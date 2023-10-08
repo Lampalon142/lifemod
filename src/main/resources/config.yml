@@ -1,0 +1,155 @@
+## Created and Directed by Lampalon_
+
+################################################
+#+--------------------------------------------+#
+#+-----------------Settings-------------------+#
+#+--------------------------------------------+#
+################################################
+
+
+################################################
+#+--------------------------------------------+#
+#+-----------------Messsages------------------+#
+#+--------------------------------------------+#
+################################################
+
+## Change Prefix to your Prefix eg : "§7[§bMyBestServer§7] §f» "
+prefix: "§7[§6Moderation§7] §f» "
+
+## Permission and console
+nopermission: "§cYou don't have permission for this."
+onlyplayer: "§cYou can't execute this command on the console."
+offlineplayer: "§cThis person is not connected to the server."
+configreloadmsg: "§aConfig have been reloaded successfully."
+
+## Fly
+fly-enable: "§aFly mod was been activate."
+fly-disable: "§cFly mod was been deactivated."
+
+## Moderation
+mod-enable: "§aModeration mod has been activated."
+mod-disable: "§cModeration mod has been deactivated."
+
+## Game mode
+gm-invalid: "§cInvalid game mode. Valid modes are: survival, creative, adventure, spectator or 0, 1, 2, 3"
+gm-usage: "§cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
+
+gm-succes: "§7Your game mode has been changed to §b§l "
+
+## Freeze
+unfreezeby: "You have been unfreeze by %player%."
+unfreeze: "You have unfreeze %target%."
+freeze-msg-one: "================"
+freeze-msg-two: "You've been freeze"
+freeze-msg-three: "Please go to the discord."
+freeze-msg-four: "If you disconnect, you will be banned."
+freeze-msg-five: "================"
+freeze-msg-six: "You freeze %target%."
+freeze-usage: "§cUsage: /freeze <player-name>."
+freeze-yourself: "§cYou can't freeze yourself."
+
+## Broadcast
+bc: "§7[§4§lAlert§7] §f"
+bc-usage: "§cInvalid"
+
+## TP
+nothingtp: "§cThere are no players to teleport to."
+tp: "§aYou have been teleported to %player%"
+
+## Moderation-Tools
+Name-invSee: "§eSee inventory"
+Name-freeze: "§bFreeze"
+Name-tpRandom: "§aRandom TP"
+Name-vanish: "§2Vanish"
+Name-kill: "§6Kill player"
+Name-Kbtester: "§dKB tester"
+Description-invSee: "§7Right-click on a player §7to see his inventory."
+Description-freeze: "§7Right-click on a player §7for freeze."
+Description-TPRandom: "§7Right-click to teleport §7randomly on a player."
+Description-Vanish: "§7Right-click to activate/deactivate §7the vanish."
+Description-Kill: "§7Right-click on a player to §ckill them."
+Description-Kbtester: "§7Left-click on a player §7to test his kb."
+
+## Vanish
+vanishon: "§cYou are now invisible!"
+vanishoff: "§aYou are now visible!"
+
+## Ec
+
+msgopenec: "§bEnder Chest from §e%player%"
+usageopenec: "§cUsage: /ecopen <player's name>"
+
+## lifemod
+
+lifemodusage: "§cUsage: /lifemod help or reload"
+
+## Help
+
+helpmsg: "§eLifeMod, Created by Lampalon_ Version : 1.2.0-RELEASE. Help :"
+helponemsg: "§6=================="
+helptwomsg: "§6§l/gm or /gamemode => §eChanges the game mode. (lifemod.mod.gm.use)"
+helpthreemsg: "§6§l/fly => §eAllows you to fly. (lifecore.mod.fly.use)"
+helpfourmsg: "§6§l/ecopen => §eOpen a person's ec. (lifemod.ecopen)"
+helpsixmsg: "§6§l/bc or /broadcast => §eProduces a message for the entire server. (lifemod.admin.bc.use)"
+helpsevenmsg: "§6§l/mod => §eModerate your server. (lifemod.moderation.mod)"
+helpeightmsg: "§6§l/lifemod help or reload => §ehelp command for view all commands (or reload to reload all config). (lifemod.reload)"
+helpninemsg: "§6§l/vanish => §evanish you or other player. (lifemod.vanish)"
+helptenmsg: "§6§l/clearinv => §eclear inventory for a player or yourself. (lifemod.clearinv)"
+helpelevenmsg: "§6§l/stafflist => §eAllows players to see moderators online. (Nothing permission)"
+helptwelvemsg: "§6§l/staffchat => §eAllows moderators and admins to chat together without players seeing messages. (lifemod.staffchat)"
+helpthirteenmsg: "§6§l/heal => §eheal yourself or a other player. (lifemod.heal)"
+helpfourteenmsg: "§6=================="
+
+## clearinv
+
+clearinvmsg: "§bInventory deleted for §e%player%"
+clearinvusage: "§cIncorrect use of the order. Usage: /clearinv <player name>."
+
+## vanish
+
+vanishusage: "§cIncorrect use of the order. Usage: /vanish <player name>."
+
+## Moderators list
+
+onlinemod: "§aOnline moderators : "
+nomodonline: "§cThere are no moderators online at the moment."
+
+## staffchat
+
+staffusage: "§cUsage: /staffchat <message>"
+staffmsg: "§b[StaffChat] §c%player%"
+staffsuccesmsg: "§a[StaffChat] Message sent successfully!"
+
+## Chatclear
+
+chatclear: "§cThe chat has been deleted."
+
+## Heal
+
+healmsgplayer: "§aYou have been heal"
+healmodmsg: "§a%player% was heal"
+healusage: "§cInvalid command usage. /heal [player]"
+
+## Kill
+
+killtargetmsg: "§cYou have been killed by %moderator%"
+killmodmsg: "§aYou have killed §c%target%"
+
+## tp
+
+tpsuccess: "§aYou have been teleported to %player%."
+tpheresuccess: "§aYou have been teleported %player%."
+tpusage: "§cUsage: /tp <player_name>"
+tphereusage: "§cUsage: /s <player_name>"
+
+## Weather
+
+weatherusage: "§cInvalid weather type. Use /weather sun/rain/storm."
+weathersun: "§aWeather set to clear/sun."
+weatherrain: "§aWeather set to rain."
+weatherstorm: "§aWeather set to storm."
+
+## God
+
+godactivate: "§aYou are now invincible."
+godesactivate: "§cYou're no longer invincible."

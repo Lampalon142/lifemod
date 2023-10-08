@@ -1,0 +1,44 @@
+name: LifeMod
+author: Lampalon
+version: '1.2.5-RELEASE'
+main: fr.lampalon.lifemod.LifeMod
+commands:
+  mod:
+    description: Moderate your server
+  broadcast:
+    aliases: ["bc"]
+    description: Produces a message for the entire server.
+  gm:
+    aliases: ["gamemode"]
+    description: Changes the game mode.
+  fly:
+    description: Allows you to fly.
+  ecopen:
+    description: Open a person's ec
+  lifemod:
+    description: Help command for view all commands
+  vanish:
+    aliases: ["v"]
+    description: Vanish you or other player.
+  clearinv:
+    description: Clear inventory for a player or yourself.
+  stafflist:
+    description: View moderators online.
+  staffchat:
+    description: chatting with other staffs.
+  chatclear:
+    description: To clear the chat.
+  togglechat:
+    description: To activate or not the chat.
+  heal:
+    description: To heal a player or yourself.
+  tp:
+    description: To tp to a person.
+  tphere:
+    description: Tp person to you.
+  weather:
+    description: To change the time.
+  god:
+    description: To activate or deactivate god for invincibility.
+  freeze:
+    description: To freeze and unfreeze players.
