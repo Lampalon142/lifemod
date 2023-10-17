@@ -8,10 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Teleport implements CommandExecutor {
+public class TeleportCmd implements CommandExecutor {
     private Messages s;
     
-    public Teleport(Messages s){
+    public TeleportCmd(Messages s){
         this.s = s;
     }
     @Override

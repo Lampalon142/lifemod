@@ -9,10 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class Ecopen implements CommandExecutor {
+public class EcopenCmd implements CommandExecutor {
     Messages messages;
 
-    public Ecopen(Messages messages) {
+    public EcopenCmd(Messages messages) {
         this.messages = messages;
     }
     @Override

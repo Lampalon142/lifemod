@@ -1,6 +1,6 @@
 name: LifeMod
 author: Lampalon
-version: '1.2.5-RELEASE'
+version: '1.2.6-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
 commands:
   mod:
@@ -41,4 +41,6 @@ commands:
   god:
     description: To activate or deactivate god for invincibility.
   freeze:
-    description: To freeze and unfreeze players.
+    description: To freeze and unfreeze player.
+  invsee:
+    description: To see inventory of a player.

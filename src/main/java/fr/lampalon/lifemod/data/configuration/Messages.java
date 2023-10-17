@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.data.configuration;
 
 import fr.lampalon.lifemod.LifeMod;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Messages {
     private final FileConfiguration config = LifeMod.getInstance().getConfig();
@@ -47,22 +48,6 @@ public class Messages {
     // other //
     public String offlineplayer = config.getString("offlineplayer");
     public String usageopenec = config.getString("usageopenec");
-    public String configreload = config.getString("configreloadmsg");
-    /// help ///
-    public String help = config.getString("helpmsg");
-    public String helpone = config.getString("helponemsg");
-    public String helptwo = config.getString("helptwomsg");
-    public String helpthree = config.getString("helpthreemsg");
-    public String helpfour = config.getString("helpfourmsg");
-    public String helpsix = config.getString("helpsixmsg");
-    public String helpseven = config.getString("helpsevenmsg");
-    public String helpeight = config.getString("helpeightmsg");
-    public String helpnine = config.getString("helpninemsg");
-    public String helpten = config.getString("helptenmsg");
-    public String helpeleven = config.getString("helpelevenmsg");
-    public String helptwelve = config.getString("helptwelvemsg");
-    public String helpthirteen = config.getString("helpthirteenmsg");
-    public String helpfourteen = config.getString("helpfourteen");
     // vanish //
     public String vanishusage = config.getString("vanishusage");
     // clearinv //
@@ -78,8 +63,6 @@ public class Messages {
     // Heal //
     public String healmsgplayer = config.getString("healmsgplayer");
     public String healusage = config.getString("healusage");
-    // other2 //
-    public String lifemodusage = config.getString("lifemodusage");
     public String tpusage = config.getString("tpusage");
     public String susage = config.getString("tphereusage");
     // weather //
@@ -90,4 +73,6 @@ public class Messages {
     // God //
     public String godactivate = config.getString("godactivate");
     public String goddesactivate = config.getString("godesactivate");
+    // Invsee //
+    public String invseeusage = config.getString("invsee-usage");
 }

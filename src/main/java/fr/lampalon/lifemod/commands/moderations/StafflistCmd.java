@@ -7,9 +7,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Stafflist implements CommandExecutor {
+public class StafflistCmd implements CommandExecutor {
     Messages messages;
-    public Stafflist(Messages messages){
+    public StafflistCmd(Messages messages){
         this.messages = messages;
     }
     @Override

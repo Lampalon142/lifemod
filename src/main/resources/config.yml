@@ -1,11 +1,5 @@
 ## Created and Directed by Lampalon_
-
-################################################
-#+--------------------------------------------+#
-#+-----------------Settings-------------------+#
-#+--------------------------------------------+#
-################################################
-
+## For help please come on : https://discord.gg/VndbGNgZ5R
 
 ################################################
 #+--------------------------------------------+#
@@ -79,27 +73,6 @@ vanishoff: "§aYou are now visible!"
 msgopenec: "§bEnder Chest from §e%player%"
 usageopenec: "§cUsage: /ecopen <player's name>"
 
-## lifemod
-
-lifemodusage: "§cUsage: /lifemod help or reload"
-
-## Help
-
-helpmsg: "§eLifeMod, Created by Lampalon_ Version : 1.2.0-RELEASE. Help :"
-helponemsg: "§6=================="
-helptwomsg: "§6§l/gm or /gamemode => §eChanges the game mode. (lifemod.mod.gm.use)"
-helpthreemsg: "§6§l/fly => §eAllows you to fly. (lifecore.mod.fly.use)"
-helpfourmsg: "§6§l/ecopen => §eOpen a person's ec. (lifemod.ecopen)"
-helpsixmsg: "§6§l/bc or /broadcast => §eProduces a message for the entire server. (lifemod.admin.bc.use)"
-helpsevenmsg: "§6§l/mod => §eModerate your server. (lifemod.moderation.mod)"
-helpeightmsg: "§6§l/lifemod help or reload => §ehelp command for view all commands (or reload to reload all config). (lifemod.reload)"
-helpninemsg: "§6§l/vanish => §evanish you or other player. (lifemod.vanish)"
-helptenmsg: "§6§l/clearinv => §eclear inventory for a player or yourself. (lifemod.clearinv)"
-helpelevenmsg: "§6§l/stafflist => §eAllows players to see moderators online. (Nothing permission)"
-helptwelvemsg: "§6§l/staffchat => §eAllows moderators and admins to chat together without players seeing messages. (lifemod.staffchat)"
-helpthirteenmsg: "§6§l/heal => §eheal yourself or a other player. (lifemod.heal)"
-helpfourteenmsg: "§6=================="
-
 ## clearinv
 
 clearinvmsg: "§bInventory deleted for §e%player%"
@@ -153,3 +126,7 @@ weatherstorm: "§aWeather set to storm."
 
 godactivate: "§aYou are now invincible."
 godesactivate: "§cYou're no longer invincible."
+
+## Invsee
+
+invsee-usage: "§cUsage : /invsee <playername>"

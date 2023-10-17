@@ -8,10 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Staffchat implements CommandExecutor {
+public class StaffchatCmd implements CommandExecutor {
     Messages messages;
 
-    public Staffchat(Messages messages){
+    public StaffchatCmd(Messages messages){
         this.messages = messages;
     }
 

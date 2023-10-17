@@ -1,12 +1,18 @@
 package fr.lampalon.lifemod;
+
 import fr.lampalon.lifemod.commands.moderations.*;
+import fr.lampalon.lifemod.commands.utils.TeleportCmd;
+import fr.lampalon.lifemod.commands.utils.WeatherCmd;
+import fr.lampalon.lifemod.listeners.ModCancels;
+import fr.lampalon.lifemod.listeners.ModItemsInteract;
+import fr.lampalon.lifemod.listeners.PluginDisable;
+import fr.lampalon.lifemod.listeners.Staffchatevent;
 import fr.lampalon.lifemod.commands.users.GodModCmd;
 import fr.lampalon.lifemod.commands.users.FreezeCmd;
-import fr.lampalon.lifemod.commands.utils.*;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
-import fr.lampalon.lifemod.listeners.*;
 import fr.lampalon.lifemod.manager.PlayerManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -19,7 +25,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -121,28 +129,29 @@ public class LifeMod extends JavaPlugin {
          pm.registerEvents((Listener)new ModCancels(), (Plugin)this);
          pm.registerEvents((Listener)new ModItemsInteract(), (Plugin)this);
          pm.registerEvents((Listener)new Staffchatevent(this, this.messages), (Plugin)this);
+         pm.registerEvents((Listener)new PluginDisable(), (Plugin)this);
     }
-    
+
     private void registerCommands() {
         this.messages = new Messages();
         getCommand("mod").setExecutor((CommandExecutor)new Commands());
-        getCommand("broadcast").setExecutor((CommandExecutor)new Broadcast());
-        getCommand("bc").setExecutor((CommandExecutor)new Broadcast());
+        getCommand("broadcast").setExecutor((CommandExecutor)new BroadcastCmd());
+        getCommand("bc").setExecutor((CommandExecutor)new BroadcastCmd());
         getCommand("gm").setExecutor((CommandExecutor)new GmCmd());
         getCommand("fly").setExecutor((CommandExecutor)new FlyCmd());
-        getCommand("ecopen").setExecutor((CommandExecutor)new Ecopen(this.messages));
+        getCommand("ecopen").setExecutor((CommandExecutor)new EcopenCmd(this.messages));
         getCommand("vanish").setExecutor((CommandExecutor)new VanishCmd(this.messages));
         getCommand("clearinv").setExecutor((CommandExecutor)new ClearinvCmd(this.messages));
-        getCommand("stafflist").setExecutor((CommandExecutor)new Stafflist(this.messages));
-        getCommand("staffchat").setExecutor((CommandExecutor)new Staffchat(this.messages));
-        getCommand("chatclear").setExecutor((CommandExecutor)new Chatclear(this.messages));
+        getCommand("stafflist").setExecutor((CommandExecutor)new StafflistCmd(this.messages));
+        getCommand("staffchat").setExecutor((CommandExecutor)new StaffchatCmd(this.messages));
+        getCommand("chatclear").setExecutor((CommandExecutor)new ChatclearCmd(this.messages));
         getCommand("heal").setExecutor((CommandExecutor)new HealCmd(this.messages));
-        getCommand("lifemod").setExecutor((CommandExecutor)new LifemodCmd(this, this.messages));
-        getCommand("tp").setExecutor((CommandExecutor)new Teleport(this.messages));
-        getCommand("tphere").setExecutor((CommandExecutor)new Teleport(this.messages));
-        getCommand("weather").setExecutor((CommandExecutor)new Weather(this, this.messages));
+        getCommand("tp").setExecutor((CommandExecutor)new TeleportCmd(this.messages));
+        getCommand("tphere").setExecutor((CommandExecutor)new TeleportCmd(this.messages));
+        getCommand("weather").setExecutor((CommandExecutor)new WeatherCmd(this, this.messages));
         getCommand("god").setExecutor((CommandExecutor)new GodModCmd(this.messages));
         getCommand("freeze").setExecutor((CommandExecutor)new FreezeCmd(this, this.messages));
+        getCommand("invsee").setExecutor((CommandExecutor)new InvseeCmd(this, this.messages));
     }
     public void onDisable() {
         Bukkit.getOnlinePlayers().stream().filter(PlayerManager::isInModerationMod).forEach(p -> {

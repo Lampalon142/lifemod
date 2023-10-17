@@ -1,13 +1,14 @@
 package fr.lampalon.lifemod.listeners;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,8 +23,8 @@ public class ModItemsInteract implements Listener {
   @EventHandler
   public void onInteract(PlayerInteractEntityEvent e) {
     Messages messages = (LifeMod.getInstance()).messages;
-    String s = LifeMod.getInstance().getConfig().getString("killtargetmsg");
-    String s1 = LifeMod.getInstance().getConfig().getString("killmodmsg");
+    String s = LifeMod.getInstance().getConfig().getString("lang.kill.targetmsg");
+    String s1 = LifeMod.getInstance().getConfig().getString("lang.kill.modmsg");
     Inventory inv;
     int i;
     Player player = e.getPlayer();

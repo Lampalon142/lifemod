@@ -8,11 +8,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Weather implements CommandExecutor {
+public class WeatherCmd implements CommandExecutor {
     private Messages messages;
     private final LifeMod plugin;
 
-    public Weather(LifeMod plugin, Messages messages) {
+    public WeatherCmd(LifeMod plugin, Messages messages) {
         this.messages = messages;
         this.plugin = plugin;
     }

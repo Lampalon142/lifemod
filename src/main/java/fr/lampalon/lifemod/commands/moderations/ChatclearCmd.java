@@ -6,10 +6,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Chatclear implements CommandExecutor {
+public class ChatclearCmd implements CommandExecutor {
     Messages messages;
 
-    public Chatclear(Messages messages){
+    public ChatclearCmd(Messages messages){
         this.messages = messages;
     }
     @Override
