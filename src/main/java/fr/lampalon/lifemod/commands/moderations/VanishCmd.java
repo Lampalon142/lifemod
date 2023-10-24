@@ -1,5 +1,6 @@
 package fr.lampalon.lifemod.commands.moderations;
 
+import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -25,10 +26,16 @@ public class VanishCmd implements CommandExecutor {
 
             Player player = (Player) sender;
 
-
-
-            if (player.hasPermission("lifemod.vanish")) {
-                if (args.length == 1) {
+            if (player.hasPermission("lifemod.vanish")){
+                if (args.length == 0){
+                    if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1));
+                        player.sendMessage(messages.prefixGeneral + messages.vanishon);
+                    } else {
+                        player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                        player.sendMessage(messages.prefixGeneral + messages.vanishoff);
+                    }
+                } else if (args.length == 1) {
                     Player targetPlayer = Bukkit.getPlayer(args[0]);
 
                     if (targetPlayer != null) {
@@ -45,7 +52,6 @@ public class VanishCmd implements CommandExecutor {
                 } else {
                     player.sendMessage(messages.prefixGeneral + messages.vanishusage);
                 }
-
             } else {
                 player.sendMessage(messages.prefixGeneral + messages.noperm);
             }

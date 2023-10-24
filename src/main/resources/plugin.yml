@@ -1,6 +1,6 @@
 name: LifeMod
 author: Lampalon
-version: '1.2.6-RELEASE'
+version: '1.2.8-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
 commands:
   mod:
@@ -44,3 +44,5 @@ commands:
     description: To freeze and unfreeze player.
   invsee:
     description: To see inventory of a player.
+  feed:
+    description: To feed you or other player.

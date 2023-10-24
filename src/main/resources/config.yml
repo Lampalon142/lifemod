@@ -130,3 +130,10 @@ godesactivate: "§cYou're no longer invincible."
 ## Invsee
 
 invsee-usage: "§cUsage : /invsee <playername>"
+
+## Feed
+
+yourself-feed: "§aYou've been feed!"
+player-feed: "§aYou've have been feed!"
+mod-feed: "§aYou've have feed %target%."
+feed-usage: "§cUsage : /feed <player>."

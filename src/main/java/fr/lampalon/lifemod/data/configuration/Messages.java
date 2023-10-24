@@ -35,7 +35,7 @@ public class Messages {
     // Moderation's-Tools //
     public String nameinvsee = config.getString("Name-invSee");
     public String namefreeze = config.getString("Name-freeze");
-    public String nametprandom = config.getString("Name-TpRandom");
+    public String nametprandom = config.getString("Name-tpRandom");
     public String namevanish = config.getString("Name-vanish");
     public String namekill = config.getString("Name-kill");
     public String namekbtester = config.getString("Name-Kbtester");
@@ -75,4 +75,8 @@ public class Messages {
     public String goddesactivate = config.getString("godesactivate");
     // Invsee //
     public String invseeusage = config.getString("invsee-usage");
+    // Feed //
+    public String yourselffeed = config.getString("yourself-feed");
+    public String playerfeed = config.getString("player-feed");
+    public String feedusage = config.getString("feed-usage");
 }

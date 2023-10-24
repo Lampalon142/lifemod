@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod;
 
 import fr.lampalon.lifemod.commands.moderations.*;
+import fr.lampalon.lifemod.commands.users.FeedCmd;
 import fr.lampalon.lifemod.commands.utils.TeleportCmd;
 import fr.lampalon.lifemod.commands.utils.WeatherCmd;
 import fr.lampalon.lifemod.listeners.ModCancels;
@@ -68,21 +69,11 @@ public class LifeMod extends JavaPlugin {
     //public MySQL getMySQL() {
         //return this.mysql;
     //}
-    public void Update(){
-        new Update(this, 112381).getLatestVersion(version -> {
-            if(this.getDescription().getVersion().equalsIgnoreCase(version)){
-                this.getLogger().info("Plugin use the latest update thanks.");
-            } else {
-                this.getLogger().warning("Plugin required an update ! (https://www.spigotmc.org/resources/lifemod-moderation-plugin.112381/)");
-            }
-        });
-    }
-
-
     public void onEnable() {
         setup();
         utils();
     }
+
     private void setup() {
         instance = this;
         this.frozenPlayers = new HashMap<>();
@@ -111,6 +102,7 @@ public class LifeMod extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§a§lPlugin initialized.");
         Bukkit.getConsoleSender().sendMessage("§8=================================");
     }
+
     private void utils(){
         int pluginId = 19817;
         Metrics metrics = new Metrics(this, pluginId);
@@ -152,7 +144,19 @@ public class LifeMod extends JavaPlugin {
         getCommand("god").setExecutor((CommandExecutor)new GodModCmd(this.messages));
         getCommand("freeze").setExecutor((CommandExecutor)new FreezeCmd(this, this.messages));
         getCommand("invsee").setExecutor((CommandExecutor)new InvseeCmd(this, this.messages));
+        getCommand("feed").setExecutor((CommandExecutor)new FeedCmd(this.messages));
     }
+
+    public void Update(){
+        new Update(this, 112381).getLatestVersion(version -> {
+            if(this.getDescription().getVersion().equalsIgnoreCase(version)){
+                this.getLogger().info("Plugin use the latest update thanks.");
+            } else {
+                this.getLogger().warning("Plugin required an update ! (https://www.spigotmc.org/resources/lifemod-moderation-plugin.112381/)");
+            }
+        });
+    }
+
     public void onDisable() {
         Bukkit.getOnlinePlayers().stream().filter(PlayerManager::isInModerationMod).forEach(p -> {
             if (PlayerManager.isInModerationMod(p)) {

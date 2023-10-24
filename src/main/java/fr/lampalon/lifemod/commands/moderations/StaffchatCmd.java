@@ -41,7 +41,7 @@ public class StaffchatCmd implements CommandExecutor {
                     }
                 }
 
-                player.sendMessage(messages.staffsuccesmsg);
+                player.sendMessage(messages.prefixGeneral + messages.staffsuccesmsg);
                 return true;
             } else {
                 player.sendMessage(messages.prefixGeneral + messages.noperm);
