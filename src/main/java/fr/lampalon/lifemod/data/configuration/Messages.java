@@ -2,7 +2,6 @@ package fr.lampalon.lifemod.data.configuration;
 
 import fr.lampalon.lifemod.LifeMod;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Messages {
     private final FileConfiguration config = LifeMod.getInstance().getConfig();

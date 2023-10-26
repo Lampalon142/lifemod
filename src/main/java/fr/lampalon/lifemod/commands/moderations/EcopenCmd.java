@@ -17,14 +17,11 @@ public class EcopenCmd implements CommandExecutor {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        String s = LifeMod.getInstance().getConfig().getString("msgopenec");
         if (label.equalsIgnoreCase("ecopen")) {
             if (sender instanceof Player) {
+
                 Player player = (Player) sender;
-                if (!player.hasPermission("lifemod.ecopen")){
-                    player.sendMessage(messages.prefixGeneral + messages.noperm);
-                    return true;
-                }
+
                 if (args.length != 1) {
                     player.sendMessage(messages.prefixGeneral + messages.usageopenec);
                     return true;
@@ -38,12 +35,11 @@ public class EcopenCmd implements CommandExecutor {
                 }
 
                 if (player.hasPermission("lifemod.ecopen")) {
-                    Inventory enderChest = Bukkit.createInventory(player, 27, messages.prefixGeneral + s.replace("%player%", targetPlayer.getPlayer().getName()));
-                    enderChest.setContents(targetPlayer.getEnderChest().getContents());
-                    player.openInventory(enderChest);
+                    player.openInventory(targetPlayer.getEnderChest());
+                } else {
+                    player.sendMessage(messages.prefixGeneral + messages.noperm);
                 }
-            }
-            if (!(sender instanceof Player)){
+            } else {
                 sender.sendMessage(messages.noconsole);
             }
             return true;

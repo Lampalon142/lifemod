@@ -56,7 +56,7 @@ public class ModCancels
   
   @EventHandler
   public void onInventoryClick(InventoryClickEvent e) {
-    e.setCancelled((PlayerManager.isInModerationMod((Player)e.getWhoClicked()) || LifeMod.getInstance().isFreeze((Player)e.getWhoClicked())));
+    e.setCancelled(LifeMod.getInstance().isFreeze((Player)e.getWhoClicked()));
   }
   
   @EventHandler

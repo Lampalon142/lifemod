@@ -4,10 +4,7 @@ import fr.lampalon.lifemod.commands.moderations.*;
 import fr.lampalon.lifemod.commands.users.FeedCmd;
 import fr.lampalon.lifemod.commands.utils.TeleportCmd;
 import fr.lampalon.lifemod.commands.utils.WeatherCmd;
-import fr.lampalon.lifemod.listeners.ModCancels;
-import fr.lampalon.lifemod.listeners.ModItemsInteract;
-import fr.lampalon.lifemod.listeners.PluginDisable;
-import fr.lampalon.lifemod.listeners.Staffchatevent;
+import fr.lampalon.lifemod.listeners.*;
 import fr.lampalon.lifemod.commands.users.GodModCmd;
 import fr.lampalon.lifemod.commands.users.FreezeCmd;
 import fr.lampalon.lifemod.data.configuration.Messages;
@@ -28,6 +25,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -122,6 +120,7 @@ public class LifeMod extends JavaPlugin {
          pm.registerEvents((Listener)new ModItemsInteract(), (Plugin)this);
          pm.registerEvents((Listener)new Staffchatevent(this, this.messages), (Plugin)this);
          pm.registerEvents((Listener)new PluginDisable(), (Plugin)this);
+         pm.registerEvents((Listener)new InventoryClick(), (Plugin)this);
     }
 
     private void registerCommands() {

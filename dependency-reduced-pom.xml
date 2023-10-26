@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fr.lampalon.lifemod</groupId>
   <artifactId>lifemod</artifactId>
-  <version>1.2.8-RELEASE</version>
+  <version>1.2.9-RELEASE</version>
   <build>
     <plugins>
       <plugin>
