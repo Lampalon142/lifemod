@@ -19,7 +19,7 @@ public class PlayerManager {
     
     public PlayerManager(Player player) {
         this.player = player;
-        this.vanished = false;
+        this.vanished = true;
     }
     
     public void init() {

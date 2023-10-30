@@ -3,15 +3,6 @@
 
 ################################################
 #+--------------------------------------------+#
-#+-----------------Settings-------------------+#
-#+--------------------------------------------+#
-################################################
-
-## Autorized Moderators to get items from /ecopen or /invsee or from moderation tools
-Autorized-player-get-item-from-ec-inventory: true
-
-################################################
-#+--------------------------------------------+#
 #+-----------------Messsages------------------+#
 #+--------------------------------------------+#
 ################################################
@@ -138,6 +129,7 @@ godesactivate: "§cYou're no longer invincible."
 ## Invsee
 
 invsee-usage: "§cUsage : /invsee <playername>"
+yourselfinvsee: "§cYou can't invsee yourself."
 
 ## Feed
 
@@ -145,3 +137,7 @@ yourself-feed: "§aYou've been feed!"
 player-feed: "§aYou've have been feed!"
 mod-feed: "§aYou've have feed %target%."
 feed-usage: "§cUsage : /feed <player>."
+
+## Ender Chest
+
+yourselfenderchest: "§cYou can't open your ender chest yourself."

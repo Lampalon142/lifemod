@@ -74,8 +74,10 @@ public class Messages {
     public String goddesactivate = config.getString("godesactivate");
     // Invsee //
     public String invseeusage = config.getString("invsee-usage");
+    public String yourselfinvsee = config.getString("yourselfinvsee");
     // Feed //
     public String yourselffeed = config.getString("yourself-feed");
     public String playerfeed = config.getString("player-feed");
     public String feedusage = config.getString("feed-usage");
+    public String yourselfenderchest = config.getString("yourselfenderchest");
 }

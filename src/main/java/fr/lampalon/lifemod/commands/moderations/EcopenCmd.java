@@ -34,11 +34,17 @@ public class EcopenCmd implements CommandExecutor {
                     return true;
                 }
 
+                if (targetPlayer == player){
+                    player.sendMessage(messages.yourselfenderchest);
+                    return true;
+                }
+
                 if (player.hasPermission("lifemod.ecopen")) {
                     player.openInventory(targetPlayer.getEnderChest());
                 } else {
                     player.sendMessage(messages.prefixGeneral + messages.noperm);
                 }
+
             } else {
                 sender.sendMessage(messages.noconsole);
             }
