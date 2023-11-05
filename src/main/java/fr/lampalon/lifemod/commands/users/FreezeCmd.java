@@ -19,7 +19,7 @@ public class FreezeCmd implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        // Conditions //
+        // Conditions et exécution //
         if (label.equalsIgnoreCase("freeze")){
             if (!(sender instanceof Player)){sender.sendMessage(messages.noconsole); return true; }
             Player player = (Player) sender;

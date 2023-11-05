@@ -1,6 +1,6 @@
 name: LifeMod
 author: Lampalon
-version: '1.3.1-RELEASE'
+version: '1.3.2-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
 commands:
   mod:
@@ -15,8 +15,6 @@ commands:
     description: Allows you to fly.
   ecopen:
     description: Open a person's ec
-  lifemod:
-    description: Help command for view all commands
   vanish:
     aliases: ["v"]
     description: Vanish you or other player.

@@ -1,4 +1,4 @@
-package fr.lampalon.lifemod.listeners;
+package fr.lampalon.lifemod.listeners.utils;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;

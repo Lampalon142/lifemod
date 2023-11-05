@@ -1,4 +1,4 @@
-package fr.lampalon.lifemod.listeners;
+package fr.lampalon.lifemod.listeners.moderation;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.manager.PlayerManager;

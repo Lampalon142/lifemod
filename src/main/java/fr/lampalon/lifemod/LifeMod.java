@@ -4,11 +4,15 @@ import fr.lampalon.lifemod.commands.moderations.*;
 import fr.lampalon.lifemod.commands.users.FeedCmd;
 import fr.lampalon.lifemod.commands.utils.TeleportCmd;
 import fr.lampalon.lifemod.commands.utils.WeatherCmd;
-import fr.lampalon.lifemod.listeners.*;
 import fr.lampalon.lifemod.commands.users.GodModCmd;
 import fr.lampalon.lifemod.commands.users.FreezeCmd;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
+import fr.lampalon.lifemod.listeners.moderation.ModCancels;
+import fr.lampalon.lifemod.listeners.moderation.ModItemsInteract;
+import fr.lampalon.lifemod.listeners.players.PlayerQuit;
+import fr.lampalon.lifemod.listeners.utils.PluginDisable;
+import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
 import java.util.ArrayList;
@@ -99,6 +103,7 @@ public class LifeMod extends JavaPlugin {
          pm.registerEvents((Listener)new ModItemsInteract(), (Plugin)this);
          pm.registerEvents((Listener)new Staffchatevent(this, this.messages), (Plugin)this);
          pm.registerEvents((Listener)new PluginDisable(), (Plugin)this);
+         pm.registerEvents((Listener)new PlayerQuit(), (Plugin)this);
     }
     private void registerCommands() {
         this.messages = new Messages();
