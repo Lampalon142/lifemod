@@ -23,8 +23,8 @@ public class ModItemsInteract implements Listener {
   @EventHandler
   public void onInteract(PlayerInteractEntityEvent e) {
     Messages messages = (LifeMod.getInstance()).messages;
-    String s = LifeMod.getInstance().getConfig().getString("lang.kill.targetmsg");
-    String s1 = LifeMod.getInstance().getConfig().getString("lang.kill.modmsg");
+    String s = LifeMod.getInstance().getConfig().getString("killtargetmsg");
+    String s1 = LifeMod.getInstance().getConfig().getString("killmodmsg");
     Inventory inv;
     int i;
     Player player = e.getPlayer();
@@ -46,9 +46,9 @@ public class ModItemsInteract implements Listener {
         } 
         
         inv.setItem(36, target.getInventory().getHelmet());
-        inv.setItem(37, target.getInventory().getHelmet());
-        inv.setItem(38, target.getInventory().getHelmet());
-        inv.setItem(39, target.getInventory().getHelmet());
+        inv.setItem(37, target.getInventory().getChestplate());
+        inv.setItem(38, target.getInventory().getLeggings());
+        inv.setItem(39, target.getInventory().getBoots());
         
         player.openInventory(inv);
         break;
@@ -108,7 +108,7 @@ public class ModItemsInteract implements Listener {
         }
         target = list.get((new Random()).nextInt(list.size()));
         player.teleport(target.getLocation());
-        player.sendMessage(messages1.replace("%player%", target.getPlayer().getName()));
+        player.sendMessage(messages.prefixGeneral + messages1.replace("%player%", target.getPlayer().getName()));
         break;
 
 

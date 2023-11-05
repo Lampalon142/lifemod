@@ -23,30 +23,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
-    // private Reports reports;
-    // private BasicDataSource connectionPool;
-    // private MySQL mysql;
     public Options options;
-
     public Messages messages;
     private ArrayList<UUID> moderators; private HashMap<UUID, PlayerManager> players; private HashMap<UUID, Location> frozenPlayers;
     public static LifeMod getInstance() {
         return instance;
     }
-
-    // public Reports getReports() {
-        // return this.reports;
-    // }
     public ArrayList<UUID> getModerators() {
                 return this.moderators;
     }
@@ -54,24 +43,16 @@ public class LifeMod extends JavaPlugin {
     public HashMap<UUID, PlayerManager> getPlayers() {
     return this.players;
     }
-    // public HashMap<Player, Player> getWhoReport() {
-        // return this.whoReport;
-    //}
     public HashMap<UUID, Location> getFrozenPlayers() {
         return this.frozenPlayers;
     }
     public boolean isFreeze(Player player) {
         return getFrozenPlayers().containsKey(player.getUniqueId());
     }
-
-    //public MySQL getMySQL() {
-        //return this.mysql;
-    //}
     public void onEnable() {
         setup();
         utils();
     }
-
     private void setup() {
         instance = this;
         this.frozenPlayers = new HashMap<>();
@@ -100,7 +81,6 @@ public class LifeMod extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§a§lPlugin initialized.");
         Bukkit.getConsoleSender().sendMessage("§8=================================");
     }
-
     private void utils(){
         int pluginId = 19817;
         Metrics metrics = new Metrics(this, pluginId);
@@ -112,7 +92,6 @@ public class LifeMod extends JavaPlugin {
         }));
         Bukkit.getConsoleSender().sendMessage("§eBStats collect some information's for Lampalon_ thanks for your trust.");
     }
-
     private void registerEvents() {
          this.messages = new Messages();
          PluginManager pm = Bukkit.getPluginManager();
@@ -120,9 +99,7 @@ public class LifeMod extends JavaPlugin {
          pm.registerEvents((Listener)new ModItemsInteract(), (Plugin)this);
          pm.registerEvents((Listener)new Staffchatevent(this, this.messages), (Plugin)this);
          pm.registerEvents((Listener)new PluginDisable(), (Plugin)this);
-         pm.registerEvents((Listener)new InventoryClick(), (Plugin)this);
     }
-
     private void registerCommands() {
         this.messages = new Messages();
         getCommand("mod").setExecutor((CommandExecutor)new Commands());
@@ -145,8 +122,7 @@ public class LifeMod extends JavaPlugin {
         getCommand("invsee").setExecutor((CommandExecutor)new InvseeCmd(this, this.messages));
         getCommand("feed").setExecutor((CommandExecutor)new FeedCmd(this.messages));
     }
-
-    public void Update(){
+    private void Update(){
         new Update(this, 112381).getLatestVersion(version -> {
             if(this.getDescription().getVersion().equalsIgnoreCase(version)){
                 this.getLogger().info("Plugin use the latest update thanks.");
@@ -155,7 +131,6 @@ public class LifeMod extends JavaPlugin {
             }
         });
     }
-
     public void onDisable() {
         Bukkit.getOnlinePlayers().stream().filter(PlayerManager::isInModerationMod).forEach(p -> {
             if (PlayerManager.isInModerationMod(p)) {
