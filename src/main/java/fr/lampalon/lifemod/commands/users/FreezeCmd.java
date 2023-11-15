@@ -7,6 +7,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 public class FreezeCmd implements CommandExecutor {
     private Messages messages;
@@ -37,13 +42,18 @@ public class FreezeCmd implements CommandExecutor {
                         target.sendMessage(messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName()));
                         player.sendMessage(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName()));
                     } else {
-                        String s4 = main.getConfig().getString("freeze-msg-six");
+                        InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
+                        Yaml yaml = new Yaml();
+                        Map<String, List<String>> config = yaml.load(input);
+
+                        List<String> freezeMsg = config.get("freeze-msg");
+
                         main.getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
-                        target.sendMessage(messages.freezeone);
-                        target.sendMessage(messages.freezetwo);
-                        target.sendMessage(messages.freezethree);
-                        target.sendMessage(messages.freezefour);
-                        target.sendMessage(messages.freezefive);
+                        for (String msg : freezeMsg) {
+                            target.sendMessage(msg);
+                        }
+
+                        String s4 = main.getConfig().getString("freeze-msg-six");
                         player.sendMessage(messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName()));
                     }
                 } else {

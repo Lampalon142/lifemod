@@ -44,3 +44,23 @@ commands:
     description: To see inventory of a player.
   feed:
     description: To feed you or other player.
+permissions:
+  lifemod.*:
+    default: op
+    children:
+      - lifemod.fly
+      - lifemod.gm
+      - lifemod.mod
+      - lifemod.bc
+      - lifemod.ecopen
+      - lifemod.vanish
+      - lifemod.clearinv
+      - lifemod.staffchat
+      - lifemod.heal
+      - lifemod.tp
+      - lifemod.tphere
+      - lifemod.weather
+      - lifemod.god
+      - lifemod.freeze
+      - lifemod.invsee
+      - lifemod.feed

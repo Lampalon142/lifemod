@@ -21,7 +21,7 @@ public class FlyCmd implements CommandExecutor
 
       Player player = (Player) sender;
 
-      if (player.hasPermission("lifecore.fly")) {
+      if (player.hasPermission("lifemod.fly")) {
         if (args.length == 0) {
           if (player.getAllowFlight()) {
             player.setAllowFlight(false);

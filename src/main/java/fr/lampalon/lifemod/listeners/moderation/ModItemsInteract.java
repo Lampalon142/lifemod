@@ -5,8 +5,10 @@ import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -18,6 +20,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.yaml.snakeyaml.Yaml;
 
 public class ModItemsInteract implements Listener {
   @EventHandler
@@ -65,11 +68,16 @@ public class ModItemsInteract implements Listener {
             break;
           }
           LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
-          target.sendMessage(messages.freezeone);
-          target.sendMessage(messages.freezetwo);
-          target.sendMessage(messages.freezethree);
-          target.sendMessage(messages.freezefour);
-          target.sendMessage(messages.freezefive);
+          InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
+          Yaml yaml = new Yaml();
+          Map<String, List<String>> config = yaml.load(input);
+
+          List<String> freezeMsg = config.get("freeze-msg");
+
+          for (String msg : freezeMsg) {
+            target.sendMessage(msg);
+          }
+
           player.sendMessage(messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName()));
         } 
         break;
