@@ -79,5 +79,6 @@ public class Messages {
     public String yourselffeed = config.getString("yourself-feed");
     public String playerfeed = config.getString("player-feed");
     public String feedusage = config.getString("feed-usage");
+    // enderchest //
     public String yourselfenderchest = config.getString("yourselfenderchest");
 }

@@ -3,6 +3,7 @@ package fr.lampalon.lifemod.commands.moderations;
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,31 +23,31 @@ public class EcopenCmd implements CommandExecutor {
 
                 Player player = (Player) sender;
 
+                Player targetPlayer = Bukkit.getPlayer(args[0]);
+
+                if (!player.hasPermission("lifemod.ecopen")) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
+                } else {
+                    player.openInventory(targetPlayer.getEnderChest());
+                }
+
                 if (args.length != 1) {
-                    player.sendMessage(messages.prefixGeneral + messages.usageopenec);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.usageopenec));
                     return true;
                 }
 
-                Player targetPlayer = Bukkit.getPlayer(args[0]);
-
                 if (targetPlayer == null) {
-                    player.sendMessage(messages.prefixGeneral + messages.offlineplayer);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.offlineplayer));
                     return true;
                 }
 
                 if (targetPlayer == player){
-                    player.sendMessage(messages.yourselfenderchest);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.yourselfenderchest));
                     return true;
                 }
 
-                if (player.hasPermission("lifemod.ecopen")) {
-                    player.openInventory(targetPlayer.getEnderChest());
-                } else {
-                    player.sendMessage(messages.prefixGeneral + messages.noperm);
-                }
-
             } else {
-                sender.sendMessage(messages.noconsole);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
             }
             return true;
         }

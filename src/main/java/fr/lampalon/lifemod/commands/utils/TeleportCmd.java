@@ -3,6 +3,7 @@ package fr.lampalon.lifemod.commands.utils;
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,19 +19,19 @@ public class TeleportCmd implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("tp")){
             if (!(sender instanceof Player)) {
-                sender.sendMessage(s.noconsole);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', s.noconsole));
                 return true;
             }
 
             Player player = (Player) sender;
 
             if (!player.hasPermission("lifemod.tp")){
-                player.sendMessage(s.noperm);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.noperm));
                 return true;
             }
 
             if (args.length != 1) {
-                player.sendMessage(s.tpusage);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.tpusage));
                 return true;
             }
 
@@ -38,7 +39,7 @@ public class TeleportCmd implements CommandExecutor {
             Player target = Bukkit.getPlayer(targetName);
 
             if (target == null) {
-                player.sendMessage(s.offlineplayer);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.offlineplayer));
                 return true;
             }
             String target1 = LifeMod.getInstance().getConfig().getString("tpsuccess");
@@ -48,19 +49,19 @@ public class TeleportCmd implements CommandExecutor {
             return true;
         } else if(label.equalsIgnoreCase("tphere")){
             if (!(sender instanceof Player)){
-                sender.sendMessage(s.noconsole);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', s.noconsole));
                 return true;
             }
 
             Player player = (Player) sender;
 
             if (!player.hasPermission("lifemod.tphere")){
-                player.sendMessage(s.noperm);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.noperm));
                 return true;
             }
 
             if (args.length != 1){
-                player.sendMessage(s.susage);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.susage));
                 return true;
             }
 
@@ -68,13 +69,13 @@ public class TeleportCmd implements CommandExecutor {
             Player targetPlayer = Bukkit.getPlayer(args[0]);
 
             if (targetPlayer == null){
-                player.sendMessage(s.offlineplayer);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.offlineplayer));
                 return true;
             }
 
             String target2 = LifeMod.getInstance().getConfig().getString("tpheresuccess");
             targetPlayer.teleport(senderPlayer.getLocation());
-            player.sendMessage(target2.replace("%player%", targetPlayer.getPlayer().getName()));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', target2.replace("%player%", targetPlayer.getPlayer().getName())));
             return true;
         }
         return true;

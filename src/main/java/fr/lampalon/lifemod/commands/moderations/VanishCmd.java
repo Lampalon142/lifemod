@@ -3,6 +3,7 @@ package fr.lampalon.lifemod.commands.moderations;
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +21,7 @@ public class VanishCmd implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("vanish")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(messages.noconsole);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
                 return true;
             }
 
@@ -30,10 +31,10 @@ public class VanishCmd implements CommandExecutor {
                 if (args.length == 0){
                     if (!player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1));
-                        player.sendMessage(messages.prefixGeneral + messages.vanishon);
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishon));
                     } else {
                         player.removePotionEffect(PotionEffectType.INVISIBILITY);
-                        player.sendMessage(messages.prefixGeneral + messages.vanishoff);
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishoff));
                     }
                 } else if (args.length == 1) {
                     Player targetPlayer = Bukkit.getPlayer(args[0]);
@@ -41,19 +42,19 @@ public class VanishCmd implements CommandExecutor {
                     if (targetPlayer != null) {
                         if (!targetPlayer.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                             targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1));
-                            targetPlayer.sendMessage(messages.prefixGeneral + messages.vanishon);
+                            targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishon));
                         } else {
                             targetPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
-                            targetPlayer.sendMessage(messages.prefixGeneral + messages.vanishoff);
+                            targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishoff));
                         }
                     } else {
-                        player.sendMessage(messages.prefixGeneral  + messages.offlineplayer);
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral  + messages.offlineplayer));
                     }
                 } else {
-                    player.sendMessage(messages.prefixGeneral + messages.vanishusage);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishusage));
                 }
             } else {
-                player.sendMessage(messages.prefixGeneral + messages.noperm);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
             }
 
             return true;

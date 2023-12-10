@@ -1,10 +1,11 @@
 name: LifeMod
 author: Lampalon
-version: '1.3.2-RELEASE'
+version: '1.3.6-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
 commands:
   mod:
     description: Moderate your server
+    aliases: ["staff"]
   broadcast:
     aliases: ["bc"]
     description: Produces a message for the entire server.

@@ -7,138 +7,137 @@
 #+--------------------------------------------+#
 ################################################
 
-## Change Prefix to your Prefix eg : "§7[§bMyBestServer§7] §f» "
-prefix: "§7[§6Moderation§7] §f» "
+## Change Prefix to your Prefix eg : "&7[&bMyBestServer&7] &f» "
+prefix: "&7[&6Moderation&7] &f» "
 
 ## Permission and console
-nopermission: "§cYou don't have permission for this."
-onlyplayer: "§cYou can't execute this command on the console."
-offlineplayer: "§cThis person is not connected to the server."
-configreloadmsg: "§aConfig have been reloaded successfully."
+nopermission: "&cYou don't have permission for this."
+onlyplayer: "&cYou can't execute this command on the console."
+offlineplayer: "&cThis person is not connected to the server."
 
 ## Fly
-fly-enable: "§aFly mod was been activate."
-fly-disable: "§cFly mod was been deactivated."
+fly-enable: "&aFly mod was been activate."
+fly-disable: "&cFly mod was been deactivated."
 
 ## Moderation
-mod-enable: "§aModeration mod has been activated."
-mod-disable: "§cModeration mod has been deactivated."
+mod-enable: "&aModeration mod has been activated."
+mod-disable: "&cModeration mod has been deactivated."
 
 ## Game mode
-gm-invalid: "§cInvalid game mode. Valid modes are: survival, creative, adventure, spectator or 0, 1, 2, 3"
-gm-usage: "§cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
+gm-invalid: "&cInvalid game mode. Valid modes are: survival, creative, adventure, spectator or 0, 1, 2, 3"
+gm-usage: "&cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
 
-gm-succes: "§7Your game mode has been changed to §b§l "
+gm-success: "&7Your game mode has been changed to &b&l%gamemode% &7for &c&l%player%"
 
 ## Freeze
-unfreezeby: "You have been unfreeze by %player%."
-unfreeze: "You have unfreeze %target%."
+unfreezeby: "&aYou have been unfreeze by %player%."
+unfreeze: "&aYou have unfreeze %target%."
 freeze-msg:
-  - "================"
-  - "You've been freeze"
-  - "Please go to the discord."
-  - "If you disconnect, you will be banned."
-  - "================"
-freeze-msg-six: "You freeze %target%."
-freeze-usage: "§cUsage: /freeze <player-name>."
-freeze-yourself: "§cYou can't freeze yourself."
+  - "&7================"
+  - "&cYou've been freeze"
+  - "&4&lPlease go to the discord."
+  - "&c&lIf you disconnect, you will be banned."
+  - "&7================"
+freeze-msg-six: "&You freeze %target%."
+freeze-usage: "&cUsage: /freeze <player-name>."
+freeze-yourself: "&cYou can't freeze yourself."
 
 ## Broadcast
-bc: "§7[§4§lAlert§7] §f"
-bc-usage: "§cInvalid"
+bc: "&7[&4&lAlert&7] &f"
+bc-usage: "&cInvalid"
 
 ## TP
-nothingtp: "§cThere are no players to teleport to."
-tp: "§aYou have been teleported to %player%"
+nothingtp: "&cThere are no players to teleport to."
+tp: "&aYou have been teleported to %player%"
 
 ## Moderation-Tools
-Name-invSee: "§eSee inventory"
-Name-freeze: "§bFreeze"
-Name-tpRandom: "§aRandom TP"
-Name-vanish: "§2Vanish"
-Name-kill: "§6Kill player"
-Name-Kbtester: "§dKB tester"
-Description-invSee: "§7Right-click on a player §7to see his inventory."
-Description-freeze: "§7Right-click on a player §7for freeze."
-Description-TPRandom: "§7Right-click to teleport §7randomly on a player."
-Description-Vanish: "§7Right-click to activate/deactivate §7the vanish."
-Description-Kill: "§7Right-click on a player to §ckill them."
-Description-Kbtester: "§7Left-click on a player §7to test his kb."
+Name-invSee: "&eSee inventory"
+Name-freeze: "&bFreeze"
+Name-tpRandom: "&aRandom TP"
+Name-vanish: "&2Vanish"
+Name-kill: "&6Kill player"
+Name-Kbtester: "&dKB tester"
+Description-invSee: "&7Right-click on a player &7to see his inventory."
+Description-freeze: "&7Right-click on a player &7for freeze."
+Description-TPRandom: "&7Right-click to teleport &7randomly on a player."
+Description-Vanish: "&7Right-click to activate/deactivate &7the vanish."
+Description-Kill: "&7Right-click on a player to &ckill them."
+Description-Kbtester: "&7Left-click on a player &7to test his kb."
 
 ## Vanish
-vanishon: "§cYou are now invisible!"
-vanishoff: "§aYou are now visible!"
+vanishon: "&cYou are now invisible!"
+vanishoff: "&aYou are now visible!"
 
 ## Ec
 
-usageopenec: "§cUsage: /ecopen <player's name>"
+usageopenec: "&cUsage: /ecopen <player's name>"
 
 ## clearinv
 
-clearinvmsg: "§bInventory deleted for §e%player%"
-clearinvusage: "§cIncorrect use of the order. Usage: /clearinv <player name>."
+clearinvmsg: "&bInventory deleted for &e%player%"
+clearinvusage: "&cIncorrect use of the order. Usage: /clearinv <player name>."
 
 ## vanish
 
-vanishusage: "§cIncorrect use of the order. Usage: /vanish <player name>."
+vanishusage: "&cIncorrect use of the order. Usage: /vanish <player name>."
 
 ## Moderators list
 
-onlinemod: "§aOnline moderators : "
-nomodonline: "§cThere are no moderators online at the moment."
+onlinemod: "&aOnline moderators : "
+nomodonline: "&cThere are no moderators online at the moment."
 
 ## staffchat
 
-staffusage: "§cUsage: /staffchat <message>"
-staffmsg: "§b[StaffChat] §c%player%"
-staffsuccesmsg: "§a[StaffChat] Message sent successfully!"
+staffusage: "&cUsage: /staffchat <message>"
+staffmsg: "&b[StaffChat] &c%player%"
+staffsuccesmsg: "&a[StaffChat] Message sent successfully!"
 
 ## Chatclear
 
-chatclear: "§cThe chat has been deleted."
+chatclear: "&cThe chat has been deleted."
 
 ## Heal
 
-healmsgplayer: "§aYou have been heal"
-healmodmsg: "§a%player% was heal"
-healusage: "§cInvalid command usage. /heal [player]"
+healmsgplayer: "&aYou have been heal"
+healmodmsg: "&a%player% was heal"
+healusage: "&cInvalid command usage. /heal [player]"
 
 ## Kill
 
-killtargetmsg: "§cYou have been killed by %moderator%"
-killmodmsg: "§aYou have killed §c%target%"
+killtargetmsg: "&cYou have been killed by %moderator%"
+killmodmsg: "&aYou have killed &c%target%"
 
 ## tp
 
-tpsuccess: "§aYou have been teleported to %player%."
-tpheresuccess: "§aYou have been teleported %player%."
-tpusage: "§cUsage: /tp <player_name>"
-tphereusage: "§cUsage: /s <player_name>"
+tpsuccess: "&aYou have been teleported to %player%."
+tpheresuccess: "&aYou have been teleported %player%."
+tpusage: "&cUsage: /tp <player_name>"
+tphereusage: "&cUsage: /s <player_name>"
 
 ## Weather
 
-weatherusage: "§cInvalid weather type. Use /weather sun/rain/storm."
-weathersun: "§aWeather set to clear/sun."
-weatherrain: "§aWeather set to rain."
-weatherstorm: "§aWeather set to storm."
+weatherusage: "&cInvalid weather type. Use /weather sun/rain/storm."
+weathersun: "&aWeather set to clear/sun."
+weatherrain: "&aWeather set to rain."
+weatherstorm: "&aWeather set to storm."
 
 ## God
 
-godactivate: "§aYou are now invincible."
-godesactivate: "§cYou're no longer invincible."
+godactivate: "&aYou are now invincible."
+godesactivate: "&cYou're no longer invincible."
 
 ## Invsee
 
-invsee-usage: "§cUsage : /invsee <playername>"
-yourselfinvsee: "§cYou can't invsee yourself."
+invsee-usage: "&cUsage : /invsee <playername>"
+yourselfinvsee: "&cYou can't invsee yourself."
 
 ## Feed
 
-yourself-feed: "§aYou've been feed!"
-player-feed: "§aYou've have been feed!"
-mod-feed: "§aYou've have feed %target%."
-feed-usage: "§cUsage : /feed <player>."
+yourself-feed: "&aYou've been feed!"
+player-feed: "&aYou've have been feed!"
+mod-feed: "&aYou've have feed %target%."
+feed-usage: "&cUsage : /feed <player>."
 
 ## Ender Chest
 
-yourselfenderchest: "§cYou can't open your ender chest yourself."
+yourselfenderchest: "&cYou can't open your ender chest yourself."

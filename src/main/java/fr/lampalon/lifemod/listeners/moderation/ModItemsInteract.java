@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -63,8 +64,8 @@ public class ModItemsInteract implements Listener {
             String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
             String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");
             LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-            target.sendMessage(messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName()));
-            player.sendMessage(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName()));
+            target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
             break;
           }
           LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
@@ -75,18 +76,18 @@ public class ModItemsInteract implements Listener {
           List<String> freezeMsg = config.get("freeze-msg");
 
           for (String msg : freezeMsg) {
-            target.sendMessage(msg);
+            target.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
           }
 
-          player.sendMessage(messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName()));
+          player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
         } 
         break;
 
       case BLAZE_ROD:
         if (e.getHand() == EquipmentSlot.HAND){
           target.damage(target.getHealth());
-          target.sendMessage(messages.prefixGeneral + s.replace("%moderator%", player.getPlayer().getName()));
-          player.sendMessage(messages.prefixGeneral + s1.replace("%target%", target.getPlayer().getName()));
+          target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s.replace("%moderator%", player.getPlayer().getName())));
+          player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s1.replace("%target%", target.getPlayer().getName())));
         }
         break;
     } 
@@ -110,13 +111,13 @@ public class ModItemsInteract implements Listener {
         list.remove(player);
         
         if (list.size() == 0) {
-          player.sendMessage(messages.prefixGeneral + messages.nothingtp);
+          player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.nothingtp));
           
           return;
         }
         target = list.get((new Random()).nextInt(list.size()));
         player.teleport(target.getLocation());
-        player.sendMessage(messages.prefixGeneral + messages1.replace("%player%", target.getPlayer().getName()));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages1.replace("%player%", target.getPlayer().getName())));
         break;
 
 
@@ -124,7 +125,7 @@ public class ModItemsInteract implements Listener {
       case BLAZE_POWDER:
         mod = PlayerManager.getFromPlayer(player);
         mod.setVanished(!mod.isVanished());
-        player.sendMessage(mod.isVanished() ? (messages.prefixGeneral + messages.vanishon) : (messages.prefixGeneral + messages.vanishoff));
+        player.sendMessage(mod.isVanished() ? (ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishon)) : (ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishoff)));
         break;
     } 
   }

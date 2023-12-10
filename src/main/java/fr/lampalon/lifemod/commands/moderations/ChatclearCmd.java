@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.data.configuration.Messages;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,13 +22,13 @@ public class ChatclearCmd implements CommandExecutor {
                     player.sendMessage("");
                 }
 
-                player.sendMessage(messages.prefixGeneral + messages.chatclear);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.chatclear));
             } else {
-                player.sendMessage(messages.prefixGeneral + messages.noperm);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
                 return true;
             }
         } else {
-            sender.sendMessage(messages.noconsole);
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
         }
 
         return true;

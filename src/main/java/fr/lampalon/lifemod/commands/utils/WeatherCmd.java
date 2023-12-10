@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.utils;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,8 +21,9 @@ public class WeatherCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(label.equalsIgnoreCase("weather")){
+
             if (!(sender instanceof Player)) {
-                sender.sendMessage(messages.noconsole);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
                 return true;
             }
 
@@ -29,12 +31,12 @@ public class WeatherCmd implements CommandExecutor {
             World world = player.getWorld();
 
             if (args.length != 1) {
-                player.sendMessage(messages.weatherusage);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.weatherusage));
                 return false;
             }
 
             if (!player.hasPermission("lifemod.weather")){
-                player.sendMessage(messages.noperm);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noperm));
                 return false;
             }
 
@@ -45,21 +47,23 @@ public class WeatherCmd implements CommandExecutor {
                 case "sun":
                     world.setStorm(false);
                     world.setThundering(false);
-                    player.sendMessage(messages.weathersun);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.weathersun));
                     break;
                 case "rain":
                     world.setStorm(true);
                     world.setThundering(false);
-                    player.sendMessage(messages.weatherrain);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.weatherrain));
                     break;
                 case "storm":
                     world.setStorm(true);
                     world.setThundering(true);
-                    player.sendMessage(messages.weatherstorm);
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.weatherstorm));
                     break;
             }
+
             return true;
         }
+
         return true;
     }
 }

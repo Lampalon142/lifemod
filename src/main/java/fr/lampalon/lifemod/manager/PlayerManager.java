@@ -5,6 +5,7 @@ import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.utils.ItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -27,17 +28,17 @@ public class PlayerManager {
         this.options = new Options();
         LifeMod.getInstance().getPlayers().put(this.player.getUniqueId(), this);
         LifeMod.getInstance().getModerators().add(this.player.getUniqueId());
-        this.player.sendMessage(messages.prefixGeneral + messages.modenable);
+        this.player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.modenable));
         saveInventory();
         this.player.setAllowFlight(true);
         this.player.setFlying(true);
         
-        ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(messages.nameinvsee).setLore(new String[] {messages.descinvsee });
-        ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(messages.namefreeze).setLore(new String[] {messages.descfreeze });
-        ItemBuilder tpRandom = (new ItemBuilder(Material.ENDER_PEARL)).setName(messages.nametprandom).setLore(new String[] {messages.desctprandom });
-        ItemBuilder vanish = (new ItemBuilder(Material.BLAZE_POWDER)).setName(messages.namevanish).setLore(new String[] {messages.descvanish });
-        ItemBuilder kill = (new ItemBuilder(Material.BLAZE_ROD)).setName(messages.namekill).setLore(new String[] {messages.desckill});
-        ItemBuilder kbTester = new ItemBuilder(Material.STICK).setName(messages.namekbtester).setLore(new String[] {messages.desckbtester}).addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
+        ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(ChatColor.translateAlternateColorCodes('&', messages.nameinvsee)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.descinvsee) });
+        ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(ChatColor.translateAlternateColorCodes('&', messages.namefreeze)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.descfreeze) });
+        ItemBuilder tpRandom = (new ItemBuilder(Material.ENDER_PEARL)).setName(ChatColor.translateAlternateColorCodes('&', messages.nametprandom)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.desctprandom) });
+        ItemBuilder vanish = (new ItemBuilder(Material.BLAZE_POWDER)).setName(ChatColor.translateAlternateColorCodes('&', messages.namevanish)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.descvanish) });
+        ItemBuilder kill = (new ItemBuilder(Material.BLAZE_ROD)).setName(ChatColor.translateAlternateColorCodes('&', messages.namekill)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.desckill)});
+        ItemBuilder kbTester = new ItemBuilder(Material.STICK).setName(ChatColor.translateAlternateColorCodes('&', messages.namekbtester)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.desckbtester)}).addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
 
         this.player.getInventory().setItem(0, invSee.toItemStack());
         this.player.getInventory().setItem(2, freeze.toItemStack());
@@ -51,7 +52,7 @@ public class PlayerManager {
         LifeMod.getInstance().getPlayers().remove(this.player.getUniqueId());
         LifeMod.getInstance().getModerators().remove(this.player.getUniqueId());
         this.player.getInventory().clear();
-        this.player.sendMessage(messages.prefixGeneral + messages.moddisable);
+        this.player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.moddisable));
         giveInventory();
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
@@ -69,7 +70,7 @@ public class PlayerManager {
     public ItemStack[] getItems() {
         return this.items;
     }
-    
+
     public boolean isVanished() {
         return this.vanished;
     }
@@ -80,7 +81,7 @@ public class PlayerManager {
         Bukkit.getOnlinePlayers().forEach(players -> players.hidePlayer(this.player));
         } else {
         Bukkit.getOnlinePlayers().forEach(players -> players.showPlayer(this.player));
-        } 
+        }
     }
     
     public void saveInventory() {

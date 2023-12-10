@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.listeners.utils;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,7 +30,7 @@ public class Staffchatevent implements Listener {
 
                 for (Player recipient : plugin.getServer().getOnlinePlayers()) {
                     if (recipient.hasPermission("lifemod.staffchat")) {
-                        recipient.sendMessage( playermsg.replace("%player%", event.getPlayer().getName()) + "» " + message.substring(1));
+                        recipient.sendMessage( ChatColor.translateAlternateColorCodes('&', playermsg.replace("%player%", event.getPlayer().getName()) + "» " + message.substring(1)));
                     }
                 }
             }
