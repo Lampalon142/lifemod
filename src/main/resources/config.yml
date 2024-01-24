@@ -46,10 +46,6 @@ freeze-yourself: "&cYou can't freeze yourself."
 bc: "&7[&4&lAlert&7] &f"
 bc-usage: "&cInvalid"
 
-## TP
-nothingtp: "&cThere are no players to teleport to."
-tp: "&aYou have been teleported to %player%"
-
 ## Moderation-Tools
 Name-invSee: "&eSee inventory"
 Name-freeze: "&bFreeze"
@@ -109,9 +105,15 @@ killmodmsg: "&aYou have killed &c%target%"
 
 ## tp
 
+nothingtp: "&cThere are no players to teleport to."
+tp: "&aYou have been teleported to %player%"
+
+
 tpsuccess: "&aYou have been teleported to %player%."
 tpheresuccess: "&aYou have been teleported %player%."
-tpusage: "&cUsage: /tp <player_name>"
+
+invalidcoordinates: "&cInvalid coordinates. Please provide valid numbers for x, y, and z."
+tpusage: "&cUsage: /tp <player> OR /tp <x> <y> <z>"
 tphereusage: "&cUsage: /s <player_name>"
 
 ## Weather

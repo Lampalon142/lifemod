@@ -4,11 +4,13 @@ import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -43,12 +45,16 @@ public class FreezeCmd implements CommandExecutor, Listener {
                         return true;
                     }
 
+                    ItemStack air = new ItemStack(Material.AIR);
+                    ItemStack packedice = new ItemStack(Material.PACKED_ICE);
+
                     if (main.getFrozenPlayers().containsKey(target.getUniqueId())) {
                         String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
                         String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");
                         LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
                         target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
+                        target.getInventory().setHelmet(air);
                     } else {
                         InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
                         Yaml yaml = new Yaml();
@@ -58,8 +64,10 @@ public class FreezeCmd implements CommandExecutor, Listener {
 
                         main.getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
                         for (String msg : freezeMsg) {
-                            target.sendMessage(msg);
+                            target.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
                         }
+
+                        target.getInventory().setHelmet(packedice);
 
                         String s4 = main.getConfig().getString("freeze-msg-six");
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));

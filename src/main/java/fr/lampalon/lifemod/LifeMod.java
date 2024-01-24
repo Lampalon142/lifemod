@@ -15,6 +15,8 @@ import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -26,6 +28,9 @@ import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -107,26 +112,28 @@ public class LifeMod extends JavaPlugin {
     }
     private void registerCommands() {
         this.messages = new Messages();
-        getCommand("mod").setExecutor((CommandExecutor)new Commands());
-        getCommand("broadcast").setExecutor((CommandExecutor)new BroadcastCmd());
-        getCommand("bc").setExecutor((CommandExecutor)new BroadcastCmd());
-        getCommand("gm").setExecutor((CommandExecutor)new GmCmd());
-        getCommand("fly").setExecutor((CommandExecutor)new FlyCmd());
-        getCommand("ecopen").setExecutor((CommandExecutor)new EcopenCmd(this.messages));
-        getCommand("vanish").setExecutor((CommandExecutor)new VanishCmd(this.messages));
-        getCommand("clearinv").setExecutor((CommandExecutor)new ClearinvCmd(this.messages));
-        getCommand("stafflist").setExecutor((CommandExecutor)new StafflistCmd(this.messages));
-        getCommand("staffchat").setExecutor((CommandExecutor)new StaffchatCmd(this.messages));
-        getCommand("chatclear").setExecutor((CommandExecutor)new ChatclearCmd(this.messages));
-        getCommand("heal").setExecutor((CommandExecutor)new HealCmd(this.messages));
-        getCommand("tp").setExecutor((CommandExecutor)new TeleportCmd(this.messages));
-        getCommand("tphere").setExecutor((CommandExecutor)new TeleportCmd(this.messages));
-        getCommand("weather").setExecutor((CommandExecutor)new WeatherCmd(this, this.messages));
-        getCommand("god").setExecutor((CommandExecutor)new GodModCmd(this.messages));
-        getCommand("freeze").setExecutor((CommandExecutor)new FreezeCmd(this, this.messages));
-        getCommand("invsee").setExecutor((CommandExecutor)new InvseeCmd(this, this.messages));
-        getCommand("feed").setExecutor((CommandExecutor)new FeedCmd(this.messages));
+        getCommand("mod").setExecutor((CommandExecutor) new Commands());
+        getCommand("staff").setExecutor((CommandExecutor)new Commands());
+        getCommand("broadcast").setExecutor((CommandExecutor) new BroadcastCmd());
+        getCommand("bc").setExecutor((CommandExecutor) new BroadcastCmd());
+        getCommand("gm").setExecutor((CommandExecutor) new GmCmd());
+        getCommand("fly").setExecutor((CommandExecutor) new FlyCmd());
+        getCommand("ecopen").setExecutor((CommandExecutor) new EcopenCmd(this.messages));
+        getCommand("vanish").setExecutor((CommandExecutor) new VanishCmd(this.messages));
+        getCommand("clearinv").setExecutor((CommandExecutor) new ClearinvCmd(this.messages));
+        getCommand("stafflist").setExecutor((CommandExecutor) new StafflistCmd(this.messages));
+        getCommand("staffchat").setExecutor((CommandExecutor) new StaffchatCmd(this.messages));
+        getCommand("chatclear").setExecutor((CommandExecutor) new ChatclearCmd(this.messages));
+        getCommand("heal").setExecutor((CommandExecutor) new HealCmd(this.messages));
+        getCommand("tp").setExecutor((CommandExecutor) new TeleportCmd(this.messages));
+        getCommand("tphere").setExecutor((CommandExecutor) new TeleportCmd(this.messages));
+        getCommand("weather").setExecutor((CommandExecutor) new WeatherCmd(this, this.messages));
+        getCommand("god").setExecutor((CommandExecutor) new GodModCmd(this.messages));
+        getCommand("freeze").setExecutor((CommandExecutor) new FreezeCmd(this, this.messages));
+        getCommand("invsee").setExecutor((CommandExecutor) new InvseeCmd(this, this.messages));
+        getCommand("feed").setExecutor((CommandExecutor) new FeedCmd(this.messages));
     }
+
     private void Update(){
         new Update(this, 112381).getLatestVersion(version -> {
             if(this.getDescription().getVersion().equalsIgnoreCase(version)){

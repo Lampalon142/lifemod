@@ -1,7 +1,11 @@
 package fr.lampalon.lifemod.data.configuration;
 
 import fr.lampalon.lifemod.LifeMod;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
 
 public class Messages {
     private final FileConfiguration config = LifeMod.getInstance().getConfig();
@@ -81,4 +85,5 @@ public class Messages {
     public String feedusage = config.getString("feed-usage");
     // enderchest //
     public String yourselfenderchest = config.getString("yourselfenderchest");
+    public String invalidcoordinates = config.getString("invalidcoordinates");
 }
