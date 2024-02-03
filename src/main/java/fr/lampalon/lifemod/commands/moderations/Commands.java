@@ -21,6 +21,7 @@ public class Commands implements CommandExecutor {
         Player player = (Player)sender;
 
         if (label.equalsIgnoreCase("mod") || label.equalsIgnoreCase("staff")) {
+
             if (!player.hasPermission("lifemod.mod")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
                 return false;

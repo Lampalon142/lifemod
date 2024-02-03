@@ -19,6 +19,7 @@ public class ClearinvCmd implements CommandExecutor {
         if (label.equalsIgnoreCase("clearinv")){
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+
                 String target = LifeMod.getInstance().getConfig().getString("clearinvmsg");
                 if (player.hasPermission("lifemod.clearinv")){
                     if (args.length == 1) {

@@ -18,6 +18,7 @@ public class BroadcastCmd implements CommandExecutor {
                 return true;
             }
             Player player = (Player) sender;
+
             if (!player.hasPermission("lifemod.bc")) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
                 return true;

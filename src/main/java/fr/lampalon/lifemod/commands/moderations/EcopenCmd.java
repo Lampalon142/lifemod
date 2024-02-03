@@ -23,17 +23,17 @@ public class EcopenCmd implements CommandExecutor {
 
                 Player player = (Player) sender;
 
+                if (args.length != 1) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.usageopenec));
+                    return true;
+                }
+
                 Player targetPlayer = Bukkit.getPlayer(args[0]);
 
                 if (!player.hasPermission("lifemod.ecopen")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
                 } else {
                     player.openInventory(targetPlayer.getEnderChest());
-                }
-
-                if (args.length != 1) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.usageopenec));
-                    return true;
                 }
 
                 if (targetPlayer == null) {

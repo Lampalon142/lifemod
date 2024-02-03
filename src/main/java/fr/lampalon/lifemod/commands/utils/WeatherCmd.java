@@ -28,6 +28,14 @@ public class WeatherCmd implements CommandExecutor {
             }
 
             Player player = (Player) sender;
+
+            boolean vanishEnabled = LifeMod.getInstance().getConfig().getBoolean("commands-enabled.weather");
+
+            if (!vanishEnabled) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.commanddisable));
+                return true;
+            }
+
             World world = player.getWorld();
 
             if (args.length != 1) {

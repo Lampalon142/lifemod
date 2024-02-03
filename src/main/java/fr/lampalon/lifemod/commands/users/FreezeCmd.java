@@ -31,10 +31,11 @@ public class FreezeCmd implements CommandExecutor, Listener {
         // Conditions et exécution //
         if (label.equalsIgnoreCase("freeze")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(messages.noconsole);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
                 return true;
             }
             Player player = (Player) sender;
+
             if (player.hasPermission("lifemod.freeze")) {
                 if (args.length == 1) {
 

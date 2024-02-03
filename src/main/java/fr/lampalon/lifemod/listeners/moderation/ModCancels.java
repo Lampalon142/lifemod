@@ -54,10 +54,10 @@ public class ModCancels
     e.setCancelled((PlayerManager.isInModerationMod(e.getPlayer()) || LifeMod.getInstance().isFreeze(e.getPlayer())));
   }
   
-  @EventHandler
-  public void onInventoryClick(InventoryClickEvent e) {
-    e.setCancelled(LifeMod.getInstance().isFreeze((Player)e.getWhoClicked()));
-  }
+  //@EventHandler
+  //public void onInventoryClick(InventoryClickEvent e) {
+    //e.setCancelled(true);
+  //}
   
   @EventHandler
   public void onMove(PlayerMoveEvent e) {

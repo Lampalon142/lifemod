@@ -24,6 +24,7 @@ public class StaffchatCmd implements CommandExecutor {
         }
 
         Player player = (Player) sender;
+
         String playermsg = LifeMod.getInstance().getConfig().getString("staffmsg");
 
         if (cmd.getName().equalsIgnoreCase("staffchat")) {

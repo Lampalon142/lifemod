@@ -3,6 +3,33 @@
 
 ################################################
 #+--------------------------------------------+#
+#+-----------------Settings-------------------+#
+#+--------------------------------------------+#
+################################################
+
+## For disable command turn true to false
+
+commands-enabled:
+  gamemode: true
+  vanish: true
+  feed: true
+  heal: true
+  mod: true
+  freeze: true
+  fly: true
+  broadcast: true
+  chatclear: true
+  clearinv: true
+  ecopen: true
+  invsee: true
+  staffchat: true
+  stafflist: true
+  godmode: true
+  teleport: true
+  weather: true
+
+################################################
+#+--------------------------------------------+#
 #+-----------------Messsages------------------+#
 #+--------------------------------------------+#
 ################################################
@@ -14,6 +41,7 @@ prefix: "&7[&6Moderation&7] &f» "
 nopermission: "&cYou don't have permission for this."
 onlyplayer: "&cYou can't execute this command on the console."
 offlineplayer: "&cThis person is not connected to the server."
+command-disable: "&cThis command is deactivate"
 
 ## Fly
 fly-enable: "&aFly mod was been activate."
@@ -44,7 +72,7 @@ freeze-yourself: "&cYou can't freeze yourself."
 
 ## Broadcast
 bc: "&7[&4&lAlert&7] &f"
-bc-usage: "&cInvalid"
+bc-usage: "&cUsage : /bc <message>"
 
 ## Moderation-Tools
 Name-invSee: "&eSee inventory"
@@ -63,6 +91,7 @@ Description-Kbtester: "&7Left-click on a player &7to test his kb."
 ## Vanish
 vanishon: "&cYou are now invisible!"
 vanishoff: "&aYou are now visible!"
+vanishcooldown: "§cPlease wait %cooldown% seconds before changing your invisible mode again."
 
 ## Ec
 
@@ -132,6 +161,7 @@ godesactivate: "&cYou're no longer invincible."
 
 invsee-usage: "&cUsage : /invsee <playername>"
 yourselfinvsee: "&cYou can't invsee yourself."
+inventoryname: "Player inventory %player%"
 
 ## Feed
 
@@ -142,4 +172,4 @@ feed-usage: "&cUsage : /feed <player>."
 
 ## Ender Chest
 
-yourselfenderchest: "&cYou can't open your ender chest yourself."
+yourselfenderchest: "&cYou can't open your ender chest."

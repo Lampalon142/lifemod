@@ -20,6 +20,7 @@ public class VanishCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("vanish")) {
+
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
                 return true;

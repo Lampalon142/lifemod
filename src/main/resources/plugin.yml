@@ -1,6 +1,6 @@
 name: LifeMod
 author: Lampalon
-version: '1.3.6-RELEASE'
+version: '1.4.1-PATCH1'
 main: fr.lampalon.lifemod.LifeMod
 commands:
   mod:

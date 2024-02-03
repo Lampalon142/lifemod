@@ -14,22 +14,15 @@ public class Messages {
     public String flyenable = config.getString("fly-enable");
     public String flydisable = config.getString("fly-disable");
     public String modenable = config.getString("mod-enable");
-
     public String moddisable = config.getString("mod-disable");
 
     public String noperm = config.getString("nopermission");
 
     public String noconsole = config.getString("onlyplayer");
+    public String commanddisable = config.getString("command-disable");
     public String gminvalid = config.getString("gm-invalid");
-    public String gmusage = config.getString("gm-usage");
-    public String gmsucces = config.getString("gm-succes");
     public String bc = config.getString("bc");
     public String bcusage = config.getString("bc-usage");
-    public String freezeone = config.getString("freeze-msg-one");
-    public String freezetwo = config.getString("freeze-msg-two");
-    public String freezethree = config.getString("freeze-msg-three");
-    public String freezefour = config.getString("freeze-msg-four");
-    public String freezefive = config.getString("freeze-msg-five");
     public String freezeusage = config.getString("freeze-usage");
     public String freezeno = config.getString("freeze-yourself");
     public String nothingtp = config.getString("nothingtp");

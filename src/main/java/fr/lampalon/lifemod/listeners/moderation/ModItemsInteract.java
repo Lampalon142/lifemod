@@ -8,10 +8,7 @@ import fr.lampalon.lifemod.manager.PlayerManager;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,53 +35,24 @@ public class ModItemsInteract implements Listener {
     int i;
     Player player = e.getPlayer();
     if (!PlayerManager.isInModerationMod(player))
-      return;  if (!(e.getRightClicked() instanceof Player))
-      return;  Player target = (Player)e.getRightClicked();
+      return;
+
+    if (!(e.getRightClicked() instanceof Player))
+      return;
     
     e.setCancelled(true);
-    
+
     switch (player.getInventory().getItemInMainHand().getType()) {
-
       case PAPER:
-        openPlayerInventoryGUI(player, target);
-
-      case PACKED_ICE:
-        ItemStack air = new ItemStack(Material.AIR);
-        ItemStack packedice = new ItemStack(Material.PACKED_ICE);
-        String s4 = LifeMod.getInstance().getConfig().getString("freeze-msg-six");
-        if (e.getHand() == EquipmentSlot.HAND) {
-          if (LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
-            String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
-            String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");
-            LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-            target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
-            target.getInventory().remove(air);
-            break;
-          }
-          LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
-          InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
-          Yaml yaml = new Yaml();
-          Map<String, List<String>> config = yaml.load(input);
-
-          List<String> freezeMsg = config.get("freeze-msg");
-
-          for (String msg : freezeMsg) {
-            target.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
-          }
-
-          target.getInventory().setHelmet(packedice);
-
-          player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
-        }
+        openTargetInventory(player, (Player) e.getRightClicked());
         break;
-
+      case PACKED_ICE:
+        handleFreeze(player, (Player) e.getRightClicked());
+        break;
       case BLAZE_ROD:
-        if (e.getHand() == EquipmentSlot.HAND){
-          target.damage(target.getHealth());
-          target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s.replace("%moderator%", player.getPlayer().getName())));
-          player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s1.replace("%target%", target.getPlayer().getName())));
-        }
+        handleKill(player, (Player) e.getRightClicked());
+        break;
+      default:
         break;
     } 
   }
@@ -96,62 +64,136 @@ public class ModItemsInteract implements Listener {
     Player target;
     PlayerManager mod;
     Player player = e.getPlayer();
-    if (!PlayerManager.isInModerationMod(player)) return;
-    if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
+    if (!PlayerManager.isInModerationMod(player))
+      return;
 
-    try {
-      Method getItemInMainHandMethod = PlayerInventory.class.getMethod("getItemInMainHand");
-      itemInHand = (ItemStack) getItemInMainHandMethod.invoke(player.getInventory());
-    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-      try {
-        if (Bukkit.getBukkitVersion().contains("1.8") || Bukkit.getBukkitVersion().contains("1.20.2")) {
-          itemInHand = player.getItemInHand();
-        } else {
-          throw new NoSuchMethodException("Both getItemInMainHand and getItemInHand methods not found.");
-        }
-      } catch (NoSuchMethodException ex2) {
-        ex2.printStackTrace();
-      }
-    }
+    if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR)
+      return;
 
-    switch (itemInHand.getType()) {
+    switch (player.getInventory().getItemInMainHand().getType()) {
       case ENDER_PEARL:
-        list = new ArrayList<>(Bukkit.getOnlinePlayers());
-        list.remove(player);
-
-        if (list.size() == 0) {
-          player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.nothingtp));
-          return;
-        }
-        target = list.get((new Random()).nextInt(list.size()));
-        player.teleport(target.getLocation());
-        String messages1 = (LifeMod.getInstance().getConfig().getString("tp"));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages1.replace("%player%", target.getPlayer().getName())));
+        teleportRandomPlayer(player);
         break;
-
       case BLAZE_POWDER:
-        mod = PlayerManager.getFromPlayer(player);
-        mod.setVanished(!mod.isVanished());
-        player.sendMessage(mod.isVanished() ? (ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishon)) : (ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishoff)));
+        toggleVanish(player);
+        break;
+      default:
         break;
     }
   }
 
-  private void openPlayerInventoryGUI(Player moderator, Player target) {
-    Inventory inventory = Bukkit.createInventory(null, 45, target.getName() + " > Inventory");
+  private void openTargetInventory(Player player, Player target) {
+    String invyes = LifeMod.getInstance().getConfig().getString("inventoryname");
+    Inventory targetInventory = Bukkit.createInventory(null, 45, invyes.replace("%player%", target.getPlayer().getName()));
+    PlayerInventory targetPlayerInventory = target.getInventory();
 
     for (int i = 0; i < 36; i++) {
-      ItemStack item = target.getInventory().getItem(i);
+      ItemStack item = targetPlayerInventory.getItem(i);
       if (item != null) {
-        inventory.setItem(i, item.clone());
+        targetInventory.setItem(i, item.clone());
       }
     }
 
-    inventory.setItem(36, target.getInventory().getHelmet());
-    inventory.setItem(37, target.getInventory().getChestplate());
-    inventory.setItem(38, target.getInventory().getLeggings());
-    inventory.setItem(39, target.getInventory().getBoots());
+    targetInventory.setItem(36, targetPlayerInventory.getHelmet());
+    targetInventory.setItem(37, targetPlayerInventory.getChestplate());
+    targetInventory.setItem(38, targetPlayerInventory.getLeggings());
+    targetInventory.setItem(39, targetPlayerInventory.getBoots());
 
-    moderator.openInventory(inventory);
+    player.openInventory(targetInventory);
+  }
+
+  private void handleFreeze(Player player, Player target) {
+    Messages messages = (LifeMod.getInstance()).messages;
+    ItemStack air = new ItemStack(Material.AIR);
+    String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
+    String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");
+    if (LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
+      target.getInventory().remove(air);
+      LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
+      target.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cVous avez été dégelé."));
+      player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aVous avez dégelé " + target.getName() + "."));
+    } else {
+      String s4 = LifeMod.getInstance().getConfig().getString("freeze-msg-six");
+      LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
+      InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
+      Yaml yaml = new Yaml();
+      Map<String, List<String>> config = yaml.load(input);
+
+      List<String> freezeMsg = config.get("freeze-msg");
+
+      for (String msg : freezeMsg) {
+        target.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+      }
+
+      ItemStack packedice = new ItemStack(Material.PACKED_ICE);
+
+      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
+
+      target.getInventory().setHelmet(packedice);
+
+      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));}
+  }
+
+  private void handleKill(Player player, Player target) {
+    Messages messages = (LifeMod.getInstance()).messages;
+    String s = LifeMod.getInstance().getConfig().getString("killtargetmsg");
+    String s1 = LifeMod.getInstance().getConfig().getString("killmodmsg");
+    target.setHealth(0);
+    target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s.replace("%moderator%", player.getPlayer().getName())));
+    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s1.replace("%target%", target.getPlayer().getName())));
+  }
+
+  private void teleportRandomPlayer(Player player) {
+    Messages messages = (LifeMod.getInstance()).messages;
+    Player[] onlinePlayers = Bukkit.getOnlinePlayers().toArray(new Player[0]);
+
+    if (onlinePlayers.length == 0) {
+      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.nothingtp));
+      return;
+    }
+
+    Player randomPlayer = onlinePlayers[new Random().nextInt(onlinePlayers.length)];
+
+    player.teleport(randomPlayer.getLocation());
+
+    String messages1 = (LifeMod.getInstance().getConfig().getString("tp"));
+    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages1.replace("%player%", randomPlayer.getPlayer().getName())));
+  }
+
+  private final HashMap<UUID, Long> vanishCooldowns = new HashMap<>();
+
+  private void toggleVanish(Player player) {
+    String s = LifeMod.getInstance().getConfig().getString("vanishcooldown");
+    Messages messages = (LifeMod.getInstance()).messages;
+    long currentTime = System.currentTimeMillis();
+    long lastToggleTime = vanishCooldowns.getOrDefault(player.getUniqueId(), 0L);
+    long cooldown = 5000;
+
+    if (currentTime - lastToggleTime < cooldown) {
+      int remainingSeconds = (int) ((cooldown - (currentTime - lastToggleTime)) / 1000);
+      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s.replace("%cooldown%", String.valueOf(remainingSeconds))));
+      return;
+    }
+
+    PlayerManager mod = PlayerManager.getFromPlayer(player);
+    boolean isVanished = !mod.isVanished();
+
+    mod.setVanished(isVanished);
+
+    vanishCooldowns.put(player.getUniqueId(), currentTime);
+
+    player.sendMessage(isVanished ? ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishon) : ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishoff));
+
+    if (isVanished) {
+      for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        if (!onlinePlayer.equals(player)) {
+          onlinePlayer.hidePlayer(player);
+        }
+      }
+    } else {
+      for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        onlinePlayer.showPlayer(player);
+      }
+    }
   }
 }

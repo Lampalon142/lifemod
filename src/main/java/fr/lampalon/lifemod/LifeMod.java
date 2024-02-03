@@ -15,8 +15,6 @@ import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -28,9 +26,6 @@ import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -58,6 +53,25 @@ public class LifeMod extends JavaPlugin {
     public boolean isFreeze(Player player) {
         return getFrozenPlayers().containsKey(player.getUniqueId());
     }
+
+    Boolean invsee = getConfig().getBoolean("commands-enabled.invsee");
+    Boolean gamemode = getConfig().getBoolean("commands-enabled.gamemode");
+    Boolean vanish = getConfig().getBoolean("commands-enabled.vanish");
+    Boolean feed = getConfig().getBoolean("commands-enabled.feed");
+    Boolean mod = getConfig().getBoolean("commands-enabled.mod");
+    Boolean freeze = getConfig().getBoolean("commands-enabled.freeze");
+    Boolean fly = getConfig().getBoolean("commands-enabled.fly");
+    Boolean broadcast = getConfig().getBoolean("commands-enabled.broadcast");
+    Boolean chatclear = getConfig().getBoolean("commands-enabled.chatclear");
+    Boolean clearinv = getConfig().getBoolean("commands-enabled.clearinv");
+    Boolean ecopen = getConfig().getBoolean("commands-enabled.ecopen");
+    Boolean staffmsg = getConfig().getBoolean("commands-enabled.staffchat");
+    Boolean stafflist = getConfig().getBoolean("commands-enabled.stafflist");
+    Boolean godmode = getConfig().getBoolean("commands-enabled.godmode");
+    Boolean teleport = getConfig().getBoolean("commands-enabled.teleport");
+    Boolean weather = getConfig().getBoolean("commands-enabled.weather");
+    Boolean heal = getConfig().getBoolean("commands-enabled.heal");
+
     public void onEnable() {
         setup();
         utils();
@@ -69,8 +83,6 @@ public class LifeMod extends JavaPlugin {
         this.moderators = new ArrayList<>();
         registerEvents();
         registerCommands();
-        //this.reports = new Reports();
-        //this.whoReport = new HashMap<>();
         saveDefaultConfig();
         Update();
         this.options = new Options();
@@ -99,7 +111,6 @@ public class LifeMod extends JavaPlugin {
                 return Bukkit.getOnlinePlayers().size();
             }
         }));
-        Bukkit.getConsoleSender().sendMessage("§eBStats collect some information's for Lampalon_ thanks for your trust.");
     }
     private void registerEvents() {
          this.messages = new Messages();
@@ -112,26 +123,76 @@ public class LifeMod extends JavaPlugin {
     }
     private void registerCommands() {
         this.messages = new Messages();
-        getCommand("mod").setExecutor((CommandExecutor) new Commands());
-        getCommand("staff").setExecutor((CommandExecutor)new Commands());
-        getCommand("broadcast").setExecutor((CommandExecutor) new BroadcastCmd());
-        getCommand("bc").setExecutor((CommandExecutor) new BroadcastCmd());
-        getCommand("gm").setExecutor((CommandExecutor) new GmCmd());
-        getCommand("fly").setExecutor((CommandExecutor) new FlyCmd());
-        getCommand("ecopen").setExecutor((CommandExecutor) new EcopenCmd(this.messages));
-        getCommand("vanish").setExecutor((CommandExecutor) new VanishCmd(this.messages));
-        getCommand("clearinv").setExecutor((CommandExecutor) new ClearinvCmd(this.messages));
-        getCommand("stafflist").setExecutor((CommandExecutor) new StafflistCmd(this.messages));
-        getCommand("staffchat").setExecutor((CommandExecutor) new StaffchatCmd(this.messages));
-        getCommand("chatclear").setExecutor((CommandExecutor) new ChatclearCmd(this.messages));
-        getCommand("heal").setExecutor((CommandExecutor) new HealCmd(this.messages));
-        getCommand("tp").setExecutor((CommandExecutor) new TeleportCmd(this.messages));
-        getCommand("tphere").setExecutor((CommandExecutor) new TeleportCmd(this.messages));
-        getCommand("weather").setExecutor((CommandExecutor) new WeatherCmd(this, this.messages));
-        getCommand("god").setExecutor((CommandExecutor) new GodModCmd(this.messages));
-        getCommand("freeze").setExecutor((CommandExecutor) new FreezeCmd(this, this.messages));
-        getCommand("invsee").setExecutor((CommandExecutor) new InvseeCmd(this, this.messages));
-        getCommand("feed").setExecutor((CommandExecutor) new FeedCmd(this.messages));
+        if (mod) {
+            getCommand("mod").setExecutor((CommandExecutor) new Commands());
+            getCommand("staff").setExecutor((CommandExecutor)new Commands());
+        }
+
+        if (broadcast) {
+            getCommand("broadcast").setExecutor((CommandExecutor) new BroadcastCmd());
+            getCommand("bc").setExecutor((CommandExecutor) new BroadcastCmd());
+        }
+
+        if (gamemode) {
+            getCommand("gm").setExecutor((CommandExecutor) new GmCmd(this.messages));
+        }
+
+        if (fly) {
+            getCommand("fly").setExecutor((CommandExecutor) new FlyCmd());
+        }
+
+        if (ecopen) {
+            getCommand("ecopen").setExecutor((CommandExecutor) new EcopenCmd(this.messages));
+        }
+
+        if (vanish) {
+            getCommand("vanish").setExecutor((CommandExecutor) new VanishCmd(this.messages));
+        }
+
+        if (clearinv) {
+            getCommand("clearinv").setExecutor((CommandExecutor) new ClearinvCmd(this.messages));
+        }
+
+        if (stafflist) {
+            getCommand("stafflist").setExecutor((CommandExecutor) new StafflistCmd(this.messages));
+        }
+
+        if (staffmsg) {
+            getCommand("staffchat").setExecutor((CommandExecutor) new StaffchatCmd(this.messages));
+        }
+
+        if (chatclear) {
+            getCommand("chatclear").setExecutor((CommandExecutor) new ChatclearCmd(this.messages));
+        }
+
+        if (heal) {
+            getCommand("heal").setExecutor((CommandExecutor) new HealCmd(this.messages));
+        }
+
+        if (teleport) {
+            getCommand("tp").setExecutor((CommandExecutor) new TeleportCmd(this.messages));
+            getCommand("tphere").setExecutor((CommandExecutor) new TeleportCmd(this.messages));
+        }
+
+        if (godmode) {
+            getCommand("god").setExecutor((CommandExecutor) new GodModCmd(this.messages));
+        }
+
+        if (freeze) {
+            getCommand("freeze").setExecutor((CommandExecutor) new FreezeCmd(this, this.messages));
+        }
+
+        if (invsee) {
+            getCommand("invsee").setExecutor((CommandExecutor) new InvseeCmd(this, this.messages));
+        }
+
+        if (feed) {
+            getCommand("feed").setExecutor((CommandExecutor) new FeedCmd(this.messages));
+        }
+
+        if (weather) {
+            getCommand("weather").setExecutor((CommandExecutor) new WeatherCmd(this, this.messages));
+        }
     }
 
     private void Update(){

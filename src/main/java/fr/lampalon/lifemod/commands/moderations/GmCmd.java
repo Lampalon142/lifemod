@@ -12,8 +12,12 @@ import org.bukkit.entity.Player;
 
 
 public class GmCmd implements CommandExecutor {
+  private final Messages messages;
+  public GmCmd(Messages messages){
+    this.messages = messages;
+  }
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    Messages messages = LifeMod.getInstance().messages;
+
     if ((label.equalsIgnoreCase("gm") || label.equalsIgnoreCase("gamemode")) && args.length >= 1) {
       if (!(sender instanceof Player)) {
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
@@ -21,6 +25,13 @@ public class GmCmd implements CommandExecutor {
       }
 
       Player player = (Player) sender;
+
+      if (args.length == 0) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.gminvalid));
+        System.out.println("Debug: Invalid usage of gamemode command detected.");
+        return true;
+      }
+
       String targetPlayerName = args.length > 1 ? args[args.length - 1] : null;
 
       if (!player.hasPermission("lifemod.gm") && (targetPlayerName == null || !targetPlayerName.equalsIgnoreCase(player.getName()))) {

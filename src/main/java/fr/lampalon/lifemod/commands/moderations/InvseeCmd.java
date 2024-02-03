@@ -26,6 +26,7 @@ public class InvseeCmd implements CommandExecutor, Listener {
                 return true;
             }
             Player player = (Player) sender;
+
             if (player.hasPermission("lifemod.invsee")){
                 int i;
 
@@ -34,13 +35,14 @@ public class InvseeCmd implements CommandExecutor, Listener {
                     return true;
                 }
 
-                        Player target = Bukkit.getPlayer(args[0]);
+                Player target = Bukkit.getPlayer(args[0]);
 
                 if (target == player){
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.yourselfinvsee));
                     return true;
                 }
-                Inventory inv = Bukkit.createInventory(null, 45, target.getName() + " > Inventory");
+                String invyes = LifeMod.getInstance().getConfig().getString("inventoryname");
+                Inventory inv = Bukkit.createInventory(null, 45, invyes.replace("%player%", target.getPlayer().getName()));
 
                 for (i = 0; i < 36; i++) {
                     if (target.getInventory().getItem(i) != null) {

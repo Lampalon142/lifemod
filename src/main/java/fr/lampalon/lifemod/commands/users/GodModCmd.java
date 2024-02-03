@@ -1,5 +1,6 @@
 package fr.lampalon.lifemod.commands.users;
 
+import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

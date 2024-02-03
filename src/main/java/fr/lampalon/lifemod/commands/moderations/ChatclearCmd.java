@@ -1,5 +1,6 @@
 package fr.lampalon.lifemod.commands.moderations;
 
+import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,6 +18,7 @@ public class ChatclearCmd implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
+
             if (player.hasPermission("lifemod.chatclear")){
                 for (int i = 0; i < 100; i++) {
                     player.sendMessage("");

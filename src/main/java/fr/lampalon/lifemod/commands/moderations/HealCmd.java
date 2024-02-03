@@ -24,6 +24,7 @@ public class HealCmd implements CommandExecutor {
             }
 
             Player player = (Player) sender;
+
             String s = LifeMod.getInstance().getConfig().getString("healmodmsg");
 
             if (!player.hasPermission("lifemod.heal")) {
