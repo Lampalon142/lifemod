@@ -54,7 +54,6 @@ mod-disable: "&cModeration mod has been deactivated."
 ## Game mode
 gm-invalid: "&cInvalid game mode. Valid modes are: survival, creative, adventure, spectator or 0, 1, 2, 3"
 gm-usage: "&cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
-
 gm-success: "&7Your game mode has been changed to &b&l%gamemode% &7for &c&l%player%"
 
 ## Freeze
@@ -135,14 +134,14 @@ killmodmsg: "&aYou have killed &c%target%"
 ## tp
 
 nothingtp: "&cThere are no players to teleport to."
-tp: "&aYou have been teleported to %player%"
-
+tptwoplayers: "&aYou have been teleported %player1% to %player2%"
+yourselftp: "&a You can't teleport to yourself"
 
 tpsuccess: "&aYou have been teleported to %player%."
 tpheresuccess: "&aYou have been teleported %player%."
 
 invalidcoordinates: "&cInvalid coordinates. Please provide valid numbers for x, y, and z."
-tpusage: "&cUsage: /tp <player> OR /tp <x> <y> <z>"
+tpusage: "&cUsage: /tp <player> or <x> <y> <z> or <player1> <player2>"
 tphereusage: "&cUsage: /s <player_name>"
 
 ## Weather
@@ -161,7 +160,7 @@ godesactivate: "&cYou're no longer invincible."
 
 invsee-usage: "&cUsage : /invsee <playername>"
 yourselfinvsee: "&cYou can't invsee yourself."
-inventoryname: "Player inventory %player%"
+inventoryname: "&cPlayer inventory %player%"
 
 ## Feed
 

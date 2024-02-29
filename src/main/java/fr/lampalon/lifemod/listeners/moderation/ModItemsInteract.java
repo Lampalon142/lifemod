@@ -154,6 +154,11 @@ public class ModItemsInteract implements Listener {
 
     Player randomPlayer = onlinePlayers[new Random().nextInt(onlinePlayers.length)];
 
+    if (randomPlayer.isEmpty()){
+      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.nothingtp));
+      return;
+    }
+
     player.teleport(randomPlayer.getLocation());
 
     String messages1 = (LifeMod.getInstance().getConfig().getString("tp"));

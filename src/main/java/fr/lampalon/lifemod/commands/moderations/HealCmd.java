@@ -33,15 +33,17 @@ public class HealCmd implements CommandExecutor {
             }
 
             if (args.length == 0) {
-                player.setHealth(20.0);
-                player.setFoodLevel(20);
+                double maxHealth = player.getMaxHealth();
+                player.setHealth(maxHealth);
+                player.setFoodLevel(player.getFoodLevel());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.healmsgplayer));
             } else if (args.length == 1) {
                 Player target = player.getServer().getPlayer(args[0]);
                 if (target != null) {
-                    target.setHealth(20.0);
-                    target.setFoodLevel(20);
-                    player.sendMessage(s.replace("%player%", player.getPlayer().getName()));
+                    double maxHealth = player.getMaxHealth();
+                    target.setHealth(maxHealth);
+                    target.setFoodLevel(player.getFoodLevel());
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.replace("%player%", player.getPlayer().getName())));
                 } else {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.offlineplayer));
                 }

@@ -79,4 +79,5 @@ public class Messages {
     // enderchest //
     public String yourselfenderchest = config.getString("yourselfenderchest");
     public String invalidcoordinates = config.getString("invalidcoordinates");
+    public String yourselftp = config.getString("yourselftp");
 }

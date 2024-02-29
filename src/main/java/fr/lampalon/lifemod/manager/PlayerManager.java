@@ -32,6 +32,7 @@ public class PlayerManager {
         saveInventory();
         this.player.setAllowFlight(true);
         this.player.setFlying(true);
+        this.player.setInvulnerable(true);
         
         ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(ChatColor.translateAlternateColorCodes('&', messages.nameinvsee)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.descinvsee) });
         ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(ChatColor.translateAlternateColorCodes('&', messages.namefreeze)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.descfreeze) });
@@ -56,6 +57,7 @@ public class PlayerManager {
         giveInventory();
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
+        this.player.setInvulnerable(false);
         setVanished(false);
     }
     

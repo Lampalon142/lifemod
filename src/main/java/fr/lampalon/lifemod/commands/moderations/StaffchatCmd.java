@@ -39,7 +39,7 @@ public class StaffchatCmd implements CommandExecutor {
                 }
                 for (Player staff : Bukkit.getOnlinePlayers()) {
                     if (staff.hasPermission("lifemod.staffchat")) {
-                        staff.sendMessage( playermsg.replace("%player%", player.getPlayer().getName()) + ": " + message.toString());
+                        staff.sendMessage( ChatColor.translateAlternateColorCodes('&', playermsg.replace("%player%", player.getPlayer().getName()) + ": " + message.toString()));
                     }
                 }
 

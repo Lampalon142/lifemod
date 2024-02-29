@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import fr.lampalon.lifemod.manager.VanishedManager;
 import fr.lampalon.lifemod.utils.Update;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
@@ -36,6 +37,7 @@ public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
     public Options options;
     public Messages messages;
+    private VanishedManager playerManager;
     private ArrayList<UUID> moderators; private HashMap<UUID, PlayerManager> players; private HashMap<UUID, Location> frozenPlayers;
     public static LifeMod getInstance() {
         return instance;
@@ -43,7 +45,6 @@ public class LifeMod extends JavaPlugin {
     public ArrayList<UUID> getModerators() {
                 return this.moderators;
     }
-
     public HashMap<UUID, PlayerManager> getPlayers() {
     return this.players;
     }
@@ -53,7 +54,6 @@ public class LifeMod extends JavaPlugin {
     public boolean isFreeze(Player player) {
         return getFrozenPlayers().containsKey(player.getUniqueId());
     }
-
     Boolean invsee = getConfig().getBoolean("commands-enabled.invsee");
     Boolean gamemode = getConfig().getBoolean("commands-enabled.gamemode");
     Boolean vanish = getConfig().getBoolean("commands-enabled.vanish");
@@ -122,6 +122,7 @@ public class LifeMod extends JavaPlugin {
          pm.registerEvents((Listener)new PlayerQuit(), (Plugin)this);
     }
     private void registerCommands() {
+        playerManager = new VanishedManager();
         this.messages = new Messages();
         if (mod) {
             getCommand("mod").setExecutor((CommandExecutor) new Commands());
@@ -146,7 +147,7 @@ public class LifeMod extends JavaPlugin {
         }
 
         if (vanish) {
-            getCommand("vanish").setExecutor((CommandExecutor) new VanishCmd(this.messages));
+            getCommand("vanish").setExecutor((CommandExecutor) new VanishCmd(this.messages, playerManager));
         }
 
         if (clearinv) {
@@ -200,7 +201,7 @@ public class LifeMod extends JavaPlugin {
             if(this.getDescription().getVersion().equalsIgnoreCase(version)){
                 this.getLogger().info("Plugin use the latest update thanks.");
             } else {
-                this.getLogger().warning("Plugin required an update ! (https://www.spigotmc.org/resources/lifemod-moderation-plugin.112381/)");
+                this.getLogger().warning("Plugin required an update ! (https://www.spigotmc.org/resources/1-8-1-20-lifemod-moderation-plugin.112381/)");
             }
         });
     }

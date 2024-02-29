@@ -32,7 +32,7 @@ public class TeleportCmd implements CommandExecutor {
                 return true;
             }
 
-            if (args.length != 1 && args.length != 3) {
+            if (args.length != 1 && args.length != 3 && args.length != 2) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.tpusage));
                 return true;
             }
@@ -47,10 +47,27 @@ public class TeleportCmd implements CommandExecutor {
                     return true;
                 }
 
+                if (target == player){
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.prefixGeneral + s.yourselftp));
+                    return false;
+                }
+
                 String target1 = LifeMod.getInstance().getConfig().getString("tpsuccess");
                 player.teleport(target);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', target1.replace("%player%", target.getPlayer().getName())));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.prefixGeneral + target1.replace("%player%", target.getPlayer().getName())));
 
+            } else if (args.length == 2) {
+                Player target1 = Bukkit.getPlayer(args[0]);
+                Player target2 = Bukkit.getPlayer(args[1]);
+
+                if (target1 == null || target2 == null) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.offlineplayer));
+                    return true;
+                }
+
+                target1.teleport(target2.getLocation());
+                String messages = LifeMod.getInstance().getConfig().getString("tptwoplayers");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.replace("%player1%", target1.getName()).replace("%player2%", target2.getName())));
             } else if (args.length == 3) {
 
                 try {
