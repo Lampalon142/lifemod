@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.users;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,10 +29,9 @@ public class FreezeCmd implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        // Conditions et exécution //
         if (label.equalsIgnoreCase("freeze")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+                sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
                 return true;
             }
             Player player = (Player) sender;
@@ -42,7 +42,7 @@ public class FreezeCmd implements CommandExecutor, Listener {
                     Player target = Bukkit.getPlayer(args[0]);
 
                     if (target.equals(player)) {
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.freezeno));
+                        sender.sendMessage(MessageUtil.parseColors(messages.freezeno));
                         return true;
                     }
 
@@ -53,8 +53,8 @@ public class FreezeCmd implements CommandExecutor, Listener {
                         String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
                         String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");
                         LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-                        target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
+                        target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
+                        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
                         target.getInventory().setHelmet(air);
                     } else {
                         InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
@@ -65,19 +65,19 @@ public class FreezeCmd implements CommandExecutor, Listener {
 
                         main.getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
                         for (String msg : freezeMsg) {
-                            target.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+                            target.sendMessage(MessageUtil.parseColors(msg));
                         }
 
                         target.getInventory().setHelmet(packedice);
 
                         String s4 = main.getConfig().getString("freeze-msg-six");
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
+                        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
                     }
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.freezeusage));
+                    player.sendMessage(MessageUtil.parseColors(messages.freezeusage));
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noperm));
+                player.sendMessage(MessageUtil.parseColors(messages.noperm));
                 return true;
             }
         }

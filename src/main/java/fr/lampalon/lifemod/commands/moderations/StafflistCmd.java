@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -20,7 +21,7 @@ public class StafflistCmd implements CommandExecutor {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
 
-                StringBuilder modList = new StringBuilder(ChatColor.translateAlternateColorCodes('&', messages.onlinemod));
+                StringBuilder modList = new StringBuilder(MessageUtil.parseColors(messages.onlinemod));
 
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("lifemod.stafflist")) {
@@ -31,13 +32,13 @@ public class StafflistCmd implements CommandExecutor {
                 if (modList.length() > messages.onlinemod.length()) {
                     modList.delete(modList.length() - 2, modList.length());
                 } else {
-                    modList.append(ChatColor.translateAlternateColorCodes('&', messages.nomodonline));
+                    modList.append(MessageUtil.parseColors(messages.nomodonline));
                 }
 
                 player.sendMessage(modList.toString());
                 return true;
             } else {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+                sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
                 return true;
             }
         }

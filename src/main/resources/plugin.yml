@@ -1,7 +1,8 @@
 name: LifeMod
 author: Lampalon
-version: '1.4.2-RELEASE'
+version: '1.4.4-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
+api-version: 1.16
 commands:
   mod:
     description: Moderate your server

@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,11 +29,6 @@ import org.yaml.snakeyaml.Yaml;
 public class ModItemsInteract implements Listener {
   @EventHandler
   public void onInteract(PlayerInteractEntityEvent e) {
-    Messages messages = (LifeMod.getInstance()).messages;
-    String s = LifeMod.getInstance().getConfig().getString("killtargetmsg");
-    String s1 = LifeMod.getInstance().getConfig().getString("killmodmsg");
-    Inventory inv;
-    int i;
     Player player = e.getPlayer();
     if (!PlayerManager.isInModerationMod(player))
       return;
@@ -56,13 +52,8 @@ public class ModItemsInteract implements Listener {
         break;
     } 
   }
-  ItemStack itemInHand;
   @EventHandler
   public void onInteract(PlayerInteractEvent e) {
-    Messages messages = (LifeMod.getInstance()).messages;
-    List<Player> list;
-    Player target;
-    PlayerManager mod;
     Player player = e.getPlayer();
     if (!PlayerManager.isInModerationMod(player))
       return;
@@ -84,7 +75,7 @@ public class ModItemsInteract implements Listener {
 
   private void openTargetInventory(Player player, Player target) {
     String invyes = LifeMod.getInstance().getConfig().getString("inventoryname");
-    Inventory targetInventory = Bukkit.createInventory(null, 45, invyes.replace("%player%", target.getPlayer().getName()));
+    Inventory targetInventory = Bukkit.createInventory(null, 45, MessageUtil.parseColors(invyes.replace("%player%", target.getPlayer().getName())));
     PlayerInventory targetPlayerInventory = target.getInventory();
 
     for (int i = 0; i < 36; i++) {
@@ -110,8 +101,8 @@ public class ModItemsInteract implements Listener {
     if (LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
       target.getInventory().remove(air);
       LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-      target.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cVous avez été dégelé."));
-      player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aVous avez dégelé " + target.getName() + "."));
+      target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
+      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
     } else {
       String s4 = LifeMod.getInstance().getConfig().getString("freeze-msg-six");
       LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
@@ -122,16 +113,16 @@ public class ModItemsInteract implements Listener {
       List<String> freezeMsg = config.get("freeze-msg");
 
       for (String msg : freezeMsg) {
-        target.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+        target.sendMessage(MessageUtil.parseColors(msg));
       }
 
       ItemStack packedice = new ItemStack(Material.PACKED_ICE);
 
-      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
+      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
 
       target.getInventory().setHelmet(packedice);
 
-      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));}
+      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));}
   }
 
   private void handleKill(Player player, Player target) {
@@ -139,8 +130,8 @@ public class ModItemsInteract implements Listener {
     String s = LifeMod.getInstance().getConfig().getString("killtargetmsg");
     String s1 = LifeMod.getInstance().getConfig().getString("killmodmsg");
     target.setHealth(0);
-    target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s.replace("%moderator%", player.getPlayer().getName())));
-    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s1.replace("%target%", target.getPlayer().getName())));
+    target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s.replace("%moderator%", player.getPlayer().getName())));
+    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s1.replace("%target%", target.getPlayer().getName())));
   }
 
   private void teleportRandomPlayer(Player player) {
@@ -148,21 +139,21 @@ public class ModItemsInteract implements Listener {
     Player[] onlinePlayers = Bukkit.getOnlinePlayers().toArray(new Player[0]);
 
     if (onlinePlayers.length == 0) {
-      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.nothingtp));
+      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.nothingtp));
       return;
     }
 
     Player randomPlayer = onlinePlayers[new Random().nextInt(onlinePlayers.length)];
 
     if (randomPlayer.isEmpty()){
-      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.nothingtp));
+      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.nothingtp));
       return;
     }
 
     player.teleport(randomPlayer.getLocation());
 
     String messages1 = (LifeMod.getInstance().getConfig().getString("tp"));
-    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages1.replace("%player%", randomPlayer.getPlayer().getName())));
+    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages1.replace("%player%", randomPlayer.getPlayer().getName())));
   }
 
   private final HashMap<UUID, Long> vanishCooldowns = new HashMap<>();
@@ -176,7 +167,7 @@ public class ModItemsInteract implements Listener {
 
     if (currentTime - lastToggleTime < cooldown) {
       int remainingSeconds = (int) ((cooldown - (currentTime - lastToggleTime)) / 1000);
-      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + s.replace("%cooldown%", String.valueOf(remainingSeconds))));
+      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s.replace("%cooldown%", String.valueOf(remainingSeconds))));
       return;
     }
 
@@ -187,7 +178,7 @@ public class ModItemsInteract implements Listener {
 
     vanishCooldowns.put(player.getUniqueId(), currentTime);
 
-    player.sendMessage(isVanished ? ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishon) : ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishoff));
+    player.sendMessage(isVanished ? MessageUtil.parseColors(messages.prefixGeneral + messages.vanishon) : MessageUtil.parseColors(messages.prefixGeneral + messages.vanishoff));
 
     if (isVanished) {
       for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

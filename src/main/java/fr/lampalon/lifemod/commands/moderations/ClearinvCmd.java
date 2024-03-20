@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,18 +28,18 @@ public class ClearinvCmd implements CommandExecutor {
 
                         if (targetPlayer != null) {
                             targetPlayer.getInventory().clear();
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + target.replace("%player%", targetPlayer.getPlayer().getName())));
+                            player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + target.replace("%player%", targetPlayer.getPlayer().getName())));
                         } else {
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral  + messages.offlineplayer));
+                            player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral  + messages.offlineplayer));
                         }
                     } else {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.clearinvusage));
+                        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.clearinvusage));
                     }
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
+                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
                 }
             } else {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+                sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
             }
         }
         return true;

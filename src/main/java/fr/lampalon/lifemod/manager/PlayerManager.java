@@ -4,13 +4,17 @@ import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.utils.ItemBuilder;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-    
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 public class PlayerManager {
     Messages messages = (LifeMod.getInstance()).messages;
     Options options = (LifeMod.getInstance()).options;
@@ -28,18 +32,19 @@ public class PlayerManager {
         this.options = new Options();
         LifeMod.getInstance().getPlayers().put(this.player.getUniqueId(), this);
         LifeMod.getInstance().getModerators().add(this.player.getUniqueId());
-        this.player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.modenable));
+        this.player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.modenable));
         saveInventory();
         this.player.setAllowFlight(true);
         this.player.setFlying(true);
         this.player.setInvulnerable(true);
+        this.player.addPotionEffect(PotionEffectType.NIGHT_VISION.createEffect(1000000000,255));
         
-        ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(ChatColor.translateAlternateColorCodes('&', messages.nameinvsee)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.descinvsee) });
-        ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(ChatColor.translateAlternateColorCodes('&', messages.namefreeze)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.descfreeze) });
-        ItemBuilder tpRandom = (new ItemBuilder(Material.ENDER_PEARL)).setName(ChatColor.translateAlternateColorCodes('&', messages.nametprandom)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.desctprandom) });
-        ItemBuilder vanish = (new ItemBuilder(Material.BLAZE_POWDER)).setName(ChatColor.translateAlternateColorCodes('&', messages.namevanish)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.descvanish) });
-        ItemBuilder kill = (new ItemBuilder(Material.BLAZE_ROD)).setName(ChatColor.translateAlternateColorCodes('&', messages.namekill)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.desckill)});
-        ItemBuilder kbTester = new ItemBuilder(Material.STICK).setName(ChatColor.translateAlternateColorCodes('&', messages.namekbtester)).setLore(new String[] {ChatColor.translateAlternateColorCodes('&', messages.desckbtester)}).addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
+        ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(MessageUtil.parseColors(messages.nameinvsee)).setLore(new String[] {MessageUtil.parseColors(messages.descinvsee) });
+        ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(MessageUtil.parseColors(messages.namefreeze)).setLore(new String[] {MessageUtil.parseColors(messages.descfreeze) });
+        ItemBuilder tpRandom = (new ItemBuilder(Material.ENDER_PEARL)).setName(MessageUtil.parseColors(messages.nametprandom)).setLore(new String[] {MessageUtil.parseColors(messages.desctprandom) });
+        ItemBuilder vanish = (new ItemBuilder(Material.BLAZE_POWDER)).setName(MessageUtil.parseColors(messages.namevanish)).setLore(new String[] {MessageUtil.parseColors(messages.descvanish) });
+        ItemBuilder kill = (new ItemBuilder(Material.BLAZE_ROD)).setName(MessageUtil.parseColors(messages.namekill)).setLore(new String[] {MessageUtil.parseColors(messages.desckill)});
+        ItemBuilder kbTester = new ItemBuilder(Material.STICK).setName(MessageUtil.parseColors(messages.namekbtester)).setLore(new String[] {MessageUtil.parseColors(messages.desckbtester)}).addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
 
         this.player.getInventory().setItem(0, invSee.toItemStack());
         this.player.getInventory().setItem(2, freeze.toItemStack());
@@ -53,11 +58,12 @@ public class PlayerManager {
         LifeMod.getInstance().getPlayers().remove(this.player.getUniqueId());
         LifeMod.getInstance().getModerators().remove(this.player.getUniqueId());
         this.player.getInventory().clear();
-        this.player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.moddisable));
+        this.player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.moddisable));
         giveInventory();
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
         this.player.setInvulnerable(false);
+        this.player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         setVanished(false);
     }
     

@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.VanishedManager;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,7 +23,7 @@ public class VanishCmd implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("vanish")) {
 
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+                sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
                 return true;
             }
 
@@ -33,9 +34,9 @@ public class VanishCmd implements CommandExecutor {
                     boolean isVanished = playerManager.isVanished();
                     playerManager.setVanished(!isVanished, player);
                     if (!isVanished) {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishon));
+                        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.vanishon));
                     } else {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishoff));
+                        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.vanishoff));
                     }
                 } else if (args.length == 1) {
                     Player targetPlayer = Bukkit.getPlayer(args[0]);
@@ -44,18 +45,18 @@ public class VanishCmd implements CommandExecutor {
                         boolean isVanished = playerManager.isVanished();
                         playerManager.setVanished(!isVanished, targetPlayer);
                         if (!isVanished) {
-                            targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishon));
+                            targetPlayer.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.vanishon));
                         } else {
-                            targetPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishoff));
+                            targetPlayer.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.vanishoff));
                         }
                     } else {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral  + messages.offlineplayer));
+                        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral  + messages.offlineplayer));
                     }
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.vanishusage));
+                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.vanishusage));
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
+                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
             }
 
             return true;

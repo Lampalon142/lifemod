@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +17,7 @@ public class FlyCmd implements CommandExecutor
     Messages messages = LifeMod.getInstance().messages;
     if (label.equalsIgnoreCase("fly")) {
       if (!(sender instanceof Player)) {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+        sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
         return true;
       }
 
@@ -27,15 +28,15 @@ public class FlyCmd implements CommandExecutor
           if (player.getAllowFlight()) {
             player.setAllowFlight(false);
             player.setFlying(false);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.flydisable));
+            player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.flydisable));
           } else {
             player.setAllowFlight(true);
             player.setFlying(true);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.flyenable));
+            player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.flyenable));
           }
         }
       } else {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
+        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
       }
 
       return true;

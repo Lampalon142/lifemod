@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -27,15 +28,14 @@ public class GmCmd implements CommandExecutor {
       Player player = (Player) sender;
 
       if (args.length == 0) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.gminvalid));
-        System.out.println("Debug: Invalid usage of gamemode command detected.");
+        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.gminvalid));
         return true;
       }
 
       String targetPlayerName = args.length > 1 ? args[args.length - 1] : null;
 
       if (!player.hasPermission("lifemod.gm") && (targetPlayerName == null || !targetPlayerName.equalsIgnoreCase(player.getName()))) {
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
+        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
         return true;
       }
 
@@ -47,7 +47,7 @@ public class GmCmd implements CommandExecutor {
         targetPlayer = Bukkit.getPlayer(targetPlayerName);
 
         if (targetPlayer == null) {
-          player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.offlineplayer));
+          player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.offlineplayer));
           return true;
         }
       }
@@ -70,33 +70,37 @@ public class GmCmd implements CommandExecutor {
             gameMode = GameMode.SPECTATOR;
             break;
           default:
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.gminvalid));
+            player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.gminvalid));
             return true;
         }
       } else {
         String modeName = args[0].toLowerCase();
         switch (modeName) {
+          case "s":
           case "survival":
             gameMode = GameMode.SURVIVAL;
             break;
           case "creative":
+          case "c":
             gameMode = GameMode.CREATIVE;
             break;
           case "adventure":
+          case "a":
             gameMode = GameMode.ADVENTURE;
             break;
           case "spectator":
+          case "sp":
             gameMode = GameMode.SPECTATOR;
             break;
           default:
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.gminvalid));
+            player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.gminvalid));
             return true;
         }
       }
 
       String gmyes = LifeMod.getInstance().getConfig().getString("gm-success");
       targetPlayer.setGameMode(gameMode);
-      player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + gmyes.replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName())));
+      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + gmyes.replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName())));
       return true;
     }
     return false;

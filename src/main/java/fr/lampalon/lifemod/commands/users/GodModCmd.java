@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.users;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +17,7 @@ public class GodModCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+            sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
             return true;
         }
 
@@ -26,13 +27,13 @@ public class GodModCmd implements CommandExecutor {
             if (sender.hasPermission("lifemod.god")) {
                 if (player.isInvulnerable()) {
                     player.setInvulnerable(false);
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.goddesactivate));
+                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.goddesactivate));
                 } else {
                     player.setInvulnerable(true);
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.godactivate));
+                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.godactivate));
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
+                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
             }
             return true;
         }

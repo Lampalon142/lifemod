@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,7 +23,7 @@ public class InvseeCmd implements CommandExecutor, Listener {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (label.equalsIgnoreCase("invsee")){
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+                sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
                 return true;
             }
             Player player = (Player) sender;
@@ -31,18 +32,18 @@ public class InvseeCmd implements CommandExecutor, Listener {
                 int i;
 
                 if (args.length != 1) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.invseeusage));
+                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.invseeusage));
                     return true;
                 }
 
                 Player target = Bukkit.getPlayer(args[0]);
 
                 if (target == player){
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.yourselfinvsee));
+                    player.sendMessage(MessageUtil.parseColors(messages.yourselfinvsee));
                     return true;
                 }
                 String invyes = LifeMod.getInstance().getConfig().getString("inventoryname");
-                Inventory inv = Bukkit.createInventory(null, 45, invyes.replace("%player%", target.getPlayer().getName()));
+                Inventory inv = Bukkit.createInventory(null, 45, MessageUtil.parseColors(invyes.replace("%player%", target.getPlayer().getName())));
 
                 for (i = 0; i < 36; i++) {
                     if (target.getInventory().getItem(i) != null) {

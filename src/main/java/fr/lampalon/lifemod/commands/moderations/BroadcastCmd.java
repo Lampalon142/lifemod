@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,17 +15,17 @@ public class BroadcastCmd implements CommandExecutor {
         Messages messages = LifeMod.getInstance().messages;
         if (cmd.getName().equalsIgnoreCase("broadcast")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+                sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
                 return true;
             }
             Player player = (Player) sender;
 
             if (!player.hasPermission("lifemod.bc")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
+                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
                 return true;
             }
             if (args.length < 1) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.bcusage));
+                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.bcusage));
                 return true;
             }
             StringBuilder message = new StringBuilder();
@@ -32,7 +33,7 @@ public class BroadcastCmd implements CommandExecutor {
                 message.append(arg).append(" ");
             }
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.bc) + message.toString());
+                onlinePlayer.sendMessage(MessageUtil.parseColors(messages.bc) + message.toString());
             }
 
             return true;

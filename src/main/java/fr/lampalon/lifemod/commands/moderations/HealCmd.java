@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.moderations;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +20,7 @@ public class HealCmd implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("heal")){
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noconsole));
+                sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
                 return true;
             }
 
@@ -28,7 +29,7 @@ public class HealCmd implements CommandExecutor {
             String s = LifeMod.getInstance().getConfig().getString("healmodmsg");
 
             if (!player.hasPermission("lifemod.heal")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.noperm));
+                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
                 return true;
             }
 
@@ -36,19 +37,19 @@ public class HealCmd implements CommandExecutor {
                 double maxHealth = player.getMaxHealth();
                 player.setHealth(maxHealth);
                 player.setFoodLevel(player.getFoodLevel());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.healmsgplayer));
+                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.healmsgplayer));
             } else if (args.length == 1) {
                 Player target = player.getServer().getPlayer(args[0]);
                 if (target != null) {
                     double maxHealth = player.getMaxHealth();
                     target.setHealth(maxHealth);
                     target.setFoodLevel(player.getFoodLevel());
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', s.replace("%player%", player.getPlayer().getName())));
+                    player.sendMessage(MessageUtil.parseColors(s.replace("%player%", player.getPlayer().getName())));
                 } else {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.offlineplayer));
+                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.offlineplayer));
                 }
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.healusage));
+                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.healusage));
             }
         }
         return true;

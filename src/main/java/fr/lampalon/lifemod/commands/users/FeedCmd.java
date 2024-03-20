@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands.users;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -29,7 +30,7 @@ public class FeedCmd implements CommandExecutor {
             if (player.hasPermission("lifemod.feed")) {
 
                 if (args.length == 0) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.yourselffeed));
+                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.yourselffeed));
                     player.setFoodLevel(20);
 
                 } else if (args.length == 1) {
@@ -41,19 +42,19 @@ public class FeedCmd implements CommandExecutor {
                         target.setFoodLevel(20);
                         String message = LifeMod.getInstance().getConfig().getString("mod-feed");
 
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + message.replace("%target%", target.getName())));
-                        target.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.playerfeed));
+                        sender.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + message.replace("%target%", target.getName())));
+                        target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.playerfeed));
 
                     } else {
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.offlineplayer));
+                        sender.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.offlineplayer));
                     }
 
                 } else {
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.prefixGeneral + messages.feedusage));
+                    sender.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.feedusage));
                 }
 
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', messages.noperm));
+                player.sendMessage(MessageUtil.parseColors(messages.noperm));
             }
 
             return true;
