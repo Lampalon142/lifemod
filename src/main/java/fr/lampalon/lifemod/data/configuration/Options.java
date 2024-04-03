@@ -16,18 +16,7 @@ public class Options {
     private static FileConfiguration config = LifeMod.getInstance().getConfig();
     private InputStream stream = LifeMod.getInstance().getResource("config.yml");
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(new InputStreamReader(this.stream, StandardCharsets.UTF_8));
-    public List<String> spamprotectmaxmessage = JavaUtils.stringToList(config.getString("spam-protection.max-messages", ""));
     private int configVersion = this.configuration.getInt("version");
-    // Permissions //
-    public String permissionWildcard = config.getString("permissions.wild-card");
-    public String permissionMember = config.getString("permissions.member");
-    // Database //
-    public String storageType = config.getString("storage.type", "flatfile");
-    public String mySqlHost = config.getString("storage.mysql.host", "localhost");
-    public String mySqlUser = config.getString("storage.mysql.user", "root");
-    public String database = config.getString("storage.mysql.database", "lifemod");
-    public String mySqlPassword = config.getString("storage.mysql.password", "root");
-    public int mySqlPort = config.getInt("storage.mysql.port", Integer.parseInt("3306"));
 
     //
     public Options(){

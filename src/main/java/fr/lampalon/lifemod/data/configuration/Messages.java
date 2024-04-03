@@ -52,6 +52,7 @@ public class Messages {
     public String onlinemod = config.getString("onlinemod");
     public String nomodonline = config.getString("nomodonline");
     // staffchat //
+    public String prefixmsg = config.getString("prefixmsg");
     public String staffsuccesmsg = config.getString("staffsuccesmsg");
     public String staffusage = config.getString("staffusage");
     // clearchat //

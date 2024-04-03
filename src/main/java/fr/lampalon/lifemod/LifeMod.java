@@ -10,7 +10,9 @@ import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.listeners.moderation.ModCancels;
 import fr.lampalon.lifemod.listeners.moderation.ModItemsInteract;
+import fr.lampalon.lifemod.listeners.players.BlockBreakListener;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
+import fr.lampalon.lifemod.listeners.players.onInventoryClick;
 import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
 import fr.lampalon.lifemod.manager.PlayerManager;
@@ -21,12 +23,15 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import fr.lampalon.lifemod.manager.VanishedManager;
+import fr.lampalon.lifemod.menu.MainMenu;
+import fr.lampalon.lifemod.utils.OreTracker;
 import fr.lampalon.lifemod.utils.Update;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -37,6 +42,8 @@ public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
     public Options options;
     public Messages messages;
+    private OreTracker oreTracker;
+    private MainMenu mainMenu;
     private VanishedManager playerManager;
     private ArrayList<UUID> moderators; private HashMap<UUID, PlayerManager> players; private HashMap<UUID, Location> frozenPlayers;
     public static LifeMod getInstance() {
@@ -54,23 +61,6 @@ public class LifeMod extends JavaPlugin {
     public boolean isFreeze(Player player) {
         return getFrozenPlayers().containsKey(player.getUniqueId());
     }
-    Boolean invsee = getConfig().getBoolean("commands-enabled.invsee");
-    Boolean gamemode = getConfig().getBoolean("commands-enabled.gamemode");
-    Boolean vanish = getConfig().getBoolean("commands-enabled.vanish");
-    Boolean feed = getConfig().getBoolean("commands-enabled.feed");
-    Boolean mod = getConfig().getBoolean("commands-enabled.mod");
-    Boolean freeze = getConfig().getBoolean("commands-enabled.freeze");
-    Boolean fly = getConfig().getBoolean("commands-enabled.fly");
-    Boolean broadcast = getConfig().getBoolean("commands-enabled.broadcast");
-    Boolean chatclear = getConfig().getBoolean("commands-enabled.chatclear");
-    Boolean clearinv = getConfig().getBoolean("commands-enabled.clearinv");
-    Boolean ecopen = getConfig().getBoolean("commands-enabled.ecopen");
-    Boolean staffmsg = getConfig().getBoolean("commands-enabled.staffchat");
-    Boolean stafflist = getConfig().getBoolean("commands-enabled.stafflist");
-    Boolean godmode = getConfig().getBoolean("commands-enabled.godmode");
-    Boolean teleport = getConfig().getBoolean("commands-enabled.teleport");
-    Boolean weather = getConfig().getBoolean("commands-enabled.weather");
-    Boolean heal = getConfig().getBoolean("commands-enabled.heal");
 
     public void onEnable() {
         setup();
@@ -120,79 +110,73 @@ public class LifeMod extends JavaPlugin {
          pm.registerEvents((Listener)new Staffchatevent(this, this.messages), (Plugin)this);
          pm.registerEvents((Listener)new PluginDisable(), (Plugin)this);
          pm.registerEvents((Listener)new PlayerQuit(), (Plugin)this);
+        BlockBreakListener blockBreakListener = new BlockBreakListener(oreTracker);
+        onInventoryClick onInventoryClick = new onInventoryClick();
+        pm.registerEvents(blockBreakListener, this);
+        pm.registerEvents(onInventoryClick, this);
     }
     private void registerCommands() {
         playerManager = new VanishedManager();
         this.messages = new Messages();
-        if (mod) {
+        FileConfiguration config = getConfig();
+        oreTracker = new OreTracker(config);
+        mainMenu = new MainMenu(oreTracker);
+        if (getConfig().getBoolean("commands-enabled.mod")) {
             getCommand("mod").setExecutor((CommandExecutor) new Commands());
             getCommand("staff").setExecutor((CommandExecutor)new Commands());
         }
-
-        if (broadcast) {
+        if (getConfig().getBoolean("commands-enabled.broadcast")) {
             getCommand("broadcast").setExecutor((CommandExecutor) new BroadcastCmd());
             getCommand("bc").setExecutor((CommandExecutor) new BroadcastCmd());
         }
-
-        if (gamemode) {
+        if (getConfig().getBoolean("commands-enabled.gamemode")) {
             getCommand("gm").setExecutor((CommandExecutor) new GmCmd(this.messages));
         }
-
-        if (fly) {
+        if (getConfig().getBoolean("commands-enabled.fly")) {
             getCommand("fly").setExecutor((CommandExecutor) new FlyCmd());
         }
-
-        if (ecopen) {
+        if (getConfig().getBoolean("commands-enabled.ecopen")) {
             getCommand("ecopen").setExecutor((CommandExecutor) new EcopenCmd(this.messages));
         }
-
-        if (vanish) {
+        if (getConfig().getBoolean("commands-enabled.vanish")) {
             getCommand("vanish").setExecutor((CommandExecutor) new VanishCmd(this.messages, playerManager));
         }
-
-        if (clearinv) {
+        if (getConfig().getBoolean("commands-enabled.clearinv")) {
             getCommand("clearinv").setExecutor((CommandExecutor) new ClearinvCmd(this.messages));
         }
-
-        if (stafflist) {
+        if (getConfig().getBoolean("commands-enabled.stafflist")) {
             getCommand("stafflist").setExecutor((CommandExecutor) new StafflistCmd(this.messages));
         }
-
-        if (staffmsg) {
+        if (getConfig().getBoolean("commands-enabled.staffchat")) {
             getCommand("staffchat").setExecutor((CommandExecutor) new StaffchatCmd(this.messages));
         }
-
-        if (chatclear) {
+        if (getConfig().getBoolean("commands-enabled.chatclear")) {
             getCommand("chatclear").setExecutor((CommandExecutor) new ChatclearCmd(this.messages));
         }
-
-        if (heal) {
+        if (getConfig().getBoolean("commands-enabled.heal")) {
             getCommand("heal").setExecutor((CommandExecutor) new HealCmd(this.messages));
         }
-
-        if (teleport) {
+        if (getConfig().getBoolean("commands-enabled.teleport")) {
             getCommand("tp").setExecutor((CommandExecutor) new TeleportCmd(this.messages));
             getCommand("tphere").setExecutor((CommandExecutor) new TeleportCmd(this.messages));
         }
-
-        if (godmode) {
+        if (getConfig().getBoolean("commands-enabled.godmode")) {
             getCommand("god").setExecutor((CommandExecutor) new GodModCmd(this.messages));
         }
-
-        if (freeze) {
+        if (getConfig().getBoolean("commands-enabled.freeze")) {
             getCommand("freeze").setExecutor((CommandExecutor) new FreezeCmd(this, this.messages));
         }
-
-        if (invsee) {
+        if (getConfig().getBoolean("commands-enabled.invsee")) {
             getCommand("invsee").setExecutor((CommandExecutor) new InvseeCmd(this, this.messages));
         }
-
-        if (feed) {
+        if (getConfig().getBoolean("commands-enabled.feed")) {
             getCommand("feed").setExecutor((CommandExecutor) new FeedCmd(this.messages));
         }
-
-        if (weather) {
+        if (getConfig().getBoolean("commands-enabled.weather")) {
             getCommand("weather").setExecutor((CommandExecutor) new WeatherCmd(this, this.messages));
+        }
+        if (getConfig().getBoolean("commands-enabled.topluck")){
+            getCommand("topluck").setExecutor((CommandExecutor)new TopLuckCmd(this, mainMenu));
         }
     }
 

@@ -25,7 +25,7 @@ public class Staffchatevent implements Listener {
         if (player.hasPermission("lifemod.staffchat")) {
             String message = event.getMessage();
 
-            if (message.startsWith("@")) {
+            if (message.startsWith(messages.prefixmsg)) {
                 event.setCancelled(true);
 
                 for (Player recipient : plugin.getServer().getOnlinePlayers()) {

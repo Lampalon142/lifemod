@@ -7,6 +7,9 @@
 #+--------------------------------------------+#
 ################################################
 
+## Change Prefix to your Prefix eg : "&7[&bMyBestServer&7] &f» "
+prefix: "&7[&6Moderation&7] &f» "
+
 ## For disable command turn true to false
 
 commands-enabled:
@@ -27,6 +30,69 @@ commands-enabled:
   godmode: true
   teleport: true
   weather: true
+  topluck: true
+
+ores-detected:
+  - DEEPSLATE_DIAMOND_ORE
+  - DEEPSLATE_EMERALD_ORE
+  - DEEPSLATE_IRON_ORE
+  - DEEPSLATE_GOLD_ORE
+  - DEEPSLATE_COAL_ORE
+  - DEEPSLATE_LAPIS_ORE
+  - DEEPSLATE_REDSTONE_ORE
+  - DIAMOND_ORE
+  - EMERALD_ORE
+  - IRON_ORE
+  - GOLD_ORE
+  - COAL_ORE
+  - LAPIS_ORE
+  - REDSTONE_ORE
+  - NETHER_QUARTZ_ORE
+  - ANCIENT_DEBRIS
+
+menu:
+  ## Title for /topluck
+  title: "&7[&cLifeMod&7]"
+  ## Slots for the list eg: 9 for 1 line etc
+  ## Default : 54
+  slots: 54
+  previous-page:
+    title: "&cPrevious Page"
+  next-page:
+    title: "&aNext Page"
+  headers:
+    title: "&ePlayer: %target%"
+    description: "&7Percentage: &c%percentage%%"
+
+submenu:
+  title: "&cSanctions menu"
+  ## Slots for the list eg: 9 for 1 line etc
+  ## Default : 27
+  slots: 27
+  teleport:
+    title: "&aTeleport to player"
+    description: "&cTo teleport you to a player."
+    material: "ENDER_PEARL"
+    slots: 11
+    action:
+      message: "&cYou have been teleported to %target%"
+  warn:
+    title: "&bDiscreet warning"
+    description: "&bTo warn a player with a Xray or other! For come on your discord"
+    material: "PAPER" ## Example : NETHERITE_SWORD
+    slots: 13
+    action:
+      message: "&e&lYou have been found, come on discord https://example.com/discord"
+  ban:
+    title: "&cBan Person"
+    description: "&cPermit to you to ban a person"
+    material: "NETHERITE_SWORD"
+    slots: 15
+    action:
+      ## For the time you can use : 30d for 1 month, 1y for 1 year
+      ## Default : 30d
+      time: "30d"
+      message: "§cYou have been banned for X-Ray"
 
 ################################################
 #+--------------------------------------------+#
@@ -34,8 +100,11 @@ commands-enabled:
 #+--------------------------------------------+#
 ################################################
 
-## Change Prefix to your Prefix eg : "&7[&bMyBestServer&7] &f» "
-prefix: "&7[&6Moderation&7] &f» "
+lang:
+  ban:
+    chat: "&c%target% has been banned from the server for X-Ray"
+    errortime: "&cBan time configuration not found."
+    time-invalid: "&cInvalid ban duration."
 
 ## Permission and console
 nopermission: "&cYou don't have permission for this."
@@ -115,6 +184,7 @@ nomodonline: "&cThere are no moderators online at the moment."
 staffusage: "&cUsage: /staffchat <message>"
 staffmsg: "&b[StaffChat] &c%player%"
 staffsuccesmsg: "&a[StaffChat] Message sent successfully!"
+prefixmsg: "@" ## Default is : @ you can change ^^
 
 ## Chatclear
 
