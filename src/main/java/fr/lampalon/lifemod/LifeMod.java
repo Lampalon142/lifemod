@@ -8,11 +8,13 @@ import fr.lampalon.lifemod.commands.users.GodModCmd;
 import fr.lampalon.lifemod.commands.users.FreezeCmd;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
+import fr.lampalon.lifemod.listeners.HistoryListener;
 import fr.lampalon.lifemod.listeners.moderation.ModCancels;
 import fr.lampalon.lifemod.listeners.moderation.ModItemsInteract;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
 import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
+import fr.lampalon.lifemod.manager.HistoryManager;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
     public Options options;
     public Messages messages;
+    private HistoryManager historyManager;
     private VanishedManager playerManager;
     private ArrayList<UUID> moderators; private HashMap<UUID, PlayerManager> players; private HashMap<UUID, Location> frozenPlayers;
     public static LifeMod getInstance() {
@@ -94,13 +97,15 @@ public class LifeMod extends JavaPlugin {
         }));
     }
     private void registerEvents() {
-         this.messages = new Messages();
-         PluginManager pm = Bukkit.getPluginManager();
-         pm.registerEvents((Listener)new ModCancels(), (Plugin)this);
-         pm.registerEvents((Listener)new ModItemsInteract(), (Plugin)this);
-         pm.registerEvents((Listener)new Staffchatevent(this, this.messages), (Plugin)this);
-         pm.registerEvents((Listener)new PluginDisable(), (Plugin)this);
-         pm.registerEvents((Listener)new PlayerQuit(), (Plugin)this);
+        historyManager = new HistoryManager();
+        this.messages = new Messages();
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents((Listener)new ModCancels(), (Plugin)this);
+        pm.registerEvents((Listener)new ModItemsInteract(), (Plugin)this);
+        pm.registerEvents((Listener)new Staffchatevent(this, this.messages), (Plugin)this);
+        pm.registerEvents((Listener)new PluginDisable(), (Plugin)this);
+        pm.registerEvents((Listener)new PlayerQuit(), (Plugin)this);
+        pm.registerEvents(new HistoryListener(historyManager), this);
     }
     private void registerCommands() {
         playerManager = new VanishedManager();
@@ -176,6 +181,7 @@ public class LifeMod extends JavaPlugin {
                 PlayerManager.getFromPlayer(p).destroy();
             }
         });
+        historyManager.saveConfig();
         this.options = null;
         this.messages = null;
     }
