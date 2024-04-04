@@ -10,9 +10,7 @@ import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.listeners.moderation.ModCancels;
 import fr.lampalon.lifemod.listeners.moderation.ModItemsInteract;
-import fr.lampalon.lifemod.listeners.players.BlockBreakListener;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
-import fr.lampalon.lifemod.listeners.players.onInventoryClick;
 import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
 import fr.lampalon.lifemod.manager.PlayerManager;
@@ -23,8 +21,6 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import fr.lampalon.lifemod.manager.VanishedManager;
-import fr.lampalon.lifemod.menu.MainMenu;
-import fr.lampalon.lifemod.utils.OreTracker;
 import fr.lampalon.lifemod.utils.Update;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
@@ -42,8 +38,6 @@ public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
     public Options options;
     public Messages messages;
-    private OreTracker oreTracker;
-    private MainMenu mainMenu;
     private VanishedManager playerManager;
     private ArrayList<UUID> moderators; private HashMap<UUID, PlayerManager> players; private HashMap<UUID, Location> frozenPlayers;
     public static LifeMod getInstance() {
@@ -63,10 +57,6 @@ public class LifeMod extends JavaPlugin {
     }
 
     public void onEnable() {
-        setup();
-        utils();
-    }
-    private void setup() {
         instance = this;
         this.frozenPlayers = new HashMap<>();
         this.players = new HashMap<>();
@@ -91,6 +81,7 @@ public class LifeMod extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§8");
         Bukkit.getConsoleSender().sendMessage("§a§lPlugin initialized.");
         Bukkit.getConsoleSender().sendMessage("§8=================================");
+        utils();
     }
     private void utils(){
         int pluginId = 19817;
@@ -110,17 +101,10 @@ public class LifeMod extends JavaPlugin {
          pm.registerEvents((Listener)new Staffchatevent(this, this.messages), (Plugin)this);
          pm.registerEvents((Listener)new PluginDisable(), (Plugin)this);
          pm.registerEvents((Listener)new PlayerQuit(), (Plugin)this);
-        BlockBreakListener blockBreakListener = new BlockBreakListener(oreTracker);
-        onInventoryClick onInventoryClick = new onInventoryClick();
-        pm.registerEvents(blockBreakListener, this);
-        pm.registerEvents(onInventoryClick, this);
     }
     private void registerCommands() {
         playerManager = new VanishedManager();
         this.messages = new Messages();
-        FileConfiguration config = getConfig();
-        oreTracker = new OreTracker(config);
-        mainMenu = new MainMenu(oreTracker);
         if (getConfig().getBoolean("commands-enabled.mod")) {
             getCommand("mod").setExecutor((CommandExecutor) new Commands());
             getCommand("staff").setExecutor((CommandExecutor)new Commands());
@@ -174,9 +158,6 @@ public class LifeMod extends JavaPlugin {
         }
         if (getConfig().getBoolean("commands-enabled.weather")) {
             getCommand("weather").setExecutor((CommandExecutor) new WeatherCmd(this, this.messages));
-        }
-        if (getConfig().getBoolean("commands-enabled.topluck")){
-            getCommand("topluck").setExecutor((CommandExecutor)new TopLuckCmd(this, mainMenu));
         }
     }
 

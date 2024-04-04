@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import fr.lampalon.lifemod.manager.VanishedManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -170,17 +171,14 @@ public class ModItemsInteract implements Listener {
       player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s.replace("%cooldown%", String.valueOf(remainingSeconds))));
       return;
     }
-
-    PlayerManager mod = PlayerManager.getFromPlayer(player);
-    boolean isVanished = !mod.isVanished();
-
-    mod.setVanished(isVanished);
+    VanishedManager vanishedManager = new VanishedManager();
+    vanishedManager.setVanished(vanishedManager.isVanished(), player);
 
     vanishCooldowns.put(player.getUniqueId(), currentTime);
 
-    player.sendMessage(isVanished ? MessageUtil.parseColors(messages.prefixGeneral + messages.vanishon) : MessageUtil.parseColors(messages.prefixGeneral + messages.vanishoff));
+    player.sendMessage(vanishedManager.isVanished() ? MessageUtil.parseColors(messages.prefixGeneral + messages.vanishon) : MessageUtil.parseColors(messages.prefixGeneral + messages.vanishoff));
 
-    if (isVanished) {
+    if (vanishedManager.isVanished()) {
       for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
         if (!onlinePlayer.equals(player)) {
           onlinePlayer.hidePlayer(player);
