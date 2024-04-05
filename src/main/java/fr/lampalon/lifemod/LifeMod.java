@@ -14,6 +14,7 @@ import fr.lampalon.lifemod.listeners.moderation.ModItemsInteract;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
 import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
+import fr.lampalon.lifemod.manager.ChatManager;
 import fr.lampalon.lifemod.manager.HistoryManager;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
@@ -40,6 +41,7 @@ public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
     public Options options;
     public Messages messages;
+    private ChatManager chatManager;
     private HistoryManager historyManager;
     private VanishedManager playerManager;
     private ArrayList<UUID> moderators; private HashMap<UUID, PlayerManager> players; private HashMap<UUID, Location> frozenPlayers;
@@ -70,6 +72,7 @@ public class LifeMod extends JavaPlugin {
         Update();
         this.options = new Options();
         this.messages = new Messages();
+        chatManager = new ChatManager(this, messages);
         Bukkit.getConsoleSender().sendMessage("§8=================================");
         Bukkit.getConsoleSender().sendMessage("§8");
         Bukkit.getConsoleSender().sendMessage("§7Plugin initialization in progress... please wait!");
@@ -165,7 +168,6 @@ public class LifeMod extends JavaPlugin {
             getCommand("weather").setExecutor((CommandExecutor) new WeatherCmd(this, this.messages));
         }
     }
-
     private void Update(){
         new Update(this, 112381).getLatestVersion(version -> {
             if(this.getDescription().getVersion().equalsIgnoreCase(version)){
@@ -184,5 +186,8 @@ public class LifeMod extends JavaPlugin {
         historyManager.saveConfig();
         this.options = null;
         this.messages = null;
+    }
+    public ChatManager getChatManager() {
+        return chatManager;
     }
  }

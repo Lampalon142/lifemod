@@ -11,6 +11,7 @@ public class Messages {
     private final FileConfiguration config = LifeMod.getInstance().getConfig();
 
     public String prefixGeneral = config.getString("prefix");
+    public String notifychatmod = config.getString("chatManager.notification");
     public String flyenable = config.getString("fly-enable");
     public String flydisable = config.getString("fly-disable");
     public String modenable = config.getString("mod-enable");

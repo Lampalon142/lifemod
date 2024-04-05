@@ -10,6 +10,16 @@
 ## Change Prefix to your Prefix eg : "&7[&bMyBestServer&7] &f» "
 prefix: "&7[&6Moderation&7] &f» "
 
+## Chat Manager
+
+chatManager:
+  notification: "&c%player% attempted to send a forbidden word !"
+  enabled: true
+  blacklist:
+    - fuck
+    - bitch
+    - suck
+
 ## For disable command turn true to false
 
 commands-enabled:

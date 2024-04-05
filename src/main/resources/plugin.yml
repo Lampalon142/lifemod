@@ -46,8 +46,6 @@ commands:
     description: To see inventory of a player.
   feed:
     description: To feed you or other player.
-  topluck:
-    description: To open the topluck menu.
 permissions:
   lifemod.*:
     default: op
@@ -68,3 +66,4 @@ permissions:
       - lifemod.freeze
       - lifemod.invsee
       - lifemod.feed
+      - lifemod.chat.views
