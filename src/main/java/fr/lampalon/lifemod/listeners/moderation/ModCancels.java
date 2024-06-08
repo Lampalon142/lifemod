@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.listeners.moderation;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.manager.PlayerManager;
+import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.Inventory;
 
 public class ModCancels
   implements Listener {
@@ -68,17 +70,16 @@ public class ModCancels
       e.setCancelled(true);
     }
   }
-  
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onInventoryClick(InventoryClickEvent e) {
-    if (!(e.getWhoClicked() instanceof Player)) {
-      return;
-    }
 
-    Player player = (Player) e.getWhoClicked();
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onInventoryClick(InventoryClickEvent event) {
+    if (!(event.getWhoClicked() instanceof Player)) return;
+
+    Player player = (Player) event.getWhoClicked();
 
     if (PlayerManager.isInModerationMod(player) || LifeMod.getInstance().isFreeze(player)) {
-      e.setCancelled(true);
+      event.setCancelled(true);
+      return;
     }
   }
   

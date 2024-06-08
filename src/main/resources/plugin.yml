@@ -1,8 +1,8 @@
 name: LifeMod
 authors: [Lampalon]
-version: '1.4.4-RELEASE'
+version: '1.5.3-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
-api-version: "1.18"
+api-version: "1.20"
 commands:
   mod:
     description: Moderate your server
@@ -46,6 +46,10 @@ commands:
     description: To see inventory of a player.
   feed:
     description: To feed you or other player.
+  lifemod:
+    description: use Lifemod for help or reload.
+  speed:
+    description: permit you to update your speed.
 permissions:
   lifemod.*:
     default: op
@@ -67,3 +71,5 @@ permissions:
       - lifemod.invsee
       - lifemod.feed
       - lifemod.chat.views
+      - lifemod.chat.bypass
+      - lifemod.invsee.interact

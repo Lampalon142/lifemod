@@ -12,15 +12,17 @@ import java.util.*;
 
 import fr.lampalon.lifemod.manager.VanishedManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -53,11 +55,13 @@ public class ModItemsInteract implements Listener {
         break;
     } 
   }
+
   @EventHandler
   public void onInteract(PlayerInteractEvent e) {
     Player player = e.getPlayer();
-    if (!PlayerManager.isInModerationMod(player))
+    if (!PlayerManager.isInModerationMod(player)) {
       return;
+    }
 
     if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR)
       return;
@@ -94,36 +98,50 @@ public class ModItemsInteract implements Listener {
     player.openInventory(targetInventory);
   }
 
+  private HashMap<Player, Long> cooldowns = new HashMap<>();
+  private final int cooldownTime = 1000;
+  private boolean isOnCooldown(Player player) {
+    return cooldowns.containsKey(player) && System.currentTimeMillis() - cooldowns.get(player) < cooldownTime;
+  }
+
+  private void addToCooldown(Player player) {
+    cooldowns.put(player, System.currentTimeMillis());
+  }
+
   private void handleFreeze(Player player, Player target) {
     Messages messages = (LifeMod.getInstance()).messages;
-    ItemStack air = new ItemStack(Material.AIR);
     String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
     String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");
-    if (LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
-      target.getInventory().remove(air);
-      LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-      target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
-      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
-    } else {
-      String s4 = LifeMod.getInstance().getConfig().getString("freeze-msg-six");
-      LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
-      InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
-      Yaml yaml = new Yaml();
-      Map<String, List<String>> config = yaml.load(input);
+    ItemStack helmet = target.getInventory().getHelmet();
+    if (!isOnCooldown(player)){
+      if (LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
+        if (helmet != null && helmet.getType() == Material.PACKED_ICE) {
+          target.getInventory().setHelmet(null);
+        }
+        LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
+        target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
+        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
+      } else {
+        String s4 = LifeMod.getInstance().getConfig().getString("freeze-msg-six");
+        LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
+        InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
+        Yaml yaml = new Yaml();
+        Map<String, List<String>> config = yaml.load(input);
 
-      List<String> freezeMsg = config.get("freeze-msg");
+        List<String> freezeMsg = config.get("freeze-msg");
 
-      for (String msg : freezeMsg) {
-        target.sendMessage(MessageUtil.parseColors(msg));
+        for (String msg : freezeMsg) {
+          target.sendMessage(MessageUtil.parseColors(msg));
+        }
+
+        ItemStack packedice = new ItemStack(Material.PACKED_ICE);
+
+        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
+
+        target.getInventory().setHelmet(packedice);
       }
-
-      ItemStack packedice = new ItemStack(Material.PACKED_ICE);
-
-      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
-
-      target.getInventory().setHelmet(packedice);
-
-      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));}
+      addToCooldown(player);
+    }
   }
 
   private void handleKill(Player player, Player target) {
@@ -161,7 +179,7 @@ public class ModItemsInteract implements Listener {
 
   private void toggleVanish(Player player) {
     String s = LifeMod.getInstance().getConfig().getString("vanishcooldown");
-    Messages messages = (LifeMod.getInstance()).messages;
+    Messages messages = LifeMod.getInstance().messages;
     long currentTime = System.currentTimeMillis();
     long lastToggleTime = vanishCooldowns.getOrDefault(player.getUniqueId(), 0L);
     long cooldown = 5000;
@@ -171,14 +189,16 @@ public class ModItemsInteract implements Listener {
       player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s.replace("%cooldown%", String.valueOf(remainingSeconds))));
       return;
     }
+
     VanishedManager vanishedManager = new VanishedManager();
-    vanishedManager.setVanished(vanishedManager.isVanished(), player);
+    boolean newVanishState = !VanishedManager.isVanished(player);
+    vanishedManager.setVanished(newVanishState, player);
 
     vanishCooldowns.put(player.getUniqueId(), currentTime);
 
-    player.sendMessage(vanishedManager.isVanished() ? MessageUtil.parseColors(messages.prefixGeneral + messages.vanishon) : MessageUtil.parseColors(messages.prefixGeneral + messages.vanishoff));
+    player.sendMessage(newVanishState ? MessageUtil.parseColors(messages.prefixGeneral + messages.vanishon) : MessageUtil.parseColors(messages.prefixGeneral + messages.vanishoff));
 
-    if (vanishedManager.isVanished()) {
+    if (newVanishState) {
       for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
         if (!onlinePlayer.equals(player)) {
           onlinePlayer.hidePlayer(player);

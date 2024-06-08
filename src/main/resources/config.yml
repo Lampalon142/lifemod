@@ -3,6 +3,15 @@
 
 ################################################
 #+--------------------------------------------+#
+#+------------------Notes---------------------+#
+#+--------------------------------------------+#
+################################################
+
+#- <> = optionnal
+#- [] = required
+
+################################################
+#+--------------------------------------------+#
 #+-----------------Settings-------------------+#
 #+--------------------------------------------+#
 ################################################
@@ -22,6 +31,7 @@ chatManager:
 
 ## For disable command turn true to false
 
+command-deactivate: "&cThis command is deactivate."
 commands-enabled:
   gamemode: true
   vanish: true
@@ -40,6 +50,78 @@ commands-enabled:
   godmode: true
   teleport: true
   weather: true
+  lifemod: true
+  speed: true
+
+discord:
+  enable: "true"
+  ## For example :
+  ## https://discord.com/api/webhooks/XXXXXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  webhookurl: "Insert your webhook here !"
+  broadcast:
+    title: "New Alert!"
+    description: "> %player% has execute broadcast command containing the message %message%!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+  chatclear:
+    title: "New Alert!"
+    description: "> %player% has execute ChatClear command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+  clearinv:
+    title: "New Alert!"
+    description: "> %player% has execute clearinv command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+  lifemod:
+    title: "New Alert!"
+    description: "> %player% has execute lifemod command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+  ecopen:
+    title: "New Alert!"
+    description: "> %player% has execute ecopen command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+  feed:
+    title: "New Alert!"
+    description: "> %player% has execute feed command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+  fly:
+    title: "New Alert!"
+    description: "> %player% has execute fly command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+  freeze:
+    title: "New Alert!"
+    description: "> %player% has execute freeze command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+  gamemode:
+    title: "New Alert!"
+    description: "> %player% has execute gamemode command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+
 
 ################################################
 #+--------------------------------------------+#
@@ -51,7 +133,10 @@ commands-enabled:
 nopermission: "&cYou don't have permission for this."
 onlyplayer: "&cYou can't execute this command on the console."
 offlineplayer: "&cThis person is not connected to the server."
-command-disable: "&cThis command is deactivate"
+config-reloaded: "&aThis config has been reloaded successfully!"
+update:
+  uselatest: "Plugin use the latest update thanks."
+  oldversion: "Plugin required an update ! (https://www.spigotmc.org/resources/1-8-1-20-lifemod-moderation-plugin.112381/)"
 
 ## Fly
 fly-enable: "&aFly mod was been activate."
@@ -62,9 +147,10 @@ mod-enable: "&aModeration mod has been activated."
 mod-disable: "&cModeration mod has been deactivated."
 
 ## Game mode
-gm-invalid: "&cInvalid game mode. Valid modes are: survival, creative, adventure, spectator or 0, 1, 2, 3"
+gm-invalid: "&cInvalid usage. Please use : /gm or /gamemode [mode] <player>"
 gm-usage: "&cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
-gm-success: "&7Your game mode has been changed to &b&l%gamemode% &7for &c&l%player%"
+gm-other: "&7Game mode has been changed to &b&l%gamemode% &7for &c&l%player%"
+gm-own: "&7Your game mode has been changed to &b&l%gamemode%"
 
 ## Freeze
 unfreezeby: "&aYou have been unfreeze by %player%."
@@ -101,19 +187,17 @@ Description-Kbtester: "&7Left-click on a player &7to test his kb."
 vanishon: "&cYou are now invisible!"
 vanishoff: "&aYou are now visible!"
 vanishcooldown: "§cPlease wait %cooldown% seconds before changing your invisible mode again."
+vanishusage: "&cIncorrect use of the order. Usage: /vanish <player name>."
 
 ## Ec
 
 usageopenec: "&cUsage: /ecopen <player's name>"
+yourselfenderchest: "&cYou can't open your ender chest."
 
 ## clearinv
 
 clearinvmsg: "&bInventory deleted for &e%player%"
 clearinvusage: "&cIncorrect use of the order. Usage: /clearinv <player name>."
-
-## vanish
-
-vanishusage: "&cIncorrect use of the order. Usage: /vanish <player name>."
 
 ## Moderators list
 
@@ -125,7 +209,7 @@ nomodonline: "&cThere are no moderators online at the moment."
 staffusage: "&cUsage: /staffchat <message>"
 staffmsg: "&b[StaffChat] &c%player%"
 staffsuccesmsg: "&a[StaffChat] Message sent successfully!"
-prefixmsg: "@" ## Default is : @ you can change ^^
+prefixmsg: "@" ## Default is : "@"
 
 ## Chatclear
 
@@ -180,6 +264,8 @@ player-feed: "&aYou've have been feed!"
 mod-feed: "&aYou've have feed %target%."
 feed-usage: "&cUsage : /feed <player>."
 
-## Ender Chest
+## Speed
 
-yourselfenderchest: "&cYou can't open your ender chest."
+speed:
+  success: "&aYour speed was been changed to %speed%"
+  provide : "&cYou do to provide a valid speed multiplier (1 to 10)"

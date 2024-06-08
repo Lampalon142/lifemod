@@ -73,7 +73,6 @@ public class Messages {
     public String goddesactivate = config.getString("godesactivate");
     // Invsee //
     public String invseeusage = config.getString("invsee-usage");
-    public String yourselfinvsee = config.getString("yourselfinvsee");
     // Feed //
     public String yourselffeed = config.getString("yourself-feed");
     public String playerfeed = config.getString("player-feed");
@@ -82,4 +81,10 @@ public class Messages {
     public String yourselfenderchest = config.getString("yourselfenderchest");
     public String invalidcoordinates = config.getString("invalidcoordinates");
     public String yourselftp = config.getString("yourselftp");
+    // tp //
+    public String gmown = config.getString("gm-own");
+    public String gmother = config.getString("gm-other");
+    // speed //
+    public String providespeed = config.getString("speed.provide");
+    public String speedsuccess = config.getString("speed.success");
 }

@@ -20,11 +20,10 @@ public class PlayerManager {
     Options options = (LifeMod.getInstance()).options;
     private Player player;
     private ItemStack[] items = new ItemStack[40];
-    private boolean vanished;
+    VanishedManager vanished =  new VanishedManager();
     
     public PlayerManager(Player player) {
         this.player = player;
-        this.vanished = true;
     }
     
     public void init() {
@@ -38,6 +37,7 @@ public class PlayerManager {
         this.player.setFlying(true);
         this.player.setInvulnerable(true);
         this.player.addPotionEffect(PotionEffectType.NIGHT_VISION.createEffect(1000000000,255));
+        vanished.setVanished(true, this.player);
         
         ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(MessageUtil.parseColors(messages.nameinvsee)).setLore(new String[] {MessageUtil.parseColors(messages.descinvsee) });
         ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(MessageUtil.parseColors(messages.namefreeze)).setLore(new String[] {MessageUtil.parseColors(messages.descfreeze) });
@@ -64,7 +64,7 @@ public class PlayerManager {
         this.player.setFlying(false);
         this.player.setInvulnerable(false);
         this.player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        setVanished(false);
+        vanished.setVanished(false, player);
     }
     
     public static PlayerManager getFromPlayer(Player player) {
@@ -78,26 +78,13 @@ public class PlayerManager {
     public ItemStack[] getItems() {
         return this.items;
     }
-
-    public boolean isVanished() {
-        return this.vanished;
-    }
-    
-    public void setVanished(boolean vanished) {
-        this.vanished = vanished;
-        if (vanished) {
-        Bukkit.getOnlinePlayers().forEach(players -> players.hidePlayer(this.player));
-        } else {
-        Bukkit.getOnlinePlayers().forEach(players -> players.showPlayer(this.player));
-        }
-    }
     
     public void saveInventory() {
         for (int slot = 0; slot < 36; slot++) {
         ItemStack item = this.player.getInventory().getItem(slot);
-        if (item != null) {
-            this.items[slot] = item;
-        }
+            if (item != null) {
+                this.items[slot] = item;
+            }
         } 
         
         this.items[36] = this.player.getInventory().getHelmet();
@@ -117,9 +104,9 @@ public class PlayerManager {
         
         for (int slot = 0; slot < 36; slot++) {
         ItemStack item = this.items[slot];
-        if (item != null) {
-            this.player.getInventory().setItem(slot, item);
-        }
+            if (item != null) {
+                this.player.getInventory().setItem(slot, item);
+            }
         } 
         
         this.player.getInventory().setHelmet(this.items[36]);

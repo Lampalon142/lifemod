@@ -3,15 +3,19 @@ package fr.lampalon.lifemod.manager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class VanishedManager {
-    private boolean vanished = false;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-    public boolean isVanished() {
-        return vanished;
+public class VanishedManager {
+    private static final Map<UUID, Boolean> vanishedPlayers = new HashMap<>();
+
+    public static boolean isVanished(Player player) {
+        return vanishedPlayers.getOrDefault(player.getUniqueId(), false);
     }
 
-    public void setVanished(boolean vanished, Player player) {
-        this.vanished = vanished;
+    public static void setVanished(boolean vanished, Player player) {
+        vanishedPlayers.put(player.getUniqueId(), vanished);
         if (vanished) {
             Bukkit.getOnlinePlayers().forEach(p -> p.hidePlayer(player));
         } else {

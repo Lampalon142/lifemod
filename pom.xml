@@ -6,7 +6,7 @@
 
     <groupId>fr.lampalon.lifemod</groupId>
     <artifactId>lifemod</artifactId>
-    <version>1.4.6-RELEASE</version>
+    <version>1.5.3-RELEASE</version>
 
     <properties>
         <maven.compiler.source>20</maven.compiler.source>
@@ -44,7 +44,8 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>me.name.util</shadedPattern>
+                            <!-- Replace this with your package! -->
+                            <shadedPattern>fr.lampalon</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -71,7 +72,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <version>1.20-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
