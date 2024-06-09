@@ -80,7 +80,6 @@ public class LifeMod extends JavaPlugin {
         registerCommands();
         saveDefaultConfig();
         Update();
-        this.options = new Options();
         this.messages = new Messages();
         chatManager = new ChatManager(this, messages);
         Bukkit.getConsoleSender().sendMessage("§cLifeMod developed by Lampalon with §4<3 §cwas been successfully initialised");
@@ -372,7 +371,6 @@ public class LifeMod extends JavaPlugin {
                 PlayerManager.getFromPlayer(p).destroy();
             }
         });
-        this.options = null;
         this.messages = null;
     }
     public void ConfigConfig() {

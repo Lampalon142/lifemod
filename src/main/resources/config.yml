@@ -54,7 +54,7 @@ commands-enabled:
   speed: true
 
 discord:
-  enable: "true"
+  enabled: true
   ## For example :
   ## https://discord.com/api/webhooks/XXXXXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   webhookurl: "Insert your webhook here !"
@@ -64,63 +64,133 @@ discord:
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   chatclear:
     title: "New Alert!"
     description: "> %player% has execute ChatClear command!"
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   clearinv:
     title: "New Alert!"
     description: "> %player% has execute clearinv command!"
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   lifemod:
     title: "New Alert!"
     description: "> %player% has execute lifemod command!"
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   ecopen:
     title: "New Alert!"
     description: "> %player% has execute ecopen command!"
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   feed:
     title: "New Alert!"
     description: "> %player% has execute feed command!"
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   fly:
     title: "New Alert!"
     description: "> %player% has execute fly command!"
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   freeze:
     title: "New Alert!"
     description: "> %player% has execute freeze command!"
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   gamemode:
     title: "New Alert!"
     description: "> %player% has execute gamemode command!"
     footer:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
-    color: "#FF0000" ## insert your color here for example : RED, AQUA...
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  god:
+    title: "New Alert!"
+    description: "> %player% has execute god command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  heal:
+    title: "New Alert!"
+    description: "> %player% has execute heal command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  invsee:
+    title: "New Alert!"
+    description: "> %player% has execute invsee command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  mod:
+    title: "New Alert!"
+    description: "> %player% has execute mod command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  speed:
+    title: "New Alert!"
+    description: "> %player% has execute speed command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  staffchat:
+    title: "New Alert!"
+    description: "> %player% has execute staffchat command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  stafflist:
+    title: "New Alert!"
+    description: "> %player% has execute stafflist command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  teleport:
+    title: "New Alert!"
+    description: "> %player% has execute teleport command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  vanish:
+    title: "New Alert!"
+    description: "> %player% has execute vanish command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  weather:
+    title: "New Alert!"
+    description: "> %player% has execute weather command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
 
 
 ################################################
@@ -137,6 +207,14 @@ config-reloaded: "&aThis config has been reloaded successfully!"
 update:
   uselatest: "Plugin use the latest update thanks."
   oldversion: "Plugin required an update ! (https://www.spigotmc.org/resources/1-8-1-20-lifemod-moderation-plugin.112381/)"
+
+## Lifemod
+
+lifemod:
+  usage: "&cUsage: /lifemod [reload|help]"
+  help:
+    title: "&a&lHelp menu for usage and description of commands"
+    slots: 54
 
 ## Fly
 fly-enable: "&aFly mod was been activate."
@@ -161,7 +239,7 @@ freeze-msg:
   - "&4&lPlease go to the discord."
   - "&c&lIf you disconnect, you will be banned."
   - "&7================"
-freeze-msg-six: "&You freeze %target%."
+freeze-msg-six: "&cYou freeze %target%."
 freeze-usage: "&cUsage: /freeze <player-name>."
 freeze-yourself: "&cYou can't freeze yourself."
 

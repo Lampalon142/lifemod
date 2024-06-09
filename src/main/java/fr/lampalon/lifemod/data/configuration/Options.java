@@ -13,24 +13,26 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class Options {
+    private static final int CURRENT_VERSION = 154;
     private static FileConfiguration config = LifeMod.getInstance().getConfig();
     private InputStream stream = LifeMod.getInstance().getResource("config.yml");
     YamlConfiguration configuration = YamlConfiguration.loadConfiguration(new InputStreamReader(this.stream, StandardCharsets.UTF_8));
-    private int configVersion = this.configuration.getInt("version");
+    private int configVersion = this.configuration.getInt("config-version");
 
     //
     public Options(){
-        if (101 < this.configVersion){
+        if (CURRENT_VERSION < configVersion) {
+            updateConfig();
             File dataFolder = LifeMod.getInstance().getDataFolder();
             File configFile = new File(dataFolder, "config.yml");
             YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(configFile);
-            String backup = "backup-#101.yml";
+            String backup = "backup-#" + CURRENT_VERSION + ".yml";
+
             configFile.renameTo(new File(dataFolder, backup));
             LifeMod.getInstance().getConfig().options().copyDefaults(true);
-            config.set("config-version", Integer.valueOf(101));
-            config.options().header(" LifeMod | Made and Directed by Lampalon_ with love\n Your configuration file has been autmatically updated to lastest version. (101)\n Note : All data has been deleted but you have your config on 'backup-#101.yml' !");
-            config.options().copyHeader();
-            config.set("config-version", Integer.valueOf(this.configVersion));
+            config.set("config-version", CURRENT_VERSION);
+            config.set("config-version",configVersion);
+
             LifeMod.getInstance().saveConfig();
         }
     }
@@ -44,7 +46,7 @@ public class Options {
         File dataFolder = LifeMod.getInstance().getDataFolder();
         File configFile = new File(dataFolder, "config.yml");
         YamlConfiguration oldConfig = YamlConfiguration.loadConfiguration(configFile);
-        String backup = "backup-#101.yml";
+        String backup = "backup-#154.yml";
         String currentKey = "";
         configFile.renameTo(new File(dataFolder, backup));
         LifeMod.getInstance().saveDefaultConfig();
@@ -64,7 +66,7 @@ public class Options {
             config.options().header(" LifeMod | Made and Directed by Lampalon_ with love\n Your configuration file has been autmatically updated to lastest version. (101)\n Note : All data has been deleted but you have your config on 'backup-#101.yml' !");
             config.options().copyHeader(true);
             LifeMod.getInstance().saveConfig();
-            Bukkit.getConsoleSender().sendMessage("Your config has been updated to #101!");
+            Bukkit.getConsoleSender().sendMessage("Your config has been updated to #1.5.4-RELEASE!");
         }
     }
 }

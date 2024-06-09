@@ -2,12 +2,17 @@ package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.Objects;
 
 public class FeedCmd implements CommandExecutor {
 
@@ -24,6 +29,20 @@ public class FeedCmd implements CommandExecutor {
                 Player player = (Player) sender;
 
                 if (player.hasPermission("lifemod.feed")) {
+
+                    if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
+                        DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
+                        webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                                .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.feed.title"))
+                                .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.feed.description").replace("%player%", sender.getName()))
+                                .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.feed.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.feed.footer.logo").replace("%player%", sender.getName()))
+                                .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.feed.color")))));
+                        try {
+                            webhook.execute();
+                        } catch(IOException e) {
+                            LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        }
+                    }
 
                     if (args.length == 0) {
                         player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("yourself-feed")));

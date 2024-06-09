@@ -2,6 +2,7 @@ package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,9 +14,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.yaml.snakeyaml.Yaml;
 
+import java.awt.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class FreezeCmd implements CommandExecutor, Listener {
     private LifeMod main;
@@ -44,6 +48,19 @@ public class FreezeCmd implements CommandExecutor, Listener {
                         ItemStack packedice = new ItemStack(Material.PACKED_ICE);
 
                         if (target != null && !target.equals(player)) {
+                            if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
+                                DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
+                                webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                                        .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.title"))
+                                        .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.description").replace("%player%", sender.getName()))
+                                        .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.freeze.footer.logo").replace("%player%", sender.getName()))
+                                        .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.color")))));
+                                try {
+                                    webhook.execute();
+                                } catch(IOException e) {
+                                    LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                                }
+                            }
                             if (main.getFrozenPlayers().containsKey(target.getUniqueId())) {
                                 String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
                                 String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");

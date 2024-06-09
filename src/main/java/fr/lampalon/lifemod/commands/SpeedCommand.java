@@ -2,11 +2,16 @@ package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
+import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.Objects;
 
 public class SpeedCommand implements CommandExecutor {
     @Override
@@ -38,6 +43,20 @@ public class SpeedCommand implements CommandExecutor {
                     if (speed < 1 || speed > 10) {
                         player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("speed.provide")));
                         return false;
+                    }
+
+                    if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
+                        DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
+                        webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                                .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.speed.title"))
+                                .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.speed.description").replace("%player%", sender.getName()))
+                                .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.speed.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.speed.footer.logo").replace("%player%", sender.getName()))
+                                .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.speed.color")))));
+                        try {
+                            webhook.execute();
+                        } catch(IOException e) {
+                            LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        }
                     }
 
                     if (player.isFlying()) {
