@@ -19,11 +19,11 @@ public class BroadcastCmd implements CommandExecutor {
         if (LifeMod.getInstance().isBroadcastActive()) {
             if (cmd.getName().equalsIgnoreCase("broadcast")) {
                 if (!sender.hasPermission("lifemod.bc")) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
                 if (args.length < 1) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("bc-usage")));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("bc.usage")));
                     return true;
                 } else {
                     StringBuilder message = new StringBuilder();
@@ -32,7 +32,7 @@ public class BroadcastCmd implements CommandExecutor {
                     }
 
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                        onlinePlayer.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("bc") + message.toString()));
+                        onlinePlayer.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("bc.prefix") + message.toString()));
                     }
                     if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                         DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
@@ -43,8 +43,8 @@ public class BroadcastCmd implements CommandExecutor {
                                 .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.broadcast.color")))));
                         try {
                             webhook.execute();
-                        } catch(IOException e) {
-                            LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 }

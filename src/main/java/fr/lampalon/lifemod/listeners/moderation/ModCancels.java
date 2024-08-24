@@ -71,7 +71,7 @@ public class ModCancels
     }
   }
 
-  @EventHandler(priority = EventPriority.HIGHEST)
+  @EventHandler
   public void onInventoryClick(InventoryClickEvent event) {
     if (!(event.getWhoClicked() instanceof Player)) return;
 

@@ -19,7 +19,7 @@ public class GodModCmd implements CommandExecutor {
         Messages messages = (LifeMod.getInstance()).messages;
         if (LifeMod.getInstance().isGodmodeActive()) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                 return true;
             }
 
@@ -36,19 +36,19 @@ public class GodModCmd implements CommandExecutor {
                                 .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.god.color")))));
                         try {
                             webhook.execute();
-                        } catch(IOException e) {
-                            LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                     if (player.isInvulnerable()) {
                         player.setInvulnerable(false);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("godesactivate")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("god.deactivate")));
                     } else {
                         player.setInvulnerable(true);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("godactivate")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("god.activate")));
                     }
                 } else {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                 }
                 return true;
             }

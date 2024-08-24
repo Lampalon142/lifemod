@@ -2,34 +2,34 @@ package fr.lampalon.lifemod.listeners.moderation;
 
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
-import fr.lampalon.lifemod.data.configuration.Options;
+import fr.lampalon.lifemod.manager.FreezeManager;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
+import java.awt.*;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
+import java.util.List;
 
 import fr.lampalon.lifemod.manager.VanishedManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.EquipmentSlot;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.yaml.snakeyaml.Yaml;
 
 public class ModItemsInteract implements Listener {
+  public HashMap<UUID, ItemStack> playerHelmets = new HashMap<>();
+
   @EventHandler
   public void onInteract(PlayerInteractEntityEvent e) {
     Player player = e.getPlayer();
@@ -110,35 +110,30 @@ public class ModItemsInteract implements Listener {
 
   private void handleFreeze(Player player, Player target) {
     Messages messages = (LifeMod.getInstance()).messages;
-    String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
-    String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");
-    ItemStack helmet = target.getInventory().getHelmet();
-    if (!isOnCooldown(player)){
-      if (LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
-        if (helmet != null && helmet.getType() == Material.PACKED_ICE) {
-          target.getInventory().setHelmet(null);
-        }
+    String s2 = LifeMod.getInstance().getConfig().getString("freeze.messages.unfreeze.mod");
+    String s3 = LifeMod.getInstance().getConfig().getString("freeze.messages.unfreeze.target");
+    FreezeManager freezeManager = LifeMod.getInstance().getFreezeManager();
+
+    if (!isOnCooldown(player)) {
+      if (freezeManager.isPlayerFrozen(target.getUniqueId()) && LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
+        freezeManager.unfreezePlayer(player, target);
         LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-        target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s3.replace("%player%", player.getPlayer().getName())));
-        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getPlayer().getName())));
+        target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s3.replace("%player%", player.getName())));
+        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getName())));
       } else {
-        String s4 = LifeMod.getInstance().getConfig().getString("freeze-msg-six");
+        String s4 = LifeMod.getInstance().getConfig().getString("freeze.messages.freeze.mod");
         LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
         InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
         Yaml yaml = new Yaml();
         Map<String, List<String>> config = yaml.load(input);
-
-        List<String> freezeMsg = config.get("freeze-msg");
+        List<String> freezeMsg = config.get("freeze.messages.onfreeze");
 
         for (String msg : freezeMsg) {
           target.sendMessage(MessageUtil.parseColors(msg));
         }
 
-        ItemStack packedice = new ItemStack(Material.PACKED_ICE);
-
-        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s4.replace("%target%", target.getPlayer().getName())));
-
-        target.getInventory().setHelmet(packedice);
+        freezeManager.freezePlayer(player, target);
+        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s4.replace("%target%", target.getName())));
       }
       addToCooldown(player);
     }
@@ -176,6 +171,7 @@ public class ModItemsInteract implements Listener {
   }
 
   private final HashMap<UUID, Long> vanishCooldowns = new HashMap<>();
+  private BukkitRunnable actionBarTask;
 
   private void toggleVanish(Player player) {
     String s = LifeMod.getInstance().getConfig().getString("vanishcooldown");

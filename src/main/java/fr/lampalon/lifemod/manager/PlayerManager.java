@@ -5,6 +5,8 @@ import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.utils.ItemBuilder;
 import fr.lampalon.lifemod.utils.MessageUtil;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerManager {
     Messages messages = (LifeMod.getInstance()).messages;
@@ -21,6 +24,7 @@ public class PlayerManager {
     private Player player;
     private ItemStack[] items = new ItemStack[40];
     VanishedManager vanished =  new VanishedManager();
+    private LifeMod plugin;
     
     public PlayerManager(Player player) {
         this.player = player;
@@ -38,20 +42,36 @@ public class PlayerManager {
         this.player.setInvulnerable(true);
         this.player.addPotionEffect(PotionEffectType.NIGHT_VISION.createEffect(1000000000,255));
         vanished.setVanished(true, this.player);
-        
-        ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(MessageUtil.parseColors(messages.nameinvsee)).setLore(new String[] {MessageUtil.parseColors(messages.descinvsee) });
-        ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(MessageUtil.parseColors(messages.namefreeze)).setLore(new String[] {MessageUtil.parseColors(messages.descfreeze) });
-        ItemBuilder tpRandom = (new ItemBuilder(Material.ENDER_PEARL)).setName(MessageUtil.parseColors(messages.nametprandom)).setLore(new String[] {MessageUtil.parseColors(messages.desctprandom) });
-        ItemBuilder vanish = (new ItemBuilder(Material.BLAZE_POWDER)).setName(MessageUtil.parseColors(messages.namevanish)).setLore(new String[] {MessageUtil.parseColors(messages.descvanish) });
-        ItemBuilder kill = (new ItemBuilder(Material.BLAZE_ROD)).setName(MessageUtil.parseColors(messages.namekill)).setLore(new String[] {MessageUtil.parseColors(messages.desckill)});
-        ItemBuilder kbTester = new ItemBuilder(Material.STICK).setName(MessageUtil.parseColors(messages.namekbtester)).setLore(new String[] {MessageUtil.parseColors(messages.desckbtester)}).addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
 
-        this.player.getInventory().setItem(0, invSee.toItemStack());
-        this.player.getInventory().setItem(2, freeze.toItemStack());
-        this.player.getInventory().setItem(4, tpRandom.toItemStack());
-        this.player.getInventory().setItem(6, vanish.toItemStack());
-        this.player.getInventory().setItem(8, kill.toItemStack());
-        this.player.getInventory().setItem(7, kbTester.toItemStack());
+        if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.invSee")) {
+            ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(MessageUtil.parseColors(messages.nameinvsee)).setLore(new String[]{MessageUtil.parseColors(messages.descinvsee)});
+            this.player.getInventory().setItem(0, invSee.toItemStack());
+        }
+
+        if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.freeze")) {
+            ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(MessageUtil.parseColors(messages.namefreeze)).setLore(new String[]{MessageUtil.parseColors(messages.descfreeze)});
+            this.player.getInventory().setItem(2, freeze.toItemStack());
+        }
+
+        if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.tpRandom")) {
+            ItemBuilder tpRandom = (new ItemBuilder(Material.ENDER_PEARL)).setName(MessageUtil.parseColors(messages.nametprandom)).setLore(new String[]{MessageUtil.parseColors(messages.desctprandom)});
+            this.player.getInventory().setItem(4, tpRandom.toItemStack());
+        }
+
+        if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.vanish")) {
+            ItemBuilder vanish = (new ItemBuilder(Material.BLAZE_POWDER)).setName(MessageUtil.parseColors(messages.namevanish)).setLore(new String[]{MessageUtil.parseColors(messages.descvanish)});
+            this.player.getInventory().setItem(6, vanish.toItemStack());
+        }
+
+        if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.killItem")) {
+            ItemBuilder kill = (new ItemBuilder(Material.BLAZE_ROD)).setName(MessageUtil.parseColors(messages.namekill)).setLore(new String[]{MessageUtil.parseColors(messages.desckill)});
+            this.player.getInventory().setItem(8, kill.toItemStack());
+        }
+
+        if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.kbTester")) {
+            ItemBuilder kbTester = new ItemBuilder(Material.STICK).setName(MessageUtil.parseColors(messages.namekbtester)).setLore(new String[]{MessageUtil.parseColors(messages.desckbtester)}).addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
+            this.player.getInventory().setItem(7, kbTester.toItemStack());
+        }
     }
     
     public void destroy() {

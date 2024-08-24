@@ -17,7 +17,6 @@ import java.util.Objects;
 public class EcopenCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Messages messages = (LifeMod.getInstance()).messages;
         if (LifeMod.getInstance().isEcopenActive()) {
             if (label.equalsIgnoreCase("ecopen")) {
                 if (sender instanceof Player) {
@@ -25,14 +24,14 @@ public class EcopenCmd implements CommandExecutor {
                     Player player = (Player) sender;
 
                     if (args.length != 1) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("usageopenec")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("ec.usage")));
                         return true;
                     }
 
                     Player targetPlayer = Bukkit.getPlayer(args[0]);
 
                     if (!player.hasPermission("lifemod.ecopen")) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     } else {
                         if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                             DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
@@ -43,25 +42,25 @@ public class EcopenCmd implements CommandExecutor {
                                     .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.ecopen.color")))));
                             try {
                                 webhook.execute();
-                            } catch(IOException e) {
-                                LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
                             }
                         }
                         player.openInventory(targetPlayer.getEnderChest());
                     }
 
                     if (targetPlayer == null) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         return true;
                     }
 
                     if (targetPlayer == player) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("yourselfenderchest")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("ec.yourself")));
                         return true;
                     }
 
                 } else {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                 }
                 return true;
             }

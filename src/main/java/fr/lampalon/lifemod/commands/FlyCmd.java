@@ -17,11 +17,10 @@ public class FlyCmd implements CommandExecutor
 {
 
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    Messages messages = LifeMod.getInstance().messages;
     if (LifeMod.getInstance().isFlyActive()) {
       if (label.equalsIgnoreCase("fly")) {
         if (!(sender instanceof Player)) {
-          sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+          sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
           return true;
         }
 
@@ -38,22 +37,22 @@ public class FlyCmd implements CommandExecutor
                       .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.fly.color")))));
               try {
                 webhook.execute();
-              } catch(IOException e) {
-                LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+              } catch (IOException e) {
+                throw new RuntimeException(e);
               }
             }
             if (player.getAllowFlight()) {
               player.setAllowFlight(false);
               player.setFlying(false);
-              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("fly-disable")));
+              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("fly.disable")));
             } else {
               player.setAllowFlight(true);
               player.setFlying(true);
-              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("fly-enable")));
+              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("fly.enable")));
             }
           }
         } else {
-          player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+          player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
         }
 
         return true;

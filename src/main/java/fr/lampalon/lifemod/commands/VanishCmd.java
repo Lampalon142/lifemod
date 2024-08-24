@@ -5,11 +5,14 @@ import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.manager.VanishedManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.awt.*;
 import java.io.IOException;
@@ -17,6 +20,7 @@ import java.util.Objects;
 
 public class VanishCmd implements CommandExecutor {
     private final VanishedManager playerManager;
+    private BukkitRunnable actionBarTask;
 
     public VanishCmd(VanishedManager playerManager){
         this.playerManager = playerManager;
@@ -42,10 +46,11 @@ public class VanishCmd implements CommandExecutor {
                                 .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.vanish.description").replace("%player%", sender.getName()))
                                 .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.vanish.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.vanish.footer.logo").replace("%player%", sender.getName()))
                                 .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.vanish.color")))));
+
                         try {
                             webhook.execute();
-                        } catch(IOException e) {
-                            LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
 

@@ -25,14 +25,14 @@ public class GmCmd implements CommandExecutor {
 
       if (label.equalsIgnoreCase("gm") || label.equalsIgnoreCase("gamemode")) {
         if (!(sender instanceof Player)) {
-          sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+          sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
         }
         if (!player.hasPermission("lifemod.gm")) {
-          player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+          player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
         } else {
 
           if (args.length < 1 || args.length > 2) {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gm-invalid")));
+            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
             return true;
           }
 
@@ -43,12 +43,12 @@ public class GmCmd implements CommandExecutor {
             targetPlayerName = args[1];
             targetPlayer = Bukkit.getPlayer(targetPlayerName);
             if (targetPlayer == null) {
-              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));
+              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
               return true;
             }
           } else {
             if (!(player instanceof Player)) {
-              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
               return true;
             }
             targetPlayer = (Player) sender;
@@ -73,7 +73,7 @@ public class GmCmd implements CommandExecutor {
                 gameMode = GameMode.SPECTATOR;
                 break;
               default:
-                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gm-invalid")));
+                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
                 return true;
             }
           } else {
@@ -95,7 +95,7 @@ public class GmCmd implements CommandExecutor {
                 gameMode = GameMode.SPECTATOR;
                 break;
               default:
-                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gm-invalid")));
+                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
                 return true;
             }
           }
@@ -109,15 +109,15 @@ public class GmCmd implements CommandExecutor {
                     .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.color")))));
             try {
               webhook.execute();
-            } catch(IOException e) {
-              LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+            } catch (IOException e) {
+              throw new RuntimeException(e);
             }
           }
           targetPlayer.setGameMode(gameMode);
           if (targetPlayerName != null) {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gm-other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName())));
+            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gamemode.other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName())));
           } else {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gm-own").replace("%gamemode%", gameMode.name())));
+            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gamemode.own").replace("%gamemode%", gameMode.name())));
           }
           return true;
         }

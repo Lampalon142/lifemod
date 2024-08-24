@@ -54,8 +54,8 @@ public class SpeedCommand implements CommandExecutor {
                                 .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.speed.color")))));
                         try {
                             webhook.execute();
-                        } catch(IOException e) {
-                            LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
 

@@ -3,6 +3,7 @@ package fr.lampalon.lifemod.commands;
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
+import fr.lampalon.lifemod.manager.FreezeManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,6 +31,7 @@ public class FreezeCmd implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        FreezeManager freezeManager = LifeMod.getInstance().getFreezeManager();
         Messages messages = (LifeMod.getInstance()).messages;
         if (main.isFreezeActive()) {
             if (label.equalsIgnoreCase("freeze")) {
@@ -57,33 +59,29 @@ public class FreezeCmd implements CommandExecutor, Listener {
                                         .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.color")))));
                                 try {
                                     webhook.execute();
-                                } catch(IOException e) {
-                                    LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
                                 }
                             }
-                            if (main.getFrozenPlayers().containsKey(target.getUniqueId())) {
-                                String s2 = LifeMod.getInstance().getConfig().getString("unfreeze");
-                                String s3 = LifeMod.getInstance().getConfig().getString("unfreezeby");
+                            if (freezeManager.isPlayerFrozen(target.getUniqueId()) && LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
+                                freezeManager.unfreezePlayer(player, target);
                                 LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-                                target.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s3.replace("%player%", player.getPlayer().getName())));
-                                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s2.replace("%target%", target.getPlayer().getName())));
-                                target.getInventory().setHelmet(air);
+                                target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + LifeMod.getInstance().getConfigConfig().getString("unfreezeby").replace("%player%", player.getName())));
+                                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + LifeMod.getInstance().getConfigConfig().getString("unfreeze").replace("%target%", target.getName())));
                             } else {
+                                String s4 = LifeMod.getInstance().getConfig().getString("freeze-msg-six");
+                                LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
                                 InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
                                 Yaml yaml = new Yaml();
                                 Map<String, List<String>> config = yaml.load(input);
-
                                 List<String> freezeMsg = config.get("freeze-msg");
 
-                                main.getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
                                 for (String msg : freezeMsg) {
                                     target.sendMessage(MessageUtil.parseColors(msg));
                                 }
 
-                                target.getInventory().setHelmet(packedice);
-
-                                String s4 = main.getConfig().getString("freeze-msg-six");
-                                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s4.replace("%target%", target.getPlayer().getName())));
+                                freezeManager.freezePlayer(player, target);
+                                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s4.replace("%target%", target.getName())));
                             }
                         } else {
                             player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));

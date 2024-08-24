@@ -30,7 +30,7 @@ public class ClearinvCmd implements CommandExecutor {
 
                             if (targetPlayer != null) {
                                 targetPlayer.getInventory().clear();
-                                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + target.replace("%player%", targetPlayer.getPlayer().getName())));
+                                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("clearinv.message").replace("%target%", targetPlayer.getPlayer().getName())));
                                 if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                                     DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
                                     webhook.addEmbed(new DiscordWebhook.EmbedObject()
@@ -40,25 +40,25 @@ public class ClearinvCmd implements CommandExecutor {
                                             .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.clearinv.color")))));
                                     try {
                                         webhook.execute();
-                                    } catch(IOException e) {
-                                        LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
                                     }
                                 }
                             } else {
-                                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));
+                                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                             }
                         } else {
-                            player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.clearinvusage));
+                            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("clearinv.usage")));
                         }
                     } else {
-                        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     }
                 } else {
-                    sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                 }
             }
         } else {
-            sender.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.commanddisable));
+            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
         return true;
     }

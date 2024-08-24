@@ -21,7 +21,7 @@ public class HealCmd implements CommandExecutor {
         if (LifeMod.getInstance().isHealActive()) {
             if (label.equalsIgnoreCase("heal")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
@@ -30,7 +30,7 @@ public class HealCmd implements CommandExecutor {
                 String s = LifeMod.getInstance().getConfig().getString("healmodmsg");
 
                 if (!player.hasPermission("lifemod.heal")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
 
@@ -43,8 +43,8 @@ public class HealCmd implements CommandExecutor {
                             .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.heal.color")))));
                     try {
                         webhook.execute();
-                    } catch(IOException e) {
-                        LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
 

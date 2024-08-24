@@ -65,7 +65,7 @@ public class WeatherCmd implements CommandExecutor {
                     try {
                         webhook.execute();
                     } catch (IOException e) {
-                        LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        throw new RuntimeException(e);
                     }
                 }
 

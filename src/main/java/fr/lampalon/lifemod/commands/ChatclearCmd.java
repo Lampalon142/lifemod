@@ -35,21 +35,21 @@ public class ChatclearCmd implements CommandExecutor {
                                 .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.chatclear.color")))));
                         try {
                             webhook.execute();
-                        } catch(IOException e) {
-                            LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
 
-                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.chatclear));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("chatclear.message")));
                 } else {
-                    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.noperm));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
             } else {
-                sender.sendMessage(MessageUtil.parseColors(messages.noconsole));
+                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
             }
         } else {
-            sender.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.commanddisable));
+            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
 
         return true;

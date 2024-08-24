@@ -3,6 +3,7 @@ package fr.lampalon.lifemod;
 import fr.lampalon.lifemod.commands.*;
 import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.data.configuration.Options;
+import fr.lampalon.lifemod.listeners.moderation.FreezeGui;
 import fr.lampalon.lifemod.listeners.moderation.ModCancels;
 import fr.lampalon.lifemod.listeners.moderation.ModItemsInteract;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
@@ -37,6 +38,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LifeMod extends JavaPlugin {
+    private FreezeManager freezeManager;
     private static LifeMod instance;
     public Options options;
     public Messages messages;
@@ -67,20 +69,23 @@ public class LifeMod extends JavaPlugin {
     private boolean isLifemodActive;
     private boolean isSpeedActive;
     private String disabledCommand;
+    private File LangFile;
+    private FileConfiguration LangConfig;
 
 
     public void onEnable() {
         CommandHandler();
-        instance = this;
         ConfigConfig();
+        instance = this;
+        freezeManager = new FreezeManager();
         this.frozenPlayers = new HashMap<>();
         this.players = new HashMap<>();
         this.moderators = new ArrayList<>();
+        this.messages = new Messages();
         registerEvents();
         registerCommands();
         saveDefaultConfig();
         Update();
-        this.messages = new Messages();
         chatManager = new ChatManager(this, messages);
         Bukkit.getConsoleSender().sendMessage("§cLifeMod developed by Lampalon with §4<3 §cwas been successfully initialised");
         utils();
@@ -103,6 +108,7 @@ public class LifeMod extends JavaPlugin {
         pm.registerEvents(new Staffchatevent(this, this.messages), (Plugin)this);
         pm.registerEvents(new PluginDisable(), this);
         pm.registerEvents(new PlayerQuit(), this);
+        pm.registerEvents(new FreezeGui(this), this);
     }
     private void registerCommands() {
         playerManager = new VanishedManager();
@@ -387,6 +393,23 @@ public class LifeMod extends JavaPlugin {
             e.printStackTrace();
         }
     }
+    public void LangConfig() {
+        LangFile = new File(getDataFolder(), "lang.yml");
+        if (!LangFile.exists()) {
+            LangFile.getParentFile().mkdirs();
+            saveResource("lang.yml", false);
+        }
+
+        LangConfig = new YamlConfiguration();
+        try {
+            LangConfig.load(LangFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+    public FileConfiguration getLangConfig() {
+        return this.LangConfig;
+    }
     public FileConfiguration getConfigConfig() {
         return this.ConfigConfig;
     }
@@ -407,5 +430,8 @@ public class LifeMod extends JavaPlugin {
     }
     public boolean isFreeze(Player player) {
         return getFrozenPlayers().containsKey(player.getUniqueId());
+    }
+    public FreezeManager getFreezeManager(){
+        return freezeManager;
     }
  }

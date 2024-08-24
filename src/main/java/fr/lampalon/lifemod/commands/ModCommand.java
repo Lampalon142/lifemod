@@ -6,10 +6,13 @@ import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
 import fr.lampalon.lifemod.utils.MessageUtil;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.awt.*;
 import java.io.IOException;
@@ -43,8 +46,8 @@ public class ModCommand implements CommandExecutor {
                             .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.mod.color")))));
                     try {
                         webhook.execute();
-                    } catch(IOException e) {
-                        LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
 

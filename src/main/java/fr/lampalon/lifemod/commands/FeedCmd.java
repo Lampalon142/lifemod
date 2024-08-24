@@ -22,7 +22,7 @@ public class FeedCmd implements CommandExecutor {
         if (LifeMod.getInstance().isFeedActive()) {
             if (label.equalsIgnoreCase("feed")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(LifeMod.getInstance().getConfigConfig().getString("onlyplayer"));
+                    sender.sendMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer"));
                     return false;
                 }
 
@@ -39,13 +39,13 @@ public class FeedCmd implements CommandExecutor {
                                 .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.feed.color")))));
                         try {
                             webhook.execute();
-                        } catch(IOException e) {
-                            LifeMod.getInstance().getLogger().severe(e.getStackTrace().toString());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
 
                     if (args.length == 0) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("yourself-feed")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("feed.yourself")));
                         player.setFoodLevel(20);
 
                     } else if (args.length == 1) {
@@ -55,21 +55,21 @@ public class FeedCmd implements CommandExecutor {
                         if (target != null) {
 
                             target.setFoodLevel(20);
-                            String message = LifeMod.getInstance().getConfig().getString("mod-feed");
+                            String message = LifeMod.getInstance().getLangConfig().getString("feed.mod");
 
                             sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + message.replace("%target%", target.getName())));
-                            target.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("player-feed")));
+                            target.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("feed.player")));
 
                         } else {
-                            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));
+                            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         }
 
                     } else {
-                        sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("feed-usage")));
+                        sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("feed.usage")));
                     }
 
                 } else {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("noperm")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                 }
 
                 return true;
