@@ -1,0 +1,156 @@
+general:
+  nopermission: "&cYou don't have permission for this."
+  onlyplayer: "&cYou can't execute this command on the console."
+  offlineplayer: "&cThis person is not connected to the server."
+  config-reloaded: "&aThis config has been reloaded successfully!"
+  update:
+    uselatest: "Plugin use the latest update thanks."
+    oldversion: "Plugin required an update! (https://www.spigotmc.org/resources/1-8-1-20-lifemod-moderation-plugin.112381/)"
+
+## Fly
+fly:
+  enable: "&aFly mod has been activated."
+  disable: "&cFly mod has been deactivated."
+
+## Moderation
+mod:
+  enable: "&aModeration mod has been activated."
+  disable: "&cModeration mod has been deactivated."
+
+## Game mode
+gamemode:
+  invalid: "&cInvalid usage. Please use : /gm or /gamemode [mode] <player>"
+  usage: "&cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
+  other: "&7Game mode has been changed to &b&l%gamemode% &7for &c&l%player%"
+  own: "&7Your game mode has been changed to &b&l%gamemode%"
+
+## Freeze
+freeze:
+  usage: "&cUsage: /freeze <player-name>."
+  yourself: "&cYou can't freeze yourself."
+  gui:
+    title: "&cYou are frozen!"
+    glass-title: "&aCome on the discord!"
+  messages:
+    unfreeze:
+      target: "&aYou have been unfrozen by %player%."
+      mod: "&aYou have unfrozen %target%."
+    freeze:
+      mod: "&cYou have frozen %target%."
+    onfreeze:
+      - "&7================"
+      - "&cYou've been frozen"
+      - "&4&lPlease go to the discord."
+      - "&c&lIf you disconnect, you will be banned."
+      - "&7================"
+
+## Broadcast
+bc:
+  prefix: "&7[&4&lAlert&7] &f"
+  usage: "&cUsage : /bc <message>"
+
+## Moderation-Tools
+tools:
+  invsee:
+    name: "&eSee inventory"
+    description: "&7Right-click on a player &7to see his inventory."
+  freeze:
+    name: "&bFreeze"
+    description: "&7Right-click on a player &7to freeze."
+  tprandom:
+    name: "&aRandom TP"
+    description: "&7Right-click to teleport &7randomly on a player."
+  vanish:
+    name: "&2Vanish"
+    description: "&7Right-click to activate/deactivate &7the vanish."
+  kill:
+    name: "&6Kill player"
+    description: "&7Right-click on a player to &ckill them."
+  kbtester:
+    name: "&dKB tester"
+    description: "&7Left-click on a player &7to test their KB."
+
+## Vanish
+vanish:
+  on: "&cYou are now invisible!"
+  off: "&aYou are now visible!"
+  cooldown: "§cPlease wait %cooldown% seconds before changing your invisible mode again."
+  usage: "&cIncorrect use of the command. Usage: /vanish <player name>."
+
+## Ender Chest
+ec:
+  usage: "&cUsage: /ecopen <player's name>"
+  yourself: "&cYou can't open your own ender chest."
+
+## Clear Inventory
+clearinv:
+  message: "&bInventory deleted for &e%target%"
+  usage: "&cIncorrect use of the command. Usage: /clearinv <player name>."
+
+## Moderators list
+modlist:
+  online: "&aOnline moderators: "
+  none: "&cThere are no moderators online at the moment."
+
+## Staff Chat
+staffchat:
+  usage: "&cUsage: /staffchat <message>"
+  message: "&b[StaffChat] &c%player%"
+  success: "&a[StaffChat] Message sent successfully!"
+  prefix: "@"  ## Default is : "@"
+
+## Chat Clear
+chatclear:
+  message: "&cThe chat has been cleared."
+
+## Heal
+heal:
+  player: "&aYou have been healed"
+  mod: "&a%player% has been healed"
+  usage: "&cInvalid command usage. /heal [player]"
+
+## Kill
+kill:
+  target: "&cYou have been killed by %moderator%"
+  mod: "&aYou have killed &c%target%"
+
+## Teleport
+tp:
+  none: "&cThere are no players to teleport to."
+  twoplayers: "&aYou have teleported %player1% to %player2%"
+  yourself: "&aYou can't teleport to yourself"
+  success: "&aYou have been teleported to %player%."
+  theresuccess: "&aYou have teleported %player%."
+  invalidcoordinates: "&cInvalid coordinates. Please provide valid numbers for x, y, and z."
+  usage: "&cUsage: /tp <player> or <x> <y> <z> or <player1> <player2>"
+  tphereusage: "&cUsage: /s <player_name>"
+
+## Weather
+weather:
+  usage: "&cInvalid weather type. Use /weather sun/rain/storm."
+  sun: "&aWeather set to clear/sun."
+  rain: "&aWeather set to rain."
+  storm: "&aWeather set to storm."
+
+## God Mode
+god:
+  activate: "&aYou are now invincible."
+  deactivate: "&cYou're no longer invincible."
+
+## Inventory See
+invsee:
+  usage: "&cUsage : /invsee <playername>"
+  yourself: "&cYou can't invsee yourself."
+  name: "&cPlayer inventory %player%"
+
+## Feed
+feed:
+  yourself: "&aYou've been feed!"
+  player: "&aYou have been feed!"
+  mod: "&aYou have feed %target%."
+  usage: "&cUsage : /feed <player>."
+
+## Speed
+speed:
+  success: "&aYour speed has been changed to %speed%"
+  provide: "&cYou need to provide a valid speed multiplier (1 to 10)"
