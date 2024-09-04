@@ -23,7 +23,6 @@ public class ClearinvCmd implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
 
-                    String target = LifeMod.getInstance().getConfig().getString("clearinvmsg");
                     if (player.hasPermission("lifemod.clearinv")) {
                         if (args.length == 1) {
                             Player targetPlayer = Bukkit.getPlayer(args[0]);
@@ -48,7 +47,7 @@ public class ClearinvCmd implements CommandExecutor {
                                 player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                             }
                         } else {
-                            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("clearinv.usage")));
+                            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("clearinv.usage")));
                         }
                     } else {
                         player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));

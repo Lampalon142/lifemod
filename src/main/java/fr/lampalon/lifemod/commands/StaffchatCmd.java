@@ -21,18 +21,18 @@ public class StaffchatCmd implements CommandExecutor {
         Messages messages = (LifeMod.getInstance()).messages;
         if (LifeMod.getInstance().isStaffchatActive()) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                 return true;
             }
 
             Player player = (Player) sender;
 
-            String playermsg = LifeMod.getInstance().getConfig().getString("staffmsg");
+            String playermsg = LifeMod.getInstance().getLangConfig().getString("staffchat.message");
 
             if (cmd.getName().equalsIgnoreCase("staffchat")) {
                 if (player.hasPermission("lifemod.staffchat")) {
                     if (args.length == 0) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("staffusage")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("staffchat.usage")));
                         return true;
                     }
                     StringBuilder message = new StringBuilder();
@@ -59,15 +59,15 @@ public class StaffchatCmd implements CommandExecutor {
                         }
                     }
 
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("staffsuccesmsg")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("staffchat.success")));
                     return true;
                 } else {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
             }
         } else {
-            sender.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.commanddisable));
+            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
         return false;
     }

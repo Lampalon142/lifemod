@@ -79,7 +79,7 @@ public class ModItemsInteract implements Listener {
   }
 
   private void openTargetInventory(Player player, Player target) {
-    String invyes = LifeMod.getInstance().getConfig().getString("inventoryname");
+    String invyes = LifeMod.getInstance().getLangConfig().getString("invsee.name");
     Inventory targetInventory = Bukkit.createInventory(null, 45, MessageUtil.parseColors(invyes.replace("%player%", target.getPlayer().getName())));
     PlayerInventory targetPlayerInventory = target.getInventory();
 
@@ -109,21 +109,20 @@ public class ModItemsInteract implements Listener {
   }
 
   private void handleFreeze(Player player, Player target) {
-    Messages messages = (LifeMod.getInstance()).messages;
-    String s2 = LifeMod.getInstance().getConfig().getString("freeze.messages.unfreeze.mod");
-    String s3 = LifeMod.getInstance().getConfig().getString("freeze.messages.unfreeze.target");
+    String s2 = LifeMod.getInstance().getLangConfig().getString("freeze.messages.unfreeze.mod");
+    String s3 = LifeMod.getInstance().getLangConfig().getString("freeze.messages.unfreeze.target");
     FreezeManager freezeManager = LifeMod.getInstance().getFreezeManager();
 
     if (!isOnCooldown(player)) {
       if (freezeManager.isPlayerFrozen(target.getUniqueId()) && LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
         freezeManager.unfreezePlayer(player, target);
         LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-        target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s3.replace("%player%", player.getName())));
-        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s2.replace("%target%", target.getName())));
+        target.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s3.replace("%player%", player.getName())));
+        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s2.replace("%target%", target.getName())));
       } else {
-        String s4 = LifeMod.getInstance().getConfig().getString("freeze.messages.freeze.mod");
+        String s4 = LifeMod.getInstance().getLangConfig().getString("freeze.messages.freeze.mod");
         LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
-        InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("config.yml");
+        InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("lang.yml");
         Yaml yaml = new Yaml();
         Map<String, List<String>> config = yaml.load(input);
         List<String> freezeMsg = config.get("freeze.messages.onfreeze");
@@ -133,19 +132,18 @@ public class ModItemsInteract implements Listener {
         }
 
         freezeManager.freezePlayer(player, target);
-        player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s4.replace("%target%", target.getName())));
+        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s4.replace("%target%", target.getName())));
       }
       addToCooldown(player);
     }
   }
 
   private void handleKill(Player player, Player target) {
-    Messages messages = (LifeMod.getInstance()).messages;
-    String s = LifeMod.getInstance().getConfig().getString("killtargetmsg");
-    String s1 = LifeMod.getInstance().getConfig().getString("killmodmsg");
+    String s = LifeMod.getInstance().getLangConfig().getString("kill.target");
+    String s1 = LifeMod.getInstance().getLangConfig().getString("kill.mod");
     target.setHealth(0);
-    target.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s.replace("%moderator%", player.getPlayer().getName())));
-    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s1.replace("%target%", target.getPlayer().getName())));
+    target.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s.replace("%moderator%", player.getPlayer().getName())));
+    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s1.replace("%target%", target.getPlayer().getName())));
   }
 
   private void teleportRandomPlayer(Player player) {
@@ -153,28 +151,28 @@ public class ModItemsInteract implements Listener {
     Player[] onlinePlayers = Bukkit.getOnlinePlayers().toArray(new Player[0]);
 
     if (onlinePlayers.length == 0) {
-      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.nothingtp));
+      player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tp.none")));
       return;
     }
 
     Player randomPlayer = onlinePlayers[new Random().nextInt(onlinePlayers.length)];
 
     if (randomPlayer.isEmpty()){
-      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.nothingtp));
+      player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tp.none")));
       return;
     }
 
     player.teleport(randomPlayer.getLocation());
 
-    String messages1 = (LifeMod.getInstance().getConfig().getString("tp"));
-    player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages1.replace("%player%", randomPlayer.getPlayer().getName())));
+    String messages1 = LifeMod.getInstance().getLangConfig().getString("tp.success");
+    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + messages1.replace("%player%", randomPlayer.getPlayer().getName())));
   }
 
   private final HashMap<UUID, Long> vanishCooldowns = new HashMap<>();
   private BukkitRunnable actionBarTask;
 
   private void toggleVanish(Player player) {
-    String s = LifeMod.getInstance().getConfig().getString("vanishcooldown");
+    String s = LifeMod.getInstance().getLangConfig().getString("vanish.cooldown");
     Messages messages = LifeMod.getInstance().messages;
     long currentTime = System.currentTimeMillis();
     long lastToggleTime = vanishCooldowns.getOrDefault(player.getUniqueId(), 0L);
@@ -192,7 +190,7 @@ public class ModItemsInteract implements Listener {
 
     vanishCooldowns.put(player.getUniqueId(), currentTime);
 
-    player.sendMessage(newVanishState ? MessageUtil.parseColors(messages.prefixGeneral + messages.vanishon) : MessageUtil.parseColors(messages.prefixGeneral + messages.vanishoff));
+    player.sendMessage(newVanishState ? MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("vanish.activate")) : MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("vanish.deactivate")));
 
     if (newVanishState) {
       for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

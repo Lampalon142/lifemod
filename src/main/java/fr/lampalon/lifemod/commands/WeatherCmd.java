@@ -28,28 +28,20 @@ public class WeatherCmd implements CommandExecutor {
             if (label.equalsIgnoreCase("weather")) {
 
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
                 Player player = (Player) sender;
-
-                boolean vanishEnabled = LifeMod.getInstance().getConfig().getBoolean("commands-enabled.weather");
-
-                if (!vanishEnabled) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-                    return true;
-                }
-
                 World world = player.getWorld();
 
                 if (args.length != 1) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("weatherusage")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("weather.usage")));
                     return false;
                 }
 
                 if (!player.hasPermission("lifemod.weather")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return false;
                 }
 
@@ -74,26 +66,25 @@ public class WeatherCmd implements CommandExecutor {
                     case "sun":
                         world.setStorm(false);
                         world.setThundering(false);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("weathersun")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("weather.sun")));
                         break;
                     case "rain":
                         world.setStorm(true);
                         world.setThundering(false);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("weatherrain")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("weather.rain")));
                         break;
                     case "storm":
                         world.setStorm(true);
                         world.setThundering(true);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("weatherstorm")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("weather.storm")));
                         break;
                 }
 
                 return true;
             }
         } else {
-            sender.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.commanddisable));
+            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
-
         return true;
     }
 }

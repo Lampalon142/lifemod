@@ -20,11 +20,10 @@ import java.util.Objects;
 
 public class ModCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Messages messages = (LifeMod.getInstance()).messages;
         if (LifeMod.getInstance().isModActive()) {
 
             if (!(sender instanceof Player)) {
-                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
                 return false;
             }
 
@@ -33,7 +32,7 @@ public class ModCommand implements CommandExecutor {
             if (label.equalsIgnoreCase("mod") || label.equalsIgnoreCase("staff")) {
 
                 if (!player.hasPermission("lifemod.mod")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return false;
                 }
 

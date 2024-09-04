@@ -20,28 +20,28 @@ public class SpeedCommand implements CommandExecutor {
         if (LifeMod.getInstance().isSpeedActive()) {
             if (label.equalsIgnoreCase("speed")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return false;
                 }
 
                 Player player = (Player) sender;
                 if (!player.hasPermission("speed.use")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                 } else {
                     if (args.length == 0) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("speed.provide")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
                         return false;
                     }
                     int speed;
                     try {
                         speed = Integer.parseInt(args[0]);
                     } catch (NumberFormatException e) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("speed.provide")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
                         return false;
                     }
 
                     if (speed < 1 || speed > 10) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("speed.provide")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
                         return false;
                     }
 
@@ -65,7 +65,7 @@ public class SpeedCommand implements CommandExecutor {
                         player.setWalkSpeed((float) speed / 10);
                     }
 
-                    String s4 = LifeMod.getInstance().getConfig().getString("speed.success");
+                    String s4 = LifeMod.getInstance().getLangConfig().getString("speed.success");
                     assert s4 != null;
                     player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s4.replace("%speed%", String.valueOf(speed))));
                 }

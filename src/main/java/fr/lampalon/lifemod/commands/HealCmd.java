@@ -27,7 +27,7 @@ public class HealCmd implements CommandExecutor {
 
                 Player player = (Player) sender;
 
-                String s = LifeMod.getInstance().getConfig().getString("healmodmsg");
+                String s = LifeMod.getInstance().getLangConfig().getString("heaL.mod");
 
                 if (!player.hasPermission("lifemod.heal")) {
                     player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
@@ -52,19 +52,19 @@ public class HealCmd implements CommandExecutor {
                     double maxHealth = player.getMaxHealth();
                     player.setHealth(maxHealth);
                     player.setFoodLevel(player.getFoodLevel());
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("healmsgplayer")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("heal.player")));
                 } else if (args.length == 1) {
                     Player target = player.getServer().getPlayer(args[0]);
                     if (target != null) {
                         double maxHealth = player.getMaxHealth();
                         target.setHealth(maxHealth);
                         target.setFoodLevel(player.getFoodLevel());
-                        player.sendMessage(MessageUtil.parseColors(s.replace("%player%", player.getPlayer().getName())));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s.replace("%player%", player.getPlayer().getName())));
                     } else {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                     }
                 } else {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("healusage")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("heal.usage")));
                 }
             }
         } else {

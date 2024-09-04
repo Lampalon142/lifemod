@@ -19,8 +19,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerManager {
-    Messages messages = (LifeMod.getInstance()).messages;
-    Options options = (LifeMod.getInstance()).options;
     private Player player;
     private ItemStack[] items = new ItemStack[40];
     VanishedManager vanished =  new VanishedManager();
@@ -31,11 +29,9 @@ public class PlayerManager {
     }
     
     public void init() {
-        this.messages = new Messages();
-        this.options = new Options();
         LifeMod.getInstance().getPlayers().put(this.player.getUniqueId(), this);
         LifeMod.getInstance().getModerators().add(this.player.getUniqueId());
-        this.player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.modenable));
+        this.player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("mod.enable")));
         saveInventory();
         this.player.setAllowFlight(true);
         this.player.setFlying(true);
@@ -44,33 +40,33 @@ public class PlayerManager {
         vanished.setVanished(true, this.player);
 
         if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.invSee")) {
-            ItemBuilder invSee = (new ItemBuilder(Material.PAPER)).setName(MessageUtil.parseColors(messages.nameinvsee)).setLore(new String[]{MessageUtil.parseColors(messages.descinvsee)});
-            this.player.getInventory().setItem(0, invSee.toItemStack());
+            ItemBuilder invSee = (new ItemBuilder(Material.valueOf(LifeMod.getInstance().getLangConfig().getString("tools.invsee.material")))).setName(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.invsee.name"))).setLore(new String[]{MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.invsee.description"))});
+            this.player.getInventory().setItem(LifeMod.getInstance().getLangConfig().getInt("tools.kbtester.slot"), invSee.toItemStack());
         }
 
         if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.freeze")) {
-            ItemBuilder freeze = (new ItemBuilder(Material.PACKED_ICE)).setName(MessageUtil.parseColors(messages.namefreeze)).setLore(new String[]{MessageUtil.parseColors(messages.descfreeze)});
-            this.player.getInventory().setItem(2, freeze.toItemStack());
+            ItemBuilder freeze = (new ItemBuilder(Material.valueOf(LifeMod.getInstance().getLangConfig().getString("tools.freeze.material")))).setName(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.freeze.name"))).setLore(new String[]{MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.freeze.description"))});
+            this.player.getInventory().setItem(LifeMod.getInstance().getLangConfig().getInt("tools.freeze.slot"), freeze.toItemStack());
         }
 
         if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.tpRandom")) {
-            ItemBuilder tpRandom = (new ItemBuilder(Material.ENDER_PEARL)).setName(MessageUtil.parseColors(messages.nametprandom)).setLore(new String[]{MessageUtil.parseColors(messages.desctprandom)});
-            this.player.getInventory().setItem(4, tpRandom.toItemStack());
+            ItemBuilder tpRandom = (new ItemBuilder(Material.valueOf(LifeMod.getInstance().getLangConfig().getString("tools.tprandom.material")))).setName(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.tprandom.name"))).setLore(new String[]{MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.tprandom.description"))});
+            this.player.getInventory().setItem(LifeMod.getInstance().getLangConfig().getInt("tools.tprandom.slot"), tpRandom.toItemStack());
         }
 
         if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.vanish")) {
-            ItemBuilder vanish = (new ItemBuilder(Material.BLAZE_POWDER)).setName(MessageUtil.parseColors(messages.namevanish)).setLore(new String[]{MessageUtil.parseColors(messages.descvanish)});
-            this.player.getInventory().setItem(6, vanish.toItemStack());
+            ItemBuilder vanish = (new ItemBuilder(Material.valueOf(LifeMod.getInstance().getLangConfig().getString("tools.vanish.material")))).setName(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.vanish.name"))).setLore(new String[]{MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.vanish.description"))});
+            this.player.getInventory().setItem(LifeMod.getInstance().getLangConfig().getInt("tools.vanish.slot"), vanish.toItemStack());
         }
 
         if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.killItem")) {
-            ItemBuilder kill = (new ItemBuilder(Material.BLAZE_ROD)).setName(MessageUtil.parseColors(messages.namekill)).setLore(new String[]{MessageUtil.parseColors(messages.desckill)});
-            this.player.getInventory().setItem(8, kill.toItemStack());
+            ItemBuilder kill = (new ItemBuilder(Material.valueOf(LifeMod.getInstance().getLangConfig().getString("tools.kill.material")))).setName(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.kill.name"))).setLore(new String[]{MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.kill.description"))});
+            this.player.getInventory().setItem(LifeMod.getInstance().getLangConfig().getInt("tools.kill.slot"), kill.toItemStack());
         }
 
         if (LifeMod.getInstance().getConfigConfig().getBoolean("items-enabled.kbTester")) {
-            ItemBuilder kbTester = new ItemBuilder(Material.STICK).setName(MessageUtil.parseColors(messages.namekbtester)).setLore(new String[]{MessageUtil.parseColors(messages.desckbtester)}).addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
-            this.player.getInventory().setItem(7, kbTester.toItemStack());
+            ItemBuilder kbTester = new ItemBuilder(Material.valueOf(LifeMod.getInstance().getLangConfig().getString("tools.kbtester.material"))).setName(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.kbtester.name"))).setLore(new String[]{MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("tools.kbtester.description"))}).addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
+            this.player.getInventory().setItem(LifeMod.getInstance().getLangConfig().getInt("tools.kbtester.slot"), kbTester.toItemStack());
         }
     }
     
@@ -78,7 +74,7 @@ public class PlayerManager {
         LifeMod.getInstance().getPlayers().remove(this.player.getUniqueId());
         LifeMod.getInstance().getModerators().remove(this.player.getUniqueId());
         this.player.getInventory().clear();
-        this.player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.moddisable));
+        this.player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("mod.disable")));
         giveInventory();
         this.player.setAllowFlight(false);
         this.player.setFlying(false);

@@ -19,7 +19,7 @@ public class FreezeGui implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (event.getView().getTitle().equals(MessageUtil.parseColors(LifeMod.getInstance().getConfig().getString("freeze.gui.title")))) {
+        if (event.getView().getTitle().equals(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("freeze.gui.title")))) {
             UUID playerId = event.getPlayer().getUniqueId();
             if (LifeMod.getInstance().getFreezeManager().isPlayerFrozen(playerId)) {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> event.getPlayer().openInventory(event.getInventory()), 1L);
@@ -29,7 +29,7 @@ public class FreezeGui implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getView().getTitle().equals(MessageUtil.parseColors(LifeMod.getInstance().getConfig().getString("freeze.gui.title")))) {
+        if (event.getView().getTitle().equals(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("freeze.gui.title")))) {
             event.setCancelled(true);
         }
     }

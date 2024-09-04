@@ -115,9 +115,9 @@ public class GmCmd implements CommandExecutor {
           }
           targetPlayer.setGameMode(gameMode);
           if (targetPlayerName != null) {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gamemode.other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName())));
+            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName())));
           } else {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("gamemode.own").replace("%gamemode%", gameMode.name())));
+            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.own").replace("%gamemode%", gameMode.name())));
           }
           return true;
         }

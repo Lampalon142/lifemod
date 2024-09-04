@@ -54,26 +54,38 @@ tools:
   invsee:
     name: "&eSee inventory"
     description: "&7Right-click on a player &7to see his inventory."
+    material: "PAPER"
+    slot: 0
   freeze:
     name: "&bFreeze"
     description: "&7Right-click on a player &7to freeze."
+    material: "PACKED_ICE"
+    slot: 2
   tprandom:
     name: "&aRandom TP"
     description: "&7Right-click to teleport &7randomly on a player."
+    material: "ENDER_PEARL"
+    slot: 4
   vanish:
     name: "&2Vanish"
     description: "&7Right-click to activate/deactivate &7the vanish."
+    material: "BLAZE_POWDER"
+    slot: 6
   kill:
     name: "&6Kill player"
     description: "&7Right-click on a player to &ckill them."
+    material: "BLAZE_ROD"
+    slot: 8
   kbtester:
     name: "&dKB tester"
     description: "&7Left-click on a player &7to test their KB."
+    material: "STICK"
+    slot: 7
 
 ## Vanish
 vanish:
-  on: "&cYou are now invisible!"
-  off: "&aYou are now visible!"
+  activate: "&cYou are now invisible!"
+  deactivate: "&aYou are now visible!"
   cooldown: "§cPlease wait %cooldown% seconds before changing your invisible mode again."
   usage: "&cIncorrect use of the command. Usage: /vanish <player name>."
 
@@ -120,10 +132,13 @@ tp:
   twoplayers: "&aYou have teleported %player1% to %player2%"
   yourself: "&aYou can't teleport to yourself"
   success: "&aYou have been teleported to %player%."
-  theresuccess: "&aYou have teleported %player%."
   invalidcoordinates: "&cInvalid coordinates. Please provide valid numbers for x, y, and z."
   usage: "&cUsage: /tp <player> or <x> <y> <z> or <player1> <player2>"
-  tphereusage: "&cUsage: /s <player_name>"
+
+## tphere
+tphere:
+  usage: "&cUsage: /s <player_name>"
+  success: "&aYou have teleported %player%."
 
 ## Weather
 weather:

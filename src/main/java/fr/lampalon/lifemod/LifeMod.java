@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
 
 import fr.lampalon.lifemod.utils.Update;
 import org.bstats.bukkit.Metrics;
@@ -38,6 +39,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LifeMod extends JavaPlugin {
+    private FileConfiguration config;
     private FreezeManager freezeManager;
     private static LifeMod instance;
     public Options options;
@@ -76,6 +78,7 @@ public class LifeMod extends JavaPlugin {
     public void onEnable() {
         CommandHandler();
         ConfigConfig();
+        LangConfig();
         instance = this;
         freezeManager = new FreezeManager();
         this.frozenPlayers = new HashMap<>();
@@ -89,6 +92,8 @@ public class LifeMod extends JavaPlugin {
         chatManager = new ChatManager(this, messages);
         Bukkit.getConsoleSender().sendMessage("§cLifeMod developed by Lampalon with §4<3 §cwas been successfully initialised");
         utils();
+
+
     }
     private void utils(){
         int pluginId = 19817;
@@ -134,7 +139,6 @@ public class LifeMod extends JavaPlugin {
         isWeatherActive = getConfig().getBoolean("commands-enabled.weather", true);
         isLifemodActive = getConfig().getBoolean("commands-enabled.lifemod", true);
         isSpeedActive = getConfig().getBoolean("commands-enabled.speed", true);
-        disabledCommand = getConfig().getString("command-deactivate");
 
         try {
             Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
@@ -340,10 +344,6 @@ public class LifeMod extends JavaPlugin {
         return isFeedActive;
     }
 
-    public String getDisabledCommand() {
-        return disabledCommand;
-    }
-
     private void unregisterCommand(String commandName) {
         try {
             Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
@@ -365,9 +365,9 @@ public class LifeMod extends JavaPlugin {
     private void Update(){
         new Update(this, 112381).getLatestVersion(version -> {
             if(this.getDescription().getVersion().equalsIgnoreCase(version)){
-                this.getLogger().info(getConfig().getString("update.uselatest"));
+                this.getLogger().info(getLangConfig().getString("general.update.uselatest"));
             } else {
-                this.getLogger().warning(getConfig().getString("update.oldversion"));
+                this.getLogger().warning(getLangConfig().getString("general.update.oldversion"));
             }
         });
     }
@@ -433,5 +433,10 @@ public class LifeMod extends JavaPlugin {
     }
     public FreezeManager getFreezeManager(){
         return freezeManager;
+    }
+    public void reloadPluginConfig() {
+        reloadConfig();
+        LangConfig();
+        config = getConfig();
     }
  }

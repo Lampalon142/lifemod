@@ -41,6 +41,7 @@ public class CommandHandler implements CommandExecutor {
 
                     plugin.reloadConfig();
                     plugin.ConfigConfig();
+                    plugin.reloadPluginConfig();
 
                     sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getLangConfig().getString("general.config-reloaded")));
                 } //else if (args.length == 1 && args[0].equalsIgnoreCase("help")) {}

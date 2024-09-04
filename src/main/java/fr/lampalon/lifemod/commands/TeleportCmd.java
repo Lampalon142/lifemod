@@ -18,24 +18,23 @@ import java.util.Objects;
 public class TeleportCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Messages s = (LifeMod.getInstance()).messages;
         if (LifeMod.getInstance().isTeleportActive()) {
             if (label.equalsIgnoreCase("tp")) {
 
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
                 Player player = (Player) sender;
 
                 if (!player.hasPermission("lifemod.tp")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("nopermission")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
 
                 if (args.length != 1 && args.length != 3 && args.length != 2) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("tpusage")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tp.usage")));
                     return true;
                 }
 
@@ -59,16 +58,16 @@ public class TeleportCmd implements CommandExecutor {
                     Player target = Bukkit.getPlayer(targetName);
 
                     if (target == null) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         return true;
                     }
 
                     if (target == player) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("yourselftp")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tp.yourself")));
                         return false;
                     }
 
-                    String target1 = LifeMod.getInstance().getConfig().getString("tpsuccess");
+                    String target1 = LifeMod.getInstance().getLangConfig().getString("tp.success");
                     player.teleport(target);
                     player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + target1.replace("%player%", target.getPlayer().getName())));
 
@@ -77,12 +76,12 @@ public class TeleportCmd implements CommandExecutor {
                     Player target2 = Bukkit.getPlayer(args[1]);
 
                     if (target1 == null || target2 == null) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         return true;
                     }
 
                     target1.teleport(target2.getLocation());
-                    String messages = LifeMod.getInstance().getConfig().getString("tptwoplayers");
+                    String messages = LifeMod.getInstance().getConfig().getString("tp.twoplayers");
                     player.sendMessage(MessageUtil.parseColors(messages.replace("%player1%", target1.getName()).replace("%player2%", target2.getName())));
                 } else if (args.length == 3) {
 
@@ -92,9 +91,9 @@ public class TeleportCmd implements CommandExecutor {
                         double z = Double.parseDouble(args[2]);
 
                         Location targetLocation = new Location(player.getWorld(), x, y, z);
-                        String target1 = LifeMod.getInstance().getConfig().getString("tpsuccess");
+                        String target1 = LifeMod.getInstance().getLangConfig().getString("tp.success");
                         player.teleport(targetLocation);
-                        player.sendMessage(MessageUtil.parseColors(target1.replace("%player%", "coordinates")));
+                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + target1.replace("%player%", "coordinates")));
                     } catch (NumberFormatException e) {
                         player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("invalidcoordinates")));
                     }
@@ -103,19 +102,19 @@ public class TeleportCmd implements CommandExecutor {
                 return true;
             } else if (label.equalsIgnoreCase("tphere")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
                 Player player = (Player) sender;
 
                 if (!player.hasPermission("lifemod.tphere")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("noperm")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
 
                 if (args.length != 1) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("tphereusage")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tphere.usage")));
                     return true;
                 }
 
@@ -123,17 +122,17 @@ public class TeleportCmd implements CommandExecutor {
                 Player targetPlayer = Bukkit.getPlayer(args[0]);
 
                 if (targetPlayer == null) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("offlineplayer")));
+                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                     return true;
                 }
 
-                String target2 = LifeMod.getInstance().getConfig().getString("tpheresuccess");
+                String target2 = LifeMod.getInstance().getLangConfig().getString("tphere.success");
                 targetPlayer.teleport(senderPlayer.getLocation());
                 player.sendMessage(MessageUtil.parseColors(target2.replace("%player%", targetPlayer.getPlayer().getName())));
                 return true;
             }
         } else {
-            sender.sendMessage(MessageUtil.parseColors(s.prefixGeneral + s.commanddisable));
+            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
         return true;
     }

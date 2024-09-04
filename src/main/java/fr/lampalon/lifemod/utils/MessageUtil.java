@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MessageUtil {
-    public static boolean isVersionAbove(String version) {
+    /**public static boolean isVersionAbove(String version) {
         String[] serverVersion = Bukkit.getVersion().split(" ")[0].split("\\.");
         String[] targetVersion = version.split("\\.");
 
@@ -22,7 +22,7 @@ public class MessageUtil {
             }
         }
         return true;
-    }
+    }*/
     public static String parseColors(String message) {
         Pattern hexColorPattern = Pattern.compile("#[a-fA-F0-9]{6}");
 
