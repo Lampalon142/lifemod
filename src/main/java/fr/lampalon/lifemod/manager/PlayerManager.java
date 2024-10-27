@@ -1,8 +1,6 @@
 package fr.lampalon.lifemod.manager;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
-import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.utils.ItemBuilder;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import net.md_5.bungee.api.ChatMessageType;
