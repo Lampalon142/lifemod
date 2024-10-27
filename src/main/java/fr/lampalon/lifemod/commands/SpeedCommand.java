@@ -1,22 +1,23 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
-public class SpeedCommand implements CommandExecutor {
+public class SpeedCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Messages msg = (LifeMod.getInstance()).messages;
         if (LifeMod.getInstance().isSpeedActive()) {
             if (label.equalsIgnoreCase("speed")) {
                 if (!(sender instanceof Player)) {
@@ -71,8 +72,18 @@ public class SpeedCommand implements CommandExecutor {
                 }
             }
         } else {
-            sender.sendMessage(MessageUtil.parseColors(msg.prefixGeneral + msg.commanddisable));
+            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
         return false;
+    }
+
+    @Override
+    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("speed")) {
+            if (args.length == 1) {
+                return Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+            }
+        }
+        return null;
     }
 }

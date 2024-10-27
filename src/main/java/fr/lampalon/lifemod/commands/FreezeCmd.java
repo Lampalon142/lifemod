@@ -1,7 +1,6 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.manager.FreezeManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
@@ -10,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -18,12 +18,10 @@ import org.yaml.snakeyaml.Yaml;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
-public class FreezeCmd implements CommandExecutor, Listener {
+public class FreezeCmd implements CommandExecutor, TabCompleter {
     private LifeMod main;
 
     public FreezeCmd(LifeMod main){
@@ -104,5 +102,19 @@ public class FreezeCmd implements CommandExecutor, Listener {
             sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("freeze")) {
+            if (args.length == 1) {
+                List<String> playerNames = new ArrayList<>();
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    playerNames.add(player.getName());
+                }
+                return playerNames;
+            }
+        }
+        return null;
     }
 }

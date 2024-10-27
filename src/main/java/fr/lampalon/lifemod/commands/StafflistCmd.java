@@ -1,7 +1,6 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.manager.VanishedManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
@@ -18,7 +17,6 @@ import java.util.Objects;
 public class StafflistCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Messages messages = (LifeMod.getInstance()).messages;
         if (LifeMod.getInstance().isStafflistActive()) {
             if (label.equalsIgnoreCase("stafflist")) {
                 if (sender instanceof Player) {

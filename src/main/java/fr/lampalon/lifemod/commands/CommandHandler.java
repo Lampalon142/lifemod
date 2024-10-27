@@ -3,18 +3,23 @@ package fr.lampalon.lifemod.commands;
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public class CommandHandler implements CommandExecutor {
+public class CommandHandler implements CommandExecutor, TabCompleter {
     private final LifeMod plugin;
 
     public CommandHandler(LifeMod plugin){
@@ -45,8 +50,7 @@ public class CommandHandler implements CommandExecutor {
 
                     sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getLangConfig().getString("general.config-reloaded")));
                 } //else if (args.length == 1 && args[0].equalsIgnoreCase("help")) {}
-
-                 else {
+                else {
                    sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getConfigConfig().getString("lifemod.usage")));
                 }
                 return true;
@@ -58,5 +62,18 @@ public class CommandHandler implements CommandExecutor {
             sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getConfigConfig().getString("command-deactivate")));
         }
         return false;
+    }
+
+    @Override
+    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("lifemod")) {
+            if (args.length == 1){
+                List<String> suggestions = new ArrayList<>();
+                suggestions.add("help");
+                suggestions.add("reload");
+                return suggestions;
+            }
+        }
+        return null;
     }
 }

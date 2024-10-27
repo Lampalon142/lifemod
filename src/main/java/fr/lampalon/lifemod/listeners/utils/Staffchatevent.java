@@ -1,32 +1,28 @@
 package fr.lampalon.lifemod.listeners.utils;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.utils.MessageUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class Staffchatevent implements Listener {
-    public Messages messages;
     private LifeMod plugin;
 
-    public Staffchatevent(LifeMod plugin, Messages messages) {
+    public Staffchatevent(LifeMod plugin) {
         this.plugin = plugin;
-        this.messages = messages;
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        String playermsg = LifeMod.getInstance().getConfig().getString("staffmsg");
+        String playermsg = LifeMod.getInstance().getLangConfig().getString("staffchat.message");
 
         if (player.hasPermission("lifemod.staffchat")) {
             String message = event.getMessage();
 
-            if (message.startsWith(messages.prefixmsg)) {
+            if (message.startsWith(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix")))) {
                 event.setCancelled(true);
 
                 for (Player recipient : plugin.getServer().getOnlinePlayers()) {

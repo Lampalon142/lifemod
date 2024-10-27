@@ -1,7 +1,6 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.manager.VanishedManager;
 import fr.lampalon.lifemod.utils.MessageUtil;

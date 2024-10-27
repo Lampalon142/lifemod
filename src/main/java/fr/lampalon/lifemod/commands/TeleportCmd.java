@@ -1,7 +1,6 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
@@ -9,13 +8,16 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class TeleportCmd implements CommandExecutor {
+public class TeleportCmd implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (LifeMod.getInstance().isTeleportActive()) {
@@ -53,7 +55,6 @@ public class TeleportCmd implements CommandExecutor {
                 }
 
                 if (args.length == 1) {
-
                     String targetName = args[0];
                     Player target = Bukkit.getPlayer(targetName);
 
@@ -81,7 +82,7 @@ public class TeleportCmd implements CommandExecutor {
                     }
 
                     target1.teleport(target2.getLocation());
-                    String messages = LifeMod.getInstance().getConfig().getString("tp.twoplayers");
+                    String messages = LifeMod.getInstance().getLangConfig().getString("tp.twoplayers");
                     player.sendMessage(MessageUtil.parseColors(messages.replace("%player1%", target1.getName()).replace("%player2%", target2.getName())));
                 } else if (args.length == 3) {
 
@@ -135,5 +136,20 @@ public class TeleportCmd implements CommandExecutor {
             sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
         return true;
+    }
+
+    @Override
+    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("tp")) {
+            List<String> playersList = new ArrayList<>();
+
+            if (args.length == 1 || args.length == 2){
+                for (Player player : Bukkit.getOnlinePlayers()){
+                    playersList.add(player.getName());
+                }
+            }
+            return playersList;
+        }
+        return null;
     }
 }

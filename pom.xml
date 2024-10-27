@@ -6,7 +6,7 @@
 
     <groupId>fr.lampalon.lifemod</groupId>
     <artifactId>lifemod</artifactId>
-    <version>1.5.7-RELEASE</version>
+    <version>1.6.1-RELEASE</version>
 
     <properties>
         <maven.compiler.source>20</maven.compiler.source>
@@ -73,6 +73,12 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.20-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

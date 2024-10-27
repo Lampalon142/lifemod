@@ -1,11 +1,10 @@
 package fr.lampalon.lifemod;
 
 import fr.lampalon.lifemod.commands.*;
-import fr.lampalon.lifemod.data.configuration.Messages;
-import fr.lampalon.lifemod.data.configuration.Options;
 import fr.lampalon.lifemod.listeners.moderation.FreezeGui;
 import fr.lampalon.lifemod.listeners.moderation.ModCancels;
 import fr.lampalon.lifemod.listeners.moderation.ModItemsInteract;
+import fr.lampalon.lifemod.listeners.players.PlayerJoin;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
 import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
@@ -19,17 +18,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
 
-import fr.lampalon.lifemod.utils.Update;
+import fr.lampalon.lifemod.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.*;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,17 +34,17 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LifeMod extends JavaPlugin {
-    private FileConfiguration config;
     private FreezeManager freezeManager;
     private static LifeMod instance;
-    public Options options;
-    public Messages messages;
+    private UpdateChecker updateChecker;
     private ChatManager chatManager;
     private VanishedManager playerManager;
     private File ConfigFile;
     private FileConfiguration ConfigConfig;
-    private ArrayList<UUID> moderators; private HashMap<UUID, PlayerManager> players; private HashMap<UUID, Location> frozenPlayers;
-    private CommandMap commandMap;
+    private ArrayList<UUID> moderators;
+    private HashMap<UUID, PlayerManager> players;
+    private HashMap<UUID, Location> frozenPlayers;
+    public CommandMap commandMap;
     public String webHookUrl = getConfig().getString("discord.webhookurl");
     private boolean isFreezeActive;
     private boolean isModActive;
@@ -70,7 +65,6 @@ public class LifeMod extends JavaPlugin {
     private boolean isWeatherActive;
     private boolean isLifemodActive;
     private boolean isSpeedActive;
-    private String disabledCommand;
     private File LangFile;
     private FileConfiguration LangConfig;
 
@@ -84,12 +78,10 @@ public class LifeMod extends JavaPlugin {
         this.frozenPlayers = new HashMap<>();
         this.players = new HashMap<>();
         this.moderators = new ArrayList<>();
-        this.messages = new Messages();
         registerEvents();
         registerCommands();
         saveDefaultConfig();
-        Update();
-        chatManager = new ChatManager(this, messages);
+        chatManager = new ChatManager(this);
         Bukkit.getConsoleSender().sendMessage("§cLifeMod developed by Lampalon with §4<3 §cwas been successfully initialised");
         utils();
 
@@ -106,18 +98,18 @@ public class LifeMod extends JavaPlugin {
         }));
     }
     private void registerEvents() {
-        this.messages = new Messages();
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new ModCancels(), this);
         pm.registerEvents(new ModItemsInteract(), this);
-        pm.registerEvents(new Staffchatevent(this, this.messages), (Plugin)this);
+        pm.registerEvents(new Staffchatevent(this), (Plugin)this);
         pm.registerEvents(new PluginDisable(), this);
         pm.registerEvents(new PlayerQuit(), this);
         pm.registerEvents(new FreezeGui(this), this);
+        updateChecker = new UpdateChecker(this, 112381);
+        pm.registerEvents(new PlayerJoin(this, updateChecker), this);
     }
     private void registerCommands() {
         playerManager = new VanishedManager();
-        this.messages = new Messages();
     }
     private void CommandHandler(){
         isFreezeActive = getConfig().getBoolean("commands-enabled.freeze", true);
@@ -165,6 +157,8 @@ public class LifeMod extends JavaPlugin {
         if (isBroadcastActive){
             getCommand("broadcast").setExecutor((CommandExecutor) new BroadcastCmd());
             getCommand("bc").setExecutor((CommandExecutor) new BroadcastCmd());
+            getCommand("broadcast").setTabCompleter((TabCompleter) new BroadcastCmd());
+            getCommand("bc").setTabCompleter((TabCompleter) new BroadcastCmd());
         } else {
             unregisterCommand("broadcast");
             unregisterCommand("bc");
@@ -172,18 +166,22 @@ public class LifeMod extends JavaPlugin {
 
         if (isGamemodeActive){
             getCommand("gm").setExecutor((CommandExecutor) new GmCmd());
+            getCommand("gm").setTabCompleter((TabCompleter) new GmCmd());
+            getCommand("gamemode").setTabCompleter((TabCompleter) new GmCmd());
         } else {
             unregisterCommand("gm");
         }
 
         if (isFlyActive){
             getCommand("fly").setExecutor((CommandExecutor) new FlyCmd());
+            getCommand("fly").setTabCompleter((TabCompleter) new FlyCmd());
         } else {
             unregisterCommand("fly");
         }
 
         if (isEcopenActive){
             getCommand("ecopen").setExecutor((CommandExecutor) new EcopenCmd());
+            getCommand("ecopen").setTabCompleter((TabCompleter) new EcopenCmd());
         } else {
             unregisterCommand("ecopen");
         }
@@ -196,6 +194,7 @@ public class LifeMod extends JavaPlugin {
 
         if (isClearinvActive){
             getCommand("clearinv").setExecutor((CommandExecutor) new ClearinvCmd());
+            getCommand("clearinv").setTabCompleter((TabCompleter) new ClearinvCmd());
         } else {
             unregisterCommand("clearinv");
         }
@@ -208,6 +207,7 @@ public class LifeMod extends JavaPlugin {
 
         if(isStaffchatActive){
             getCommand("staffchat").setExecutor((CommandExecutor) new StaffchatCmd());
+            getCommand("staffchat").setTabCompleter((TabCompleter) new StaffchatCmd() );
         } else {
             unregisterCommand("staffchat");
         }
@@ -220,6 +220,7 @@ public class LifeMod extends JavaPlugin {
 
         if(isHealActive){
             getCommand("heal").setExecutor((CommandExecutor) new HealCmd());
+            getCommand("heal").setTabCompleter((TabCompleter) new HealCmd());
         } else {
             unregisterCommand("heal");
         }
@@ -227,6 +228,8 @@ public class LifeMod extends JavaPlugin {
         if(isTeleportActive){
             getCommand("tp").setExecutor((CommandExecutor) new TeleportCmd());
             getCommand("tphere").setExecutor((CommandExecutor) new TeleportCmd());
+            getCommand("tp").setTabCompleter((TabCompleter) new TeleportCmd());
+            getCommand("tphere").setTabCompleter((TabCompleter) new TeleportCmd());
         } else {
             unregisterCommand("tp");
             unregisterCommand("tphere");
@@ -234,36 +237,42 @@ public class LifeMod extends JavaPlugin {
 
         if(isGodmodeActive){
             getCommand("god").setExecutor((CommandExecutor) new GodModCmd());
+            getCommand("god").setTabCompleter((TabCompleter) new GodModCmd());
         } else {
             unregisterCommand("god");
         }
 
         if(isInvseeActive){
             getCommand("invsee").setExecutor((CommandExecutor) new InvseeCmd(this));
+            getCommand("invsee").setTabCompleter((TabCompleter) new InvseeCmd(this));
         } else {
             unregisterCommand("invsee");
         }
 
         if(isFeedActive){
             getCommand("feed").setExecutor((CommandExecutor) new FeedCmd());
+            getCommand("feed").setTabCompleter((TabCompleter) new FeedCmd());
         } else {
             unregisterCommand("feed");
         }
 
         if(isWeatherActive){
             getCommand("weather").setExecutor((CommandExecutor) new WeatherCmd(this));
+            getCommand("weather").setTabCompleter((TabCompleter) new WeatherCmd(this));
         } else {
             unregisterCommand("weather");
         }
 
         if(isLifemodActive){
             getCommand("lifemod").setExecutor((CommandExecutor)new CommandHandler(this));
+            getCommand("lifemod").setTabCompleter((TabCompleter) new CommandHandler(this));
         } else {
             unregisterCommand("lifemod");
         }
 
         if(isSpeedActive){
             getCommand("speed").setExecutor((CommandExecutor)new SpeedCommand());
+            getCommand("speed").setTabCompleter((TabCompleter) new SpeedCommand());
         } else {
             unregisterCommand("speed");
         }
@@ -362,22 +371,12 @@ public class LifeMod extends JavaPlugin {
             e.printStackTrace();
         }
     }
-    private void Update(){
-        new Update(this, 112381).getLatestVersion(version -> {
-            if(this.getDescription().getVersion().equalsIgnoreCase(version)){
-                this.getLogger().info(getLangConfig().getString("general.update.uselatest"));
-            } else {
-                this.getLogger().warning(getLangConfig().getString("general.update.oldversion"));
-            }
-        });
-    }
     public void onDisable() {
         Bukkit.getOnlinePlayers().stream().filter(PlayerManager::isInModerationMod).forEach(p -> {
             if (PlayerManager.isInModerationMod(p)) {
                 PlayerManager.getFromPlayer(p).destroy();
             }
         });
-        this.messages = null;
     }
     public void ConfigConfig() {
         ConfigFile = new File(getDataFolder(), "config.yml");
@@ -437,6 +436,5 @@ public class LifeMod extends JavaPlugin {
     public void reloadPluginConfig() {
         reloadConfig();
         LangConfig();
-        config = getConfig();
     }
- }
+}

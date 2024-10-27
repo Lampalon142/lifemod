@@ -21,7 +21,7 @@ mod:
 gamemode:
   invalid: "&cInvalid usage. Please use : /gm or /gamemode [mode] <player>"
   usage: "&cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
-  other: "&7Game mode has been changed to &b&l%gamemode% &7for &c&l%player%"
+  other: "&7Game mode has been changed to &b&l%gamemode% &7for &c&l%luckperms_prefix% %player%"
   own: "&7Your game mode has been changed to &b&l%gamemode%"
 
 ## Freeze
@@ -48,6 +48,10 @@ freeze:
 bc:
   prefix: "&7[&4&lAlert&7] &f"
   usage: "&cUsage : /bc <message>"
+  tabcompleter:
+    - Hello
+    - Welcome
+    - Attention
 
 ## Moderation-Tools
 tools:
@@ -149,8 +153,12 @@ weather:
 
 ## God Mode
 god:
-  activate: "&aYou are now invincible."
-  deactivate: "&cYou're no longer invincible."
+  activate:
+    own: "&aYou are now invincible."
+    other: "&aYou have made %player% invincible to attack"
+  deactivate:
+    own: "&cYou're no longer invincible."
+    other: "&aYou have made %player% not invincible to attack"
 
 ## Inventory See
 invsee:

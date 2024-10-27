@@ -1,7 +1,6 @@
 package fr.lampalon.lifemod.manager;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,13 +12,11 @@ import java.util.List;
 
 public class ChatManager implements Listener {
     private final LifeMod plugin;
-    private Messages messages;
     private boolean enabled;
     private List<String> blacklist;
 
-    public ChatManager(LifeMod plugin, Messages messages) {
+    public ChatManager(LifeMod plugin) {
         this.plugin = plugin;
-        this.messages = messages;
         reloadConfig();
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -53,7 +50,7 @@ public class ChatManager implements Listener {
     private void notifyViewers(Player sender) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("lifemod.chat.views")) {
-                player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + messages.notifychatmod.replace("%player%", sender.getPlayer().getName())));
+                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("chatManager.notification").replace("%player%", sender.getPlayer().getName())));
             }
         }
     }

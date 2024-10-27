@@ -1,20 +1,22 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class WeatherCmd implements CommandExecutor {
+public class WeatherCmd implements CommandExecutor, TabCompleter {
     private final LifeMod plugin;
 
     public WeatherCmd(LifeMod plugin) {
@@ -23,7 +25,6 @@ public class WeatherCmd implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Messages messages = (LifeMod.getInstance()).messages;
         if (plugin.isWeatherActive()) {
             if (label.equalsIgnoreCase("weather")) {
 
@@ -86,5 +87,19 @@ public class WeatherCmd implements CommandExecutor {
             sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
         return true;
+    }
+
+    @Override
+    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("weather")) {
+            if (args.length == 1){
+                List<String> suggestions = new ArrayList<>();
+                suggestions.add("sun");
+                suggestions.add("rain");
+                suggestions.add("storm");
+                return suggestions;
+            }
+        }
+        return null;
     }
 }

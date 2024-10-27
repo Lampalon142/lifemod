@@ -1,7 +1,6 @@
 package fr.lampalon.lifemod.listeners.moderation;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.FreezeManager;
 import fr.lampalon.lifemod.manager.PlayerManager;
 
@@ -125,7 +124,7 @@ public class ModItemsInteract implements Listener {
         InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("lang.yml");
         Yaml yaml = new Yaml();
         Map<String, List<String>> config = yaml.load(input);
-        List<String> freezeMsg = config.get("freeze.messages.onfreeze");
+        List<String> freezeMsg = LifeMod.getInstance().getLangConfig().getStringList("freeze.messages.onfreeze");
 
         for (String msg : freezeMsg) {
           target.sendMessage(MessageUtil.parseColors(msg));
@@ -147,7 +146,6 @@ public class ModItemsInteract implements Listener {
   }
 
   private void teleportRandomPlayer(Player player) {
-    Messages messages = (LifeMod.getInstance()).messages;
     Player[] onlinePlayers = Bukkit.getOnlinePlayers().toArray(new Player[0]);
 
     if (onlinePlayers.length == 0) {
@@ -173,14 +171,13 @@ public class ModItemsInteract implements Listener {
 
   private void toggleVanish(Player player) {
     String s = LifeMod.getInstance().getLangConfig().getString("vanish.cooldown");
-    Messages messages = LifeMod.getInstance().messages;
     long currentTime = System.currentTimeMillis();
     long lastToggleTime = vanishCooldowns.getOrDefault(player.getUniqueId(), 0L);
     long cooldown = 5000;
 
     if (currentTime - lastToggleTime < cooldown) {
       int remainingSeconds = (int) ((cooldown - (currentTime - lastToggleTime)) / 1000);
-      player.sendMessage(MessageUtil.parseColors(messages.prefixGeneral + s.replace("%cooldown%", String.valueOf(remainingSeconds))));
+      player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s.replace("%cooldown%", String.valueOf(remainingSeconds))));
       return;
     }
 

@@ -1,20 +1,23 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class BroadcastCmd implements CommandExecutor {
+
+public class BroadcastCmd implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (LifeMod.getInstance().isBroadcastActive()) {
             if (cmd.getName().equalsIgnoreCase("broadcast")) {
@@ -54,5 +57,15 @@ public class BroadcastCmd implements CommandExecutor {
             sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
         }
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("broadcast") || cmd.getName().equalsIgnoreCase("bc")){
+            if (args.length == 1) {
+                return LifeMod.getInstance().getLangConfig().getStringList("bc.tabcompleter");
+            }
+        }
+        return null;
     }
 }

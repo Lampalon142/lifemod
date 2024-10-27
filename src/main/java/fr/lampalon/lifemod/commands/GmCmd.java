@@ -1,25 +1,36 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
-import fr.lampalon.lifemod.data.configuration.Messages;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
 
-public class GmCmd implements CommandExecutor {
+public class GmCmd implements CommandExecutor, TabCompleter {
+
+  private LuckPerms luckPerms;
+
+  public GmCmd(){
+    if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null){
+      luckPerms = LuckPermsProvider.get();
+    }
+  }
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    Messages messages = (LifeMod.getInstance()).messages;
     Player player = (Player) sender;
     if(LifeMod.getInstance().isGamemodeActive()) {
 
@@ -113,11 +124,21 @@ public class GmCmd implements CommandExecutor {
               throw new RuntimeException(e);
             }
           }
+
+          String playerPrefix = "";
+          if (luckPerms != null){
+            User user = luckPerms.getUserManager().getUser(targetPlayer.getName());
+            if (user != null){
+              playerPrefix = user.getCachedData().getMetaData().getPrefix();
+            }
+            if (playerPrefix == null) playerPrefix = "";
+          }
+
           targetPlayer.setGameMode(gameMode);
           if (targetPlayerName != null) {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName())));
+            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName()).replace("%luckperms_prefix%", playerPrefix)));
           } else {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.own").replace("%gamemode%", gameMode.name())));
+            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.own").replace("%gamemode%", gameMode.name()).replace("%luckperms_prefix%", playerPrefix)));
           }
           return true;
         }
@@ -126,5 +147,21 @@ public class GmCmd implements CommandExecutor {
       sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
     }
     return false;
+  }
+
+  @Override
+  public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+    if (cmd.getName().equalsIgnoreCase("gamemode") || cmd.getName().equalsIgnoreCase("gm")) {
+      if (args.length == 1) {
+        return Arrays.asList("survival", "creative", "adventure", "spectator", "s", "c", "a", "sp", "0", "1", "2", "3");
+      } else if (args.length == 2) {
+        List<String> playerNames = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+          playerNames.add(player.getName());
+        }
+        return playerNames;
+      }
+    }
+    return null;
   }
 }
