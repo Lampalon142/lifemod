@@ -8,8 +8,13 @@ import java.util.regex.Pattern;
 
 public class MessageUtil {
     public static String parseColors(String message) {
-        Pattern hexColorPattern = Pattern.compile("#[a-fA-F0-9]{6}");
+        if (message == null || message.trim().isEmpty()) {
+            return "";
+        }
 
+        message = message.replace("\\n", "\n");
+
+        Pattern hexColorPattern = Pattern.compile("#[a-fA-F0-9]{6}");
         Matcher matcher = hexColorPattern.matcher(message);
 
         StringBuffer sb = new StringBuffer();

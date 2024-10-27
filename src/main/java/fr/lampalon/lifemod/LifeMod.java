@@ -82,7 +82,7 @@ public class LifeMod extends JavaPlugin {
         registerCommands();
         saveDefaultConfig();
         chatManager = new ChatManager(this);
-        Bukkit.getConsoleSender().sendMessage("§cLifeMod developed by Lampalon with §4<3 §cwas been successfully initialised");
+        Bukkit.getConsoleSender().sendMessage("§aLifeMod developed by Lampalon with §4<3 §awas been successfully initialised");
         utils();
 
 

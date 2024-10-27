@@ -31,13 +31,14 @@ public class GmCmd implements CommandExecutor, TabCompleter {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    Player player = (Player) sender;
     if(LifeMod.getInstance().isGamemodeActive()) {
 
       if (label.equalsIgnoreCase("gm") || label.equalsIgnoreCase("gamemode")) {
         if (!(sender instanceof Player)) {
           sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
         }
+
+        Player player = (Player) sender;
         if (!player.hasPermission("lifemod.gm")) {
           player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
         } else {
