@@ -22,7 +22,7 @@ public class ModCommand implements CommandExecutor {
         if (LifeMod.getInstance().isModActive()) {
 
             if (!(sender instanceof Player)) {
-                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("onlyplayer")));
+                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                 return false;
             }
 

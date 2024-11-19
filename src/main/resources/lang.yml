@@ -4,8 +4,14 @@ general:
   offlineplayer: "&cThis person is not connected to the server."
   config-reloaded: "&aThis config has been reloaded successfully!"
   update:
-    uselatest: "Plugin use the latest update thanks."
-    oldversion: "Plugin required an update! (https://www.spigotmc.org/resources/1-8-1-20-lifemod-moderation-plugin.112381/)"
+    message: |
+      &dHello %player%
+      &bLifeMod plugin has an available update!
+      &eYour version: &c%current_version%
+      &eNew version: &a%latest_version%
+      &eLink: &bhttps://www.spigotmc.org/resources/1-8-1-20-lifemod-moderation-plugin.112381/
+      &r
+      &e===========================
 
 ## Fly
 fly:

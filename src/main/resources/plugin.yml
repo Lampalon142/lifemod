@@ -50,6 +50,8 @@ commands:
     description: use Lifemod for help or reload.
   speed:
     description: permit you to update your speed.
+  panel:
+    description: Manage player from a gui.
 permissions:
   lifemod.*:
     default: op
@@ -74,3 +76,4 @@ permissions:
       - lifemod.chat.bypass
       - lifemod.invsee.interact
       - lifemod.notify
+      - lifemod.panel

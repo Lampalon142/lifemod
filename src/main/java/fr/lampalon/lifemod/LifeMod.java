@@ -1,9 +1,7 @@
 package fr.lampalon.lifemod;
 
 import fr.lampalon.lifemod.commands.*;
-import fr.lampalon.lifemod.listeners.moderation.FreezeGui;
-import fr.lampalon.lifemod.listeners.moderation.ModCancels;
-import fr.lampalon.lifemod.listeners.moderation.ModItemsInteract;
+import fr.lampalon.lifemod.listeners.moderation.*;
 import fr.lampalon.lifemod.listeners.players.PlayerJoin;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
 import fr.lampalon.lifemod.listeners.utils.PluginDisable;
@@ -91,6 +89,8 @@ public class LifeMod extends JavaPlugin {
         pm.registerEvents(new PluginDisable(), this);
         pm.registerEvents(new PlayerQuit(), this);
         pm.registerEvents(new FreezeGui(this), this);
+        pm.registerEvents(new PanelActionListener(), this);
+        pm.registerEvents(new PanelListener(), this);
         updateChecker = new UpdateChecker(this, 112381);
         pm.registerEvents(new PlayerJoin(this, updateChecker), this);
     }
@@ -244,6 +244,12 @@ public class LifeMod extends JavaPlugin {
         } else {
             unregisterCommand("speed");
         }
+
+        if (getConfig().getBoolean("commands-enabled.panel", true)){
+            getCommand("panel").setExecutor(new PanelCmd());
+        } else {
+            unregisterCommand("panel");
+        }
     }
 
     public boolean isFreezeActive() {
@@ -320,6 +326,10 @@ public class LifeMod extends JavaPlugin {
 
     public boolean isFeedActive() {
         return getConfig().getBoolean("commands-enabled.feed");
+    }
+
+    public boolean isPanelActive() {
+        return getConfig().getBoolean("commands-enabled.panel");
     }
 
     private void unregisterCommand(String commandName) {

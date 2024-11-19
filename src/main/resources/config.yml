@@ -52,6 +52,7 @@ commands-enabled:
   weather: true
   lifemod: true
   speed: true
+  panel: true
 
 items-enabled:
   kbTester: true
@@ -60,6 +61,25 @@ items-enabled:
   tpRandom: true
   vanish: true
   killItem: true
+
+## Panel Cmd items
+
+panel:
+  player:
+    title: "&a&l%player%"
+    item: "PLAYER_HEAD"
+  title: "&c&lPlayer panel"
+  action:
+    title: "&cAction for %player%"
+    items:
+      invsee:
+        name: "&eView inventory"
+        material: "CHEST"
+      teleport:
+        name: "&bTeleport"
+        material: "ENDER_PEARL"
+        teleported: "&aYou have been successfuly teleported to %player%"
+
 
 ## LifeMod config
 

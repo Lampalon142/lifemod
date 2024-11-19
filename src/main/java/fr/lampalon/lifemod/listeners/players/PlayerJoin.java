@@ -5,6 +5,7 @@ import fr.lampalon.lifemod.utils.MessageUtil;
 import fr.lampalon.lifemod.utils.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,14 +31,19 @@ public class PlayerJoin implements Listener {
                     if (updateChecker.getLatestVersionS() == null) {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[LifeMod] Failed to retrieve the latest version."));
                     } else if (result == UpdateChecker.UpdateCheckResult.OUT_DATED) {
-                        String message = "&dHello " + player.getName() + "\n" +
-                                "&bLifeMod plugin has an available update!\n" +
-                                "&eYour version: &c" + updateChecker.getCurrentVersionS() + "\n" +
-                                "&eNew version: &a" + updateChecker.getLatestVersionS() + "\n" +
-                                "&eLink: &bhttps://www.spigotmc.org/resources/1-8-1-20-lifemod-moderation-plugin.112381/" + "\n" +
-                                "&r\n" +
-                                "&e===========================";
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+                        String rawMessage = LifeMod.getInstance().getLangConfig().getString("general.update.message");
+
+                        if (rawMessage == null) {
+                            rawMessage = "&dHello %player%\n" +
+                                    "&bLifeMod plugin has an available update!\n" +
+                                    "&eYour version: &c%current_version%\n" +
+                                    "&eNew version: &a%latest_version%\n" +
+                                    "&eLink: &bhttps://www.spigotmc.org/resources/1-8-1-20-lifemod-moderation-plugin.112381/\n" +
+                                    "&r\n" +
+                                    "&e===========================";
+                        }
+
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', rawMessage.replace("%player%", player.getName()).replace("%current_version%", updateChecker.getCurrentVersionS()).replace("%latest_version%", updateChecker.getLatestVersionS())));
                     } else if (result == UpdateChecker.UpdateCheckResult.UP_TO_DATE) {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a[LifeMod] LifeMod is up to date."));
                     } else if (result == UpdateChecker.UpdateCheckResult.UNRELEASED) {
