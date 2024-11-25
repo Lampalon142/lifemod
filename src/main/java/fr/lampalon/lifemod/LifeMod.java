@@ -6,10 +6,7 @@ import fr.lampalon.lifemod.listeners.players.PlayerJoin;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
 import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
-import fr.lampalon.lifemod.manager.ChatManager;
-import fr.lampalon.lifemod.manager.FreezeManager;
-import fr.lampalon.lifemod.manager.PlayerManager;
-import fr.lampalon.lifemod.manager.VanishedManager;
+import fr.lampalon.lifemod.manager.*;
 import fr.lampalon.lifemod.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
@@ -20,7 +17,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -232,15 +228,15 @@ public class LifeMod extends JavaPlugin {
         }
 
         if (getConfig().getBoolean("commands-enabled.lifemod", true)) {
-            getCommand("lifemod").setExecutor(new CommandHandler(this));
-            getCommand("lifemod").setTabCompleter(new CommandHandler(this));
+            getCommand("lifemod").setExecutor(new lifemodCmd(this));
+            getCommand("lifemod").setTabCompleter(new lifemodCmd(this));
         } else {
             unregisterCommand("lifemod");
         }
 
         if (getConfig().getBoolean("commands-enabled.speed", true)) {
-            getCommand("speed").setExecutor(new SpeedCommand());
-            getCommand("speed").setTabCompleter(new SpeedCommand());
+            getCommand("speed").setExecutor(new SpeedCmd());
+            getCommand("speed").setTabCompleter(new SpeedCmd());
         } else {
             unregisterCommand("speed");
         }
@@ -249,6 +245,12 @@ public class LifeMod extends JavaPlugin {
             getCommand("panel").setExecutor(new PanelCmd());
         } else {
             unregisterCommand("panel");
+        }
+
+        if (getConfig().getBoolean("commands-enabled.spectate", true)){
+            getCommand("spectate").setExecutor(new SpectateCmd(this));
+        } else {
+            unregisterCommand("spectate");
         }
     }
 

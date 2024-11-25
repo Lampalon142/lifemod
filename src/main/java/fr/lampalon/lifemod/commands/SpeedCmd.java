@@ -11,11 +11,10 @@ import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class SpeedCommand implements CommandExecutor, TabCompleter {
+public class SpeedCmd implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (LifeMod.getInstance().isSpeedActive()) {

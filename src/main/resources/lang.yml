@@ -183,3 +183,14 @@ feed:
 speed:
   success: "&aYour speed has been changed to %speed%"
   provide: "&cYou need to provide a valid speed multiplier (1 to 10)"
+
+## Spectate
+
+spectate:
+  usage: "&cUsage: /spectate <player> | /spectate leave | /spectate fp"
+  already-spectate: "&cYou are already spectating! Use /spectate leave first."
+  spectate: "&aYou are now spectating &e%target% &a."
+  fp-spectate: "&aYou are now in first-person spectator mode."
+  leave:
+    success: "&aYou have exited Spectator mode and returned to your original location."
+    error: "&cYou are not spectating anyone!"

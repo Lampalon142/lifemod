@@ -3,26 +3,21 @@ package fr.lampalon.lifemod.commands;
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class CommandHandler implements CommandExecutor, TabCompleter {
+public class lifemodCmd implements CommandExecutor, TabCompleter {
     private final LifeMod plugin;
 
-    public CommandHandler(LifeMod plugin){
+    public lifemodCmd(LifeMod plugin){
         this.plugin = plugin;
     }
     @Override

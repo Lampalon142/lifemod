@@ -6,7 +6,7 @@
 
     <groupId>fr.lampalon.lifemod</groupId>
     <artifactId>LifeMod</artifactId>
-    <version>1.6.1-RELEASE</version>
+    <version>1.6.2-BETA</version>
 
     <properties>
         <maven.compiler.source>20</maven.compiler.source>
@@ -74,13 +74,18 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.20-R0.1-SNAPSHOT</version>
+            <artifactId>spigot</artifactId>
+            <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -99,12 +104,17 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.13.0</version>
         </dependency>
-        <!-- bStats -->
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.2</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api-plugin</artifactId>
+            <version>2.14.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

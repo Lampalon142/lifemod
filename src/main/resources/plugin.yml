@@ -1,6 +1,6 @@
 name: LifeMod
 authors: [Lampalon]
-version: '1.6.1-RELEASE'
+version: '1.6.2-BETA'
 main: fr.lampalon.lifemod.LifeMod
 api-version: "1.20"
 commands:
@@ -52,6 +52,8 @@ commands:
     description: permit you to update your speed.
   panel:
     description: Manage player from a gui.
+  spectate:
+    description: See player from a command.
 permissions:
   lifemod.*:
     default: op
@@ -77,3 +79,4 @@ permissions:
       - lifemod.invsee.interact
       - lifemod.notify
       - lifemod.panel
+      - lifemod.spectate

@@ -26,4 +26,8 @@ public class VanishedManager {
             Bukkit.getOnlinePlayers().forEach(p -> p.showPlayer(player));
         }
     }
+
+    public static Map<UUID, Boolean> getVanishedPlayers() {
+        return vanishedPlayers;
+    }
 }

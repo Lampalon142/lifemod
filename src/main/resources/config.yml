@@ -53,6 +53,7 @@ commands-enabled:
   lifemod: true
   speed: true
   panel: true
+  spectate: true
 
 items-enabled:
   kbTester: true
@@ -228,6 +229,13 @@ discord:
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   weather:
+    title: "New Alert!"
+    description: "> %player% has execute weather command!"
+    footer:
+      title: "Powered By ImproveDevelopment"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  spectate:
     title: "New Alert!"
     description: "> %player% has execute weather command!"
     footer:
