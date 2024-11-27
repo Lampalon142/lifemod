@@ -6,7 +6,7 @@
 
     <groupId>fr.lampalon.lifemod</groupId>
     <artifactId>LifeMod</artifactId>
-    <version>1.6.2-BETA</version>
+    <version>1.6.3-RELEASE</version>
 
     <properties>
         <maven.compiler.source>20</maven.compiler.source>

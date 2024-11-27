@@ -4,6 +4,7 @@ import fr.lampalon.lifemod.commands.*;
 import fr.lampalon.lifemod.listeners.moderation.*;
 import fr.lampalon.lifemod.listeners.players.PlayerJoin;
 import fr.lampalon.lifemod.listeners.players.PlayerQuit;
+import fr.lampalon.lifemod.listeners.players.PlayerTeleportEvent;
 import fr.lampalon.lifemod.listeners.utils.PluginDisable;
 import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
 import fr.lampalon.lifemod.manager.*;
@@ -87,6 +88,7 @@ public class LifeMod extends JavaPlugin {
         pm.registerEvents(new FreezeGui(this), this);
         pm.registerEvents(new PanelActionListener(), this);
         pm.registerEvents(new PanelListener(), this);
+        pm.registerEvents(new PlayerTeleportEvent(), this);
         updateChecker = new UpdateChecker(this, 112381);
         pm.registerEvents(new PlayerJoin(this, updateChecker), this);
     }
