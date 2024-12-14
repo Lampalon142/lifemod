@@ -31,6 +31,7 @@ public class AntiXray {
     public AntiXray(LifeMod plugin) {
         this.plugin = plugin;
 
+        // Chargement de la configuration
         FileConfiguration config = plugin.getConfig();
         rareOres = config.getStringList("rare-ores");
         fakeBlocks = config.getStringList("fake-blocks");
@@ -43,14 +44,15 @@ public class AntiXray {
                     Block block = chunk.getBlock(x, y, z);
                     Material blockType = block.getType();
 
+                    // Si c'est un minerai rare, le remplacer par de la pierre
                     if (isRareOre(blockType)) {
-                        originalBlocks.put(block, blockType);
-                        block.setType(Material.STONE);
+                        originalBlocks.put(block, blockType); // Sauvegarde le bloc original
+                        block.setType(Material.STONE); // Cache le minerai
                     }
-                    else if (random.nextDouble() < 0.1) {
-                        if (isBlockNatural(block)) {
-                            originalBlocks.put(block, blockType);
-                            block.setType(getRandomFakeBlock());
+                    else if (random.nextDouble() < 0.1) { // 10% de chances d'ajouter un leurre
+                        if (isBlockNatural(block)) { // Vérifie si le bloc est naturel (ex. pierre)
+                            originalBlocks.put(block, blockType); // Sauvegarde l'original
+                            block.setType(getRandomFakeBlock()); // Place un bloc de leurre
                         }
                     }
                 }
@@ -59,6 +61,7 @@ public class AntiXray {
     }
 
     private boolean isBlockNatural(Block block) {
+        // Vérifie si le bloc fait partie de l'environnement naturel
         Material type = block.getType();
         return type == Material.STONE || type == Material.DEEPSLATE || type == Material.DIRT || type == Material.GRAVEL;
     }
@@ -66,8 +69,8 @@ public class AntiXray {
     public void restoreBlock(Block block) {
         if (originalBlocks.containsKey(block)) {
             Material originalMaterial = originalBlocks.get(block);
-            block.setType(originalMaterial);
-            originalBlocks.remove(block);
+            block.setType(originalMaterial); // Remet le bloc d'origine
+            originalBlocks.remove(block); // Supprime l'entrée une fois restauré
         }
     }
 
