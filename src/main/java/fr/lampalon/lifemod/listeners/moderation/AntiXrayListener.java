@@ -30,7 +30,7 @@ public class AntiXrayListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        obfuscateChunksAroundPlayer(player, 3); // Rayon de 3 chunks autour du joueur
+        obfuscateChunksAroundPlayer(player, 3);
     }
 
     @EventHandler
@@ -38,22 +38,17 @@ public class AntiXrayListener implements Listener {
         Block block = event.getBlock();
         Player player = event.getPlayer();
 
-        // Vérifie si le bloc est un leurre (obfusqué)
         if (antiXray.isObfuscated(block)) {
-            Material originalMaterial = antiXray.originalBlocks.get(block); // Récupère le matériau original
+            Material originalMaterial = antiXray.originalBlocks.get(block);
 
-            // Annule les drops par défaut (empêche le leurre de dropper ses items)
             event.setDropItems(false);
 
-            // Remplace immédiatement le bloc par l'original (ou rien, selon le comportement attendu)
             block.setType(originalMaterial);
 
-            // Optionnel : Simule le drop du matériau d'origine
-            if (originalMaterial != Material.STONE) { // Exemple : On ne droppe pas pour la pierre
+            if (originalMaterial != Material.STONE) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(originalMaterial));
             }
 
-            // Supprime l'entrée du bloc obfusqué de la mémoire
             antiXray.originalBlocks.remove(block);
         }
     }
@@ -64,14 +59,12 @@ public class AntiXrayListener implements Listener {
         Location from = event.getFrom();
         Location to = event.getTo();
 
-        // Vérifie si le joueur a changé de chunk
         if (from.getChunk().getX() != to.getChunk().getX() || from.getChunk().getZ() != to.getChunk().getZ()) {
             Chunk currentChunk = to.getChunk();
 
-            // Vérifie si le chunk actuel est déjà obfusqué
             if (!lastPlayerChunks.containsKey(player.getUniqueId()) || !lastPlayerChunks.get(player.getUniqueId()).equals(currentChunk)) {
                 lastPlayerChunks.put(player.getUniqueId(), currentChunk);
-                obfuscateChunksAroundPlayer(player, 3); // Obfusque les chunks dans un rayon de 3
+                obfuscateChunksAroundPlayer(player, 3);
             }
         }
     }
@@ -82,7 +75,7 @@ public class AntiXrayListener implements Listener {
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
                 Chunk chunk = centerChunk.getWorld().getChunkAt(centerChunk.getX() + dx, centerChunk.getZ() + dz);
-                antiXray.obfuscateRegion(player, chunk); // Appelle la méthode d'obfuscation
+                antiXray.obfuscateRegion(player, chunk);
             }
         }
     }
