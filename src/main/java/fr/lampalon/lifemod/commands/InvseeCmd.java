@@ -25,7 +25,6 @@ public class InvseeCmd implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (label.equalsIgnoreCase("invsee")) {
-            if (plugin.isInvseeActive()) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
@@ -65,9 +64,6 @@ public class InvseeCmd implements CommandExecutor, TabCompleter {
 
                 player.openInventory(targetPlayer.getInventory());
                 return true;
-            } else {
-                sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-            }
         }
 
         return false;

@@ -6,7 +6,7 @@
 
     <groupId>fr.lampalon.lifemod</groupId>
     <artifactId>LifeMod</artifactId>
-    <version>1.6.3-RELEASE</version>
+    <version>1.6.4-ALPHA</version>
 
     <properties>
         <maven.compiler.source>20</maven.compiler.source>
@@ -22,14 +22,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <outputDirectory>../../serveurs/test/plugins</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -84,7 +76,7 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
+            <artifactId>spigot-api</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

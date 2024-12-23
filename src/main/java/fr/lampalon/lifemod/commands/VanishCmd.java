@@ -26,7 +26,6 @@ public class VanishCmd implements CommandExecutor {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (LifeMod.getInstance().isVanishActive()) {
             if (command.getName().equalsIgnoreCase("vanish")) {
 
                 if (!(sender instanceof Player)) {
@@ -83,9 +82,6 @@ public class VanishCmd implements CommandExecutor {
 
                 return true;
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return false;
     }
 }

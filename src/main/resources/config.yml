@@ -28,12 +28,31 @@ chatManager:
     - fuck
     - bitch
     - suck
+## AntiXray
+
+rare-ores:
+   - DIAMOND_ORE
+   - GOLD_ORE
+   - IRON_ORE
+   - EMERALD_ORE
+   - ANCIENT_DEBRIS
+
+fake-blocks:
+  - STONE
+  - ANDESITE
+  - GRANITE
+  - DIORITE
+  - COAL_ORE
+  - DEEPSLATE_COAL_ORE
+
+fake-block-chance: 0.1 # Chance (10%) to place a fake block (i discourage to put the value higher than 0.9 or 1)
 
 ## For disable command turn true to false
 
 command-deactivate: "&cThis command is deactivate."
 commands-enabled:
   gamemode: true
+  gm: true
   vanish: true
   feed: true
   heal: true

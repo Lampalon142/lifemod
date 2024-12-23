@@ -25,7 +25,6 @@ public class WeatherCmd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (plugin.isWeatherActive()) {
             if (label.equalsIgnoreCase("weather")) {
 
                 if (!(sender instanceof Player)) {
@@ -83,9 +82,6 @@ public class WeatherCmd implements CommandExecutor, TabCompleter {
 
                 return true;
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return true;
     }
 

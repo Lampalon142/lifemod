@@ -1,5 +1,6 @@
 package fr.lampalon.lifemod.listeners.utils;
 
+import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.manager.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

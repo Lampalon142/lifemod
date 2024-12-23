@@ -20,7 +20,6 @@ import java.util.Objects;
 public class TeleportCmd implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (LifeMod.getInstance().isTeleportActive()) {
             if (label.equalsIgnoreCase("tp")) {
 
                 if (!(sender instanceof Player)) {
@@ -132,9 +131,6 @@ public class TeleportCmd implements CommandExecutor, TabCompleter {
                 player.sendMessage(MessageUtil.parseColors(target2.replace("%player%", targetPlayer.getPlayer().getName())));
                 return true;
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return true;
     }
 

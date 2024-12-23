@@ -31,7 +31,6 @@ public class GmCmd implements CommandExecutor, TabCompleter {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    if(LifeMod.getInstance().isGamemodeActive()) {
 
       if (label.equalsIgnoreCase("gm") || label.equalsIgnoreCase("gamemode")) {
         if (!(sender instanceof Player)) {
@@ -144,9 +143,6 @@ public class GmCmd implements CommandExecutor, TabCompleter {
           return true;
         }
       }
-    } else {
-      sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-    }
     return false;
   }
 

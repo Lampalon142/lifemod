@@ -31,7 +31,6 @@ public class FreezeCmd implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         FreezeManager freezeManager = LifeMod.getInstance().getFreezeManager();
-        if (main.isFreezeActive()) {
             if (label.equalsIgnoreCase("freeze")) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
@@ -98,9 +97,6 @@ public class FreezeCmd implements CommandExecutor, TabCompleter {
                     return true;
                 }
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return false;
     }
 

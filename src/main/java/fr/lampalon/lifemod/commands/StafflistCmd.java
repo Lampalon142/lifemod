@@ -17,7 +17,6 @@ import java.util.Objects;
 public class StafflistCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (LifeMod.getInstance().isStafflistActive()) {
             if (label.equalsIgnoreCase("stafflist")) {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
@@ -57,9 +56,6 @@ public class StafflistCmd implements CommandExecutor {
                     return true;
                 }
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return false;
     }
 }

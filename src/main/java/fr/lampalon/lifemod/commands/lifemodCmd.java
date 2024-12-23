@@ -22,7 +22,6 @@ public class lifemodCmd implements CommandExecutor, TabCompleter {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (plugin.isLifemodActive()) {
             if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")) {
                 DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
                 webhook.addEmbed(new DiscordWebhook.EmbedObject()
@@ -40,7 +39,6 @@ public class lifemodCmd implements CommandExecutor, TabCompleter {
                 if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 
                     plugin.reloadConfig();
-                    plugin.ConfigConfig();
                     plugin.reloadPluginConfig();
 
                     sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getLangConfig().getString("general.config-reloaded")));
@@ -53,10 +51,6 @@ public class lifemodCmd implements CommandExecutor, TabCompleter {
                 sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getLangConfig().getString("general.nopermission")));
                 return false;
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getConfigConfig().getString("command-deactivate")));
-        }
-        return false;
     }
 
     @Override

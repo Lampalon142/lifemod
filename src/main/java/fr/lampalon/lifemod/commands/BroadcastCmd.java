@@ -19,7 +19,6 @@ import java.util.Objects;
 
 public class BroadcastCmd implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (LifeMod.getInstance().isBroadcastActive()) {
             if (cmd.getName().equalsIgnoreCase("broadcast")) {
                 if (!sender.hasPermission("lifemod.bc")) {
                     sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
@@ -53,9 +52,6 @@ public class BroadcastCmd implements CommandExecutor, TabCompleter {
                 }
                 return true;
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return false;
     }
 

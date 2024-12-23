@@ -20,7 +20,6 @@ public class HealCmd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (LifeMod.getInstance().isHealActive()) {
             if (label.equalsIgnoreCase("heal")) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
@@ -69,9 +68,6 @@ public class HealCmd implements CommandExecutor, TabCompleter {
                     player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("heal.usage")));
                 }
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return true;
     }
 

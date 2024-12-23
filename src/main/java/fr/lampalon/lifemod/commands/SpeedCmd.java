@@ -17,7 +17,6 @@ import java.util.Objects;
 public class SpeedCmd implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (LifeMod.getInstance().isSpeedActive()) {
             if (label.equalsIgnoreCase("speed")) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
@@ -70,9 +69,6 @@ public class SpeedCmd implements CommandExecutor, TabCompleter {
                     player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s4.replace("%speed%", String.valueOf(speed))));
                 }
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return false;
     }
 

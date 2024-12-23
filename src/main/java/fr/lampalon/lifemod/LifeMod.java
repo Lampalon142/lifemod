@@ -2,11 +2,8 @@ package fr.lampalon.lifemod;
 
 import fr.lampalon.lifemod.commands.*;
 import fr.lampalon.lifemod.listeners.moderation.*;
-import fr.lampalon.lifemod.listeners.players.PlayerJoin;
-import fr.lampalon.lifemod.listeners.players.PlayerQuit;
-import fr.lampalon.lifemod.listeners.players.PlayerTeleportEvent;
-import fr.lampalon.lifemod.listeners.utils.PluginDisable;
-import fr.lampalon.lifemod.listeners.utils.Staffchatevent;
+import fr.lampalon.lifemod.listeners.players.*;
+import fr.lampalon.lifemod.listeners.utils.*;
 import fr.lampalon.lifemod.manager.*;
 import fr.lampalon.lifemod.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
@@ -24,316 +21,132 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.Callable;
+import java.util.*;
 
 public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
-    public CommandMap commandMap;
-    public String webHookUrl = getConfig().getString("discord.webhookurl");
+    private CommandMap commandMap;
     private FreezeManager freezeManager;
     private UpdateChecker updateChecker;
+    public AntiXray antiXray;
     private ChatManager chatManager;
     private VanishedManager playerManager;
-    private File ConfigFile;
-    private FileConfiguration ConfigConfig;
-    private ArrayList<UUID> moderators;
-    private HashMap<UUID, PlayerManager> players;
-    private HashMap<UUID, Location> frozenPlayers;
-    private File LangFile;
-    private FileConfiguration LangConfig;
+    private FileConfiguration configConfig;
+    private FileConfiguration langConfig;
+    private Set<UUID> moderators = new HashSet<>();
+    private Map<UUID, PlayerManager> players = new HashMap<>();
+    private Map<UUID, Location> frozenPlayers = new HashMap<>();
+    public String webHookUrl = getConfig().getString("discord.webhookurl");
 
     public static LifeMod getInstance() {
         return instance;
     }
 
+    @Override
     public void onEnable() {
-        CommandHandler();
-        ConfigConfig();
-        LangConfig();
         instance = this;
-        freezeManager = new FreezeManager();
-        this.frozenPlayers = new HashMap<>();
-        this.players = new HashMap<>();
-        this.moderators = new ArrayList<>();
+        loadConfigurations();
+        initializeManagers();
         registerEvents();
         registerCommands();
         saveDefaultConfig();
-        chatManager = new ChatManager(this);
+        setupMetrics();
         Bukkit.getConsoleSender().sendMessage("§aLifeMod developed by Lampalon with §4<3 §awas been successfully initialised");
-        utils();
     }
 
-    private void utils() {
+    private void loadConfigurations() {
+        configConfig = loadConfig("config.yml");
+        langConfig = loadConfig("lang.yml");
+    }
+
+    private FileConfiguration loadConfig(String fileName) {
+        File file = new File(getDataFolder(), fileName);
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            saveResource(fileName, false);
+        }
+        FileConfiguration config = new YamlConfiguration();
+        try {
+            config.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        return config;
+    }
+
+    private void initializeManagers() {
+        freezeManager = new FreezeManager();
+        playerManager = new VanishedManager();
+        chatManager = new ChatManager(this);
+    }
+
+    private void setupMetrics() {
         int pluginId = 19817;
         Metrics metrics = new Metrics(this, pluginId);
-        metrics.addCustomChart(new SingleLineChart("players", new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                return Bukkit.getOnlinePlayers().size();
-            }
-        }));
+        metrics.addCustomChart(new SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
     }
 
     private void registerEvents() {
         PluginManager pm = Bukkit.getPluginManager();
+        updateChecker = new UpdateChecker(this, 112381);
         pm.registerEvents(new ModCancels(), this);
         pm.registerEvents(new ModItemsInteract(), this);
         pm.registerEvents(new Staffchatevent(this), this);
         pm.registerEvents(new PluginDisable(), this);
         pm.registerEvents(new PlayerQuit(), this);
         pm.registerEvents(new FreezeGui(this), this);
-        pm.registerEvents(new PanelActionListener(), this);
-        pm.registerEvents(new PanelListener(), this);
         pm.registerEvents(new PlayerTeleportEvent(), this);
-        updateChecker = new UpdateChecker(this, 112381);
         pm.registerEvents(new PlayerJoin(this, updateChecker), this);
     }
 
     private void registerCommands() {
-        playerManager = new VanishedManager();
+        commandMap = getCommandMap();
+        registerCommand("freeze", new FreezeCmd(this));
+        registerCommand("mod", new ModCommand());
+        registerCommand("staff", new ModCommand());
+        registerCommand("broadcast", new BroadcastCmd());
+        registerCommand("bc", new BroadcastCmd());
+        registerCommand("gamemode", new GmCmd());
+        registerCommand("gm", new GmCmd());
+        registerCommand("fly", new FlyCmd());
+        registerCommand("ecopen", new EcopenCmd());
+        registerCommand("vanish", new VanishCmd(playerManager));
+        registerCommand("clearinv", new ClearinvCmd());
+        registerCommand("stafflist", new StafflistCmd());
+        registerCommand("staffchat", new StaffchatCmd());
+        registerCommand("chatclear", new ChatclearCmd());
+        registerCommand("heal", new HealCmd());
+        registerCommand("tp", new TeleportCmd());
+        registerCommand("tphere", new TeleportCmd());
+        registerCommand("god", new GodModCmd());
+        registerCommand("invsee", new InvseeCmd(this));
+        registerCommand("feed", new FeedCmd());
+        registerCommand("weather", new WeatherCmd(this));
+        registerCommand("lifemod", new lifemodCmd(this));
+        registerCommand("speed", new SpeedCmd());
+        registerCommand("spectate", new SpectateCmd(this));
     }
 
-    private void CommandHandler() {
+    private CommandMap getCommandMap() {
         try {
             Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
-            commandMap = (CommandMap) commandMapField.get(getServer());
+            return (CommandMap) commandMapField.get(getServer());
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if (getConfig().getBoolean("commands-enabled.freeze", true)) {
-            getCommand("freeze").setExecutor(new FreezeCmd(this));
-        } else {
-            unregisterCommand("freeze");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.mod", true)) {
-            getCommand("mod").setExecutor(new ModCommand());
-            getCommand("staff").setExecutor(new ModCommand());
-        } else {
-            unregisterCommand("mod");
-            unregisterCommand("staff");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.broadcast", true)) {
-            getCommand("broadcast").setExecutor(new BroadcastCmd());
-            getCommand("bc").setExecutor(new BroadcastCmd());
-            getCommand("broadcast").setTabCompleter(new BroadcastCmd());
-            getCommand("bc").setTabCompleter(new BroadcastCmd());
-        } else {
-            unregisterCommand("broadcast");
-            unregisterCommand("bc");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.gamemode", true)) {
-            getCommand("gm").setExecutor(new GmCmd());
-            getCommand("gm").setTabCompleter(new GmCmd());
-            getCommand("gamemode").setTabCompleter(new GmCmd());
-        } else {
-            unregisterCommand("gm");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.fly", true)) {
-            getCommand("fly").setExecutor(new FlyCmd());
-            getCommand("fly").setTabCompleter(new FlyCmd());
-        } else {
-            unregisterCommand("fly");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.ecopen", true)) {
-            getCommand("ecopen").setExecutor(new EcopenCmd());
-            getCommand("ecopen").setTabCompleter(new EcopenCmd());
-        } else {
-            unregisterCommand("ecopen");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.vanish", true)) {
-            getCommand("vanish").setExecutor(new VanishCmd(playerManager));
-        } else {
-            unregisterCommand("vanish");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.clearinv", true)) {
-            getCommand("clearinv").setExecutor(new ClearinvCmd());
-            getCommand("clearinv").setTabCompleter(new ClearinvCmd());
-        } else {
-            unregisterCommand("clearinv");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.stafflist", true)) {
-            getCommand("stafflist").setExecutor(new StafflistCmd());
-        } else {
-            unregisterCommand("stafflist");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.staffchat", true)) {
-            getCommand("staffchat").setExecutor(new StaffchatCmd());
-            getCommand("staffchat").setTabCompleter(new StaffchatCmd());
-        } else {
-            unregisterCommand("staffchat");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.chatclear", true)) {
-            getCommand("chatclear").setExecutor(new ChatclearCmd());
-        } else {
-            unregisterCommand("chatclear");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.heal", true)) {
-            getCommand("heal").setExecutor(new HealCmd());
-            getCommand("heal").setTabCompleter(new HealCmd());
-        } else {
-            unregisterCommand("heal");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.teleport", true)) {
-            getCommand("tp").setExecutor(new TeleportCmd());
-            getCommand("tphere").setExecutor(new TeleportCmd());
-            getCommand("tp").setTabCompleter(new TeleportCmd());
-            getCommand("tphere").setTabCompleter(new TeleportCmd());
-        } else {
-            unregisterCommand("tp");
-            unregisterCommand("tphere");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.godmode", true)) {
-            getCommand("god").setExecutor(new GodModCmd());
-            getCommand("god").setTabCompleter(new GodModCmd());
-        } else {
-            unregisterCommand("god");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.invsee", true)) {
-            getCommand("invsee").setExecutor(new InvseeCmd(this));
-            getCommand("invsee").setTabCompleter(new InvseeCmd(this));
-        } else {
-            unregisterCommand("invsee");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.feed", true)) {
-            getCommand("feed").setExecutor(new FeedCmd());
-            getCommand("feed").setTabCompleter(new FeedCmd());
-        } else {
-            unregisterCommand("feed");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.weather", true)) {
-            getCommand("weather").setExecutor(new WeatherCmd(this));
-            getCommand("weather").setTabCompleter(new WeatherCmd(this));
-        } else {
-            unregisterCommand("weather");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.lifemod", true)) {
-            getCommand("lifemod").setExecutor(new lifemodCmd(this));
-            getCommand("lifemod").setTabCompleter(new lifemodCmd(this));
-        } else {
-            unregisterCommand("lifemod");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.speed", true)) {
-            getCommand("speed").setExecutor(new SpeedCmd());
-            getCommand("speed").setTabCompleter(new SpeedCmd());
-        } else {
-            unregisterCommand("speed");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.panel", true)){
-            getCommand("panel").setExecutor(new PanelCmd());
-        } else {
-            unregisterCommand("panel");
-        }
-
-        if (getConfig().getBoolean("commands-enabled.spectate", true)){
-            getCommand("spectate").setExecutor(new SpectateCmd(this));
-        } else {
-            unregisterCommand("spectate");
+            return null;
         }
     }
 
-    public boolean isFreezeActive() {
-        return getConfig().getBoolean("commands-enabled.freeze");
-    }
-
-    public boolean isFlyActive() {
-        return getConfig().getBoolean("commands-enabled.fly");
-    }
-
-    public boolean isBroadcastActive() {
-        return getConfig().getBoolean("commands-enabled.broadcast");
-    }
-
-    public boolean isGamemodeActive() {
-        return getConfig().getBoolean("commands-enabled.gamemode");
-    }
-
-    public boolean isModActive() {
-        return getConfig().getBoolean("commands-enabled.mod");
-    }
-
-    public boolean isEcopenActive() {
-        return getConfig().getBoolean("commands-enabled.ecopen");
-    }
-
-    public boolean isVanishActive() {
-        return getConfig().getBoolean("commands-enabled.vanish");
-    }
-
-    public boolean isStafflistActive() {
-        return getConfig().getBoolean("commands-enabled.stafflist");
-    }
-
-    public boolean isClearinvActive() {
-        return getConfig().getBoolean("commands-enabled.clearinv");
-    }
-
-    public boolean isStaffchatActive() {
-        return getConfig().getBoolean("commands-enabled.staffchat");
-    }
-
-    public boolean isChatclearActive() {
-        return getConfig().getBoolean("commands-enabled.chatclear");
-    }
-
-    public boolean isHealActive() {
-        return getConfig().getBoolean("commands-enabled.heal");
-    }
-
-    public boolean isTeleportActive() {
-        return getConfig().getBoolean("commands-enabled.teleport");
-    }
-
-    public boolean isInvseeActive() {
-        return getConfig().getBoolean("commands-enabled.invsee");
-    }
-
-    public boolean isGodmodeActive() {
-        return getConfig().getBoolean("commands-enabled.godmode");
-    }
-
-    public boolean isSpeedActive() {
-        return getConfig().getBoolean("commands-enabled.speed");
-    }
-
-    public boolean isLifemodActive() {
-        return getConfig().getBoolean("commands-enabled.lifemod");
-    }
-
-    public boolean isWeatherActive() {
-        return getConfig().getBoolean("commands-enabled.weather");
-    }
-
-    public boolean isFeedActive() {
-        return getConfig().getBoolean("commands-enabled.feed");
-    }
-
-    public boolean isPanelActive() {
-        return getConfig().getBoolean("commands-enabled.panel");
+    private void registerCommand(String commandName, CommandExecutor executor) {
+        if (getConfig().getBoolean("commands-enabled." + commandName, true)) {
+            getCommand(commandName).setExecutor(executor);
+            if (executor instanceof TabCompleter) {
+                getCommand(commandName).setTabCompleter((TabCompleter) executor);
+            }
+        } else {
+            unregisterCommand(commandName);
+        }
     }
 
     private void unregisterCommand(String commandName) {
@@ -355,70 +168,43 @@ public class LifeMod extends JavaPlugin {
         }
     }
 
+    @Override
     public void onDisable() {
-        Bukkit.getOnlinePlayers().stream().filter(PlayerManager::isInModerationMod).forEach(p -> {
-            if (PlayerManager.isInModerationMod(p)) {
-                PlayerManager.getFromPlayer(p).destroy();
-            }
-        });
-    }
-
-    public void ConfigConfig() {
-        ConfigFile = new File(getDataFolder(), "config.yml");
-        if (!ConfigFile.exists()) {
-            ConfigFile.getParentFile().mkdirs();
-            saveResource("config.yml", false);
-        }
-
-        ConfigConfig = new YamlConfiguration();
-        try {
-            ConfigConfig.load(ConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void LangConfig() {
-        LangFile = new File(getDataFolder(), "lang.yml");
-        if (!LangFile.exists()) {
-            LangFile.getParentFile().mkdirs();
-            saveResource("lang.yml", false);
-        }
-
-        LangConfig = new YamlConfiguration();
-        try {
-            LangConfig.load(LangFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+        Bukkit.getOnlinePlayers().stream()
+                .filter(PlayerManager::isInModerationMod)
+                .forEach(p -> PlayerManager.getFromPlayer(p).destroy());
+        if (antiXray != null){
+            antiXray.restoreAllBlocks();
+            getLogger().info("[LIFEMOD] restoring all fake blocks");
         }
     }
 
     public FileConfiguration getLangConfig() {
-        return this.LangConfig;
+        return langConfig;
     }
 
     public FileConfiguration getConfigConfig() {
-        return this.ConfigConfig;
+        return configConfig;
     }
 
     public ChatManager getChatManager() {
         return chatManager;
     }
 
-    public ArrayList<UUID> getModerators() {
-        return this.moderators;
+    public Set<UUID> getModerators() {
+        return moderators;
     }
 
-    public HashMap<UUID, PlayerManager> getPlayers() {
-        return this.players;
+    public Map<UUID, PlayerManager> getPlayers() {
+        return players;
     }
 
-    public HashMap<UUID, Location> getFrozenPlayers() {
-        return this.frozenPlayers;
+    public Map<UUID, Location> getFrozenPlayers() {
+        return frozenPlayers;
     }
 
     public boolean isFreeze(Player player) {
-        return getFrozenPlayers().containsKey(player.getUniqueId());
+        return frozenPlayers.containsKey(player.getUniqueId());
     }
 
     public FreezeManager getFreezeManager() {
@@ -427,6 +213,10 @@ public class LifeMod extends JavaPlugin {
 
     public void reloadPluginConfig() {
         reloadConfig();
-        LangConfig();
+        langConfig = loadConfig("lang.yml");
+    }
+
+    public AntiXray getAntiXray() {
+        return antiXray;
     }
 }

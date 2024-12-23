@@ -19,7 +19,6 @@ import java.util.Objects;
 
 public class ModCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (LifeMod.getInstance().isModActive()) {
 
             if (!(sender instanceof Player)) {
                 sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
@@ -55,9 +54,6 @@ public class ModCommand implements CommandExecutor {
                     (new PlayerManager(player)).init();
                 }
             }
-        } else {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("command-deactivate")));
-        }
         return false;
     }
 }

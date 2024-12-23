@@ -1,6 +1,6 @@
 name: LifeMod
 authors: [Lampalon]
-version: '1.6.3-RELEASE'
+version: '1.6.4-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
 api-version: "1.20"
 commands:
