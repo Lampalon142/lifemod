@@ -13,5 +13,4 @@ public class PlayerTeleportEvent implements Listener {
             VanishedManager.setVanished(true, player);
         }
     }
-
 }

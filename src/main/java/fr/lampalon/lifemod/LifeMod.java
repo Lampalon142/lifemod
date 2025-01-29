@@ -5,6 +5,7 @@ import fr.lampalon.lifemod.listeners.moderation.*;
 import fr.lampalon.lifemod.listeners.players.*;
 import fr.lampalon.lifemod.listeners.utils.*;
 import fr.lampalon.lifemod.manager.*;
+import fr.lampalon.lifemod.manager.database.DatabaseManager;
 import fr.lampalon.lifemod.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
@@ -27,8 +28,8 @@ public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
     private CommandMap commandMap;
     private FreezeManager freezeManager;
+    private DatabaseManager databaseManager;
     private UpdateChecker updateChecker;
-    public AntiXray antiXray;
     private ChatManager chatManager;
     private VanishedManager playerManager;
     private FileConfiguration configConfig;
@@ -45,6 +46,7 @@ public class LifeMod extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.databaseManager = new DatabaseManager(this);
         loadConfigurations();
         initializeManagers();
         registerEvents();
@@ -78,6 +80,8 @@ public class LifeMod extends JavaPlugin {
         freezeManager = new FreezeManager();
         playerManager = new VanishedManager();
         chatManager = new ChatManager(this);
+        databaseManager = new DatabaseManager(this);
+        databaseManager.setupDatabase();
     }
 
     private void setupMetrics() {
@@ -96,7 +100,9 @@ public class LifeMod extends JavaPlugin {
         pm.registerEvents(new PlayerQuit(), this);
         pm.registerEvents(new FreezeGui(this), this);
         pm.registerEvents(new PlayerTeleportEvent(), this);
-        pm.registerEvents(new PlayerJoin(this, updateChecker), this);
+        if (getLangConfig().getBoolean("general.update.enabled")) {
+            pm.registerEvents(new PlayerJoin(this, updateChecker), this);
+        }
     }
 
     private void registerCommands() {
@@ -125,6 +131,8 @@ public class LifeMod extends JavaPlugin {
         registerCommand("lifemod", new lifemodCmd(this));
         registerCommand("speed", new SpeedCmd());
         registerCommand("spectate", new SpectateCmd(this));
+        registerCommand("otp", new OtpCommand(databaseManager));
+        registerCommand("oinvsee", new OInvseeCommand(databaseManager));
     }
 
     private CommandMap getCommandMap() {
@@ -173,9 +181,8 @@ public class LifeMod extends JavaPlugin {
         Bukkit.getOnlinePlayers().stream()
                 .filter(PlayerManager::isInModerationMod)
                 .forEach(p -> PlayerManager.getFromPlayer(p).destroy());
-        if (antiXray != null){
-            antiXray.restoreAllBlocks();
-            getLogger().info("[LIFEMOD] restoring all fake blocks");
+        if (databaseManager != null) {
+            databaseManager.closeConnection();
         }
     }
 
@@ -210,13 +217,13 @@ public class LifeMod extends JavaPlugin {
     public FreezeManager getFreezeManager() {
         return freezeManager;
     }
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
 
     public void reloadPluginConfig() {
         reloadConfig();
         langConfig = loadConfig("lang.yml");
-    }
-
-    public AntiXray getAntiXray() {
-        return antiXray;
     }
 }

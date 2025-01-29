@@ -1,6 +1,6 @@
 name: LifeMod
 authors: [Lampalon]
-version: '1.6.5-RELEASE'
+version: '1.6.6-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
 api-version: "1.20"
 commands:
@@ -52,6 +52,10 @@ commands:
     description: permit you to update your speed.
   spectate:
     description: See player from a command.
+  otp:
+    description: "teleport to an offline player."
+  oinvsee:
+    description: "See the inventory of a offline player."
 permissions:
   lifemod.*:
     default: op
@@ -77,3 +81,5 @@ permissions:
       - lifemod.invsee.interact
       - lifemod.notify
       - lifemod.spectate
+      - lifemod.otp
+      - lifemod.oinvsee

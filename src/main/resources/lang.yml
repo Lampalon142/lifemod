@@ -4,6 +4,7 @@ general:
   offlineplayer: "&cThis person is not connected to the server."
   config-reloaded: "&aThis config has been reloaded successfully!"
   update:
+    enabled: true
     message: |
       &dHello %player%
       &bLifeMod plugin has an available update!
@@ -194,3 +195,19 @@ spectate:
   leave:
     success: "&aYou have exited Spectator mode and returned to your original location."
     error: "&cYou are not spectating anyone!"
+
+##Otp
+
+otp:
+  usage: "&cUsage: /otp <player>"
+  player-not-found: "&cPlayer %target% doesn't exist or has never connected."
+  no-position: "&cNo saved position for %target%."
+  teleported: "&aYou have been teleported to %target%'s last position."
+
+## Oinvsee
+
+oinvsee:
+  usage: "&cUsage : /oinvsee <player>"
+  no-inventory: "&cNo saved inventory for %target%."
+  name: "&cPlayer inventory %target%"
+  success: "&aYou are now viewing %target%'s inventory."
