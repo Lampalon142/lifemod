@@ -43,14 +43,14 @@ public class ChatManager implements Listener {
         }
     }
 
-    private String filterWord(String message, String word) {
-        return message.replaceAll(word, "***");
-    }
+    private String filterWord(String message, String word) { return message.replaceAll(word, "***"); }
 
     private void notifyViewers(Player sender) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("lifemod.chat.views")) {
-                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getConfigConfig().getString("chatManager.notification").replace("%player%", sender.getPlayer().getName())));
+                String notificationMessage = LifeMod.getInstance().getConfigConfig().getString("chatManager.notification", "");
+                notificationMessage = notificationMessage.replace("%player%", sender.getName());
+                player.sendMessage(MessageUtil.formatMessage("%prefix%" + notificationMessage));
             }
         }
     }

@@ -1,5 +1,6 @@
 package fr.lampalon.lifemod.utils;
 
+import fr.lampalon.lifemod.LifeMod;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 public class MessageUtil {
     private static final Pattern HEX_PATTERN = Pattern.compile("(&#|#)([A-Fa-f0-9]{6})");
     private static final Pattern RGB_PATTERN = Pattern.compile("rgb\\((\\d{1,3}),(\\d{1,3}),(\\d{1,3})\\)");
+    private static final String PREFIX_PLACEHOLDER = "%prefix%";
 
     public static String parseColors(String message) {
         if (message == null || message.trim().isEmpty()) {
@@ -38,5 +40,16 @@ public class MessageUtil {
         message = sb.toString();
 
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public static String formatMessage(String message) {
+        if (message == null || !message.contains(PREFIX_PLACEHOLDER)) {
+            return parseColors(message);
+        }
+
+        String prefix = LifeMod.getInstance().getConfigConfig().getString("prefix", "");
+        message = message.replace(PREFIX_PLACEHOLDER, prefix);
+
+        return parseColors(message);
     }
 }
