@@ -48,10 +48,10 @@ public class FreezeManager {
     private void openFreezeGUI(Player player) {
         ItemStack item = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("freeze.gui.glass-title")));
+        meta.setDisplayName(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("freeze.gui.glass-title")));
         item.setItemMeta(meta);
 
-        Inventory freezeMenu = Bukkit.createInventory(null, 27, MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("freeze.gui.title")));
+        Inventory freezeMenu = Bukkit.createInventory(null, 27, MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("freeze.gui.title")));
         freezeMenu.setItem(11, item);
         freezeMenu.setItem(13, item);
         freezeMenu.setItem(15, item);
