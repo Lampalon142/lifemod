@@ -25,10 +25,11 @@ public class OInvseeCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtil.parseColors(langConfig.getString("general.onlyplayer", "&cYou can't execute this command on the console.")));
             return true;
         }
+        Player player = (Player) sender;
 
         if (!player.hasPermission("lifemod.oinvsee")) {
             sender.sendMessage(MessageUtil.parseColors(langConfig.getString("general.nopermission", "&cYou don't have permission for this.")));
