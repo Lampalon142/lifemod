@@ -56,22 +56,20 @@ public class SQLiteManager implements DatabaseProvider {
         }
 
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS player_coords (
-                    uuid TEXT PRIMARY KEY,
-                    x DOUBLE,
-                    y DOUBLE,
-                    z DOUBLE,
-                    world TEXT
-                );
-            """);
+            String sql = "CREATE TABLE IF NOT EXISTS player_coords ("
+                    + "uuid TEXT PRIMARY KEY, "
+                    + "x DOUBLE, "
+                    + "y DOUBLE, "
+                    + "z DOUBLE, "
+                    + "world TEXT"
+                    + ");";
+            statement.executeUpdate(sql);
 
-            statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS player_inventories (
-                    uuid TEXT PRIMARY KEY,
-                    inventory_data TEXT
-                );
-            """);
+            String sql2 = "CREATE TABLE IF NOT EXISTS player_inventories ("
+                    + "uuid TEXT PRIMARY KEY, "
+                    + "inventory_data TEXT"
+                    + ");";
+            statement.executeUpdate(sql2);
 
         } catch (SQLException e) {
             plugin.getLogger().severe("[LifeMod] ERROR: Failed to initialize \"setupDatabase()\"!");
