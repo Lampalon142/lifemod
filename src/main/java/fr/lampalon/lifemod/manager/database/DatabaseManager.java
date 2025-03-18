@@ -22,13 +22,10 @@ public class DatabaseManager {
         String type = config.getString("database.type", "sqlite").toLowerCase();
 
         switch (type) {
-            /**
-            case "mysql":
-                databaseProvider = new MySQLManager(plugin);
-                break;*/
             case "sqlite":
-            default:
                 databaseProvider = new SQLiteManager(plugin);
+                break;
+            default:
                 break;
         }
 
