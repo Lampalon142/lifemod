@@ -6,6 +6,7 @@ import fr.lampalon.lifemod.listeners.players.*;
 import fr.lampalon.lifemod.listeners.utils.*;
 import fr.lampalon.lifemod.manager.*;
 import fr.lampalon.lifemod.manager.database.DatabaseManager;
+import fr.lampalon.lifemod.utils.ConfigUpdater;
 import fr.lampalon.lifemod.utils.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
@@ -21,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -64,15 +66,23 @@ public class LifeMod extends JavaPlugin {
     private FileConfiguration loadConfig(String fileName) {
         File file = new File(getDataFolder(), fileName);
         if (!file.exists()) {
-            file.getParentFile().mkdirs();
+            getDataFolder().mkdirs();
             saveResource(fileName, false);
         }
+
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(file);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+
+        FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(
+                new InputStreamReader(getResource(fileName))
+        );
+
+        ConfigUpdater.updateConfig(this, file, config, defaultConfig);
+
         return config;
     }
 
