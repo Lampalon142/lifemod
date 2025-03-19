@@ -28,7 +28,7 @@ public class WeatherCmd implements CommandExecutor, TabCompleter {
             if (label.equalsIgnoreCase("weather")) {
 
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
@@ -36,12 +36,12 @@ public class WeatherCmd implements CommandExecutor, TabCompleter {
                 World world = player.getWorld();
 
                 if (args.length != 1) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("weather.usage")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("weather.usage")));
                     return false;
                 }
 
                 if (!player.hasPermission("lifemod.weather")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return false;
                 }
 
@@ -66,17 +66,17 @@ public class WeatherCmd implements CommandExecutor, TabCompleter {
                     case "sun":
                         world.setStorm(false);
                         world.setThundering(false);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("weather.sun")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("weather.sun")));
                         break;
                     case "rain":
                         world.setStorm(true);
                         world.setThundering(false);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("weather.rain")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("weather.rain")));
                         break;
                     case "storm":
                         world.setStorm(true);
                         world.setThundering(true);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("weather.storm")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("weather.storm")));
                         break;
                 }
 

@@ -34,16 +34,16 @@ public class GmCmd implements CommandExecutor, TabCompleter {
 
       if (label.equalsIgnoreCase("gm") || label.equalsIgnoreCase("gamemode")) {
         if (!(sender instanceof Player)) {
-          sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+          sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
         }
 
         Player player = (Player) sender;
         if (!player.hasPermission("lifemod.gm")) {
-          player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+          player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
         } else {
 
           if (args.length < 1 || args.length > 2) {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
+            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
             return true;
           }
 
@@ -54,12 +54,12 @@ public class GmCmd implements CommandExecutor, TabCompleter {
             targetPlayerName = args[1];
             targetPlayer = Bukkit.getPlayer(targetPlayerName);
             if (targetPlayer == null) {
-              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+              player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
               return true;
             }
           } else {
             if (!(player instanceof Player)) {
-              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+              player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
               return true;
             }
             targetPlayer = (Player) sender;
@@ -84,7 +84,7 @@ public class GmCmd implements CommandExecutor, TabCompleter {
                 gameMode = GameMode.SPECTATOR;
                 break;
               default:
-                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
+                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
                 return true;
             }
           } else {
@@ -106,7 +106,7 @@ public class GmCmd implements CommandExecutor, TabCompleter {
                 gameMode = GameMode.SPECTATOR;
                 break;
               default:
-                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
+                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
                 return true;
             }
           }
@@ -136,9 +136,9 @@ public class GmCmd implements CommandExecutor, TabCompleter {
 
           targetPlayer.setGameMode(gameMode);
           if (targetPlayerName != null) {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName()).replace("%luckperms_prefix%", playerPrefix)));
+            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName()).replace("%luckperms_prefix%", playerPrefix)));
           } else {
-            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.own").replace("%gamemode%", gameMode.name()).replace("%luckperms_prefix%", playerPrefix)));
+            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.own").replace("%gamemode%", gameMode.name()).replace("%luckperms_prefix%", playerPrefix)));
           }
           return true;
         }

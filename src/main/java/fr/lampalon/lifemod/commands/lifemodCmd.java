@@ -41,14 +41,14 @@ public class lifemodCmd implements CommandExecutor, TabCompleter {
                     plugin.reloadConfig();
                     plugin.reloadPluginConfig();
 
-                    sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getLangConfig().getString("general.config-reloaded")));
+                    sender.sendMessage(MessageUtil.formatMessage(plugin.getConfigConfig().getString("prefix") + plugin.getLangConfig().getString("general.config-reloaded")));
                 } //else if (args.length == 1 && args[0].equalsIgnoreCase("help")) {}
                 else {
-                   sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getConfigConfig().getString("lifemod.usage")));
+                   sender.sendMessage(MessageUtil.formatMessage(plugin.getConfigConfig().getString("prefix") + plugin.getConfigConfig().getString("lifemod.usage")));
                 }
                 return true;
             } else {
-                sender.sendMessage(MessageUtil.parseColors(plugin.getConfigConfig().getString("prefix") + plugin.getLangConfig().getString("general.nopermission")));
+                sender.sendMessage(MessageUtil.formatMessage(plugin.getConfigConfig().getString("prefix") + plugin.getLangConfig().getString("general.nopermission")));
                 return false;
             }
     }

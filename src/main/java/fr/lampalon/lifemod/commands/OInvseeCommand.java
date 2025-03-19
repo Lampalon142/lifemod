@@ -26,39 +26,39 @@ public class OInvseeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageUtil.parseColors(langConfig.getString("general.onlyplayer", "&cYou can't execute this command on the console.")));
+            sender.sendMessage(MessageUtil.formatMessage(langConfig.getString("general.onlyplayer", "&cYou can't execute this command on the console.")));
             return true;
         }
         Player player = (Player) sender;
 
         if (!player.hasPermission("lifemod.oinvsee")) {
-            sender.sendMessage(MessageUtil.parseColors(langConfig.getString("general.nopermission", "&cYou don't have permission for this.")));
+            sender.sendMessage(MessageUtil.formatMessage(langConfig.getString("general.nopermission", "&cYou don't have permission for this.")));
             return true;
         }
 
         if (args.length != 1) {
-            player.sendMessage(MessageUtil.parseColors(langConfig.getString("oinvsee.usage", "&cUsage : /oinvsee <player>")));
+            player.sendMessage(MessageUtil.formatMessage(langConfig.getString("oinvsee.usage", "&cUsage : /oinvsee <player>")));
             return true;
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
         if (!target.hasPlayedBefore()) {
-            player.sendMessage(MessageUtil.parseColors(langConfig.getString("general.offlineplayer", "&cThis person is not connected to the server.")));
+            player.sendMessage(MessageUtil.formatMessage(langConfig.getString("general.offlineplayer", "&cThis person is not connected to the server.")));
             return true;
         }
 
         ItemStack[] savedInventory = databaseManager.getSQLiteManager().getPlayerInventory(target.getUniqueId());
         if (savedInventory == null) {
-            player.sendMessage(MessageUtil.parseColors(langConfig.getString("oinvsee.no-inventory", "&cNo saved inventory for %target%.").replace("%target%", args[0])));
+            player.sendMessage(MessageUtil.formatMessage(langConfig.getString("oinvsee.no-inventory", "&cNo saved inventory for %target%.").replace("%target%", args[0])));
             return true;
         }
 
-        String inventoryTitle = MessageUtil.parseColors(langConfig.getString("oinvsee.name", "&cPlayer inventory %target%").replace("%target%", args[0]));
+        String inventoryTitle = MessageUtil.formatMessage(langConfig.getString("oinvsee.name", "&cPlayer inventory %target%").replace("%target%", args[0]));
         Inventory inv = Bukkit.createInventory(null, 45, inventoryTitle);
         inv.setContents(savedInventory);
         player.openInventory(inv);
 
-        player.sendMessage(MessageUtil.parseColors(langConfig.getString("oinvsee.success", "&aYou are now viewing %target%'s inventory.").replace("%target%", args[0])));
+        player.sendMessage(MessageUtil.formatMessage(langConfig.getString("oinvsee.success", "&aYou are now viewing %target%'s inventory.").replace("%target%", args[0])));
         return true;
     }
 }

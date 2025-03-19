@@ -30,7 +30,7 @@ public class ClearinvCmd implements CommandExecutor, TabCompleter {
 
                             if (targetPlayer != null) {
                                 targetPlayer.getInventory().clear();
-                                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("clearinv.message").replace("%target%", targetPlayer.getPlayer().getName())));
+                                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("clearinv.message").replace("%target%", targetPlayer.getPlayer().getName())));
                                 if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                                     DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
                                     webhook.addEmbed(new DiscordWebhook.EmbedObject()
@@ -45,16 +45,16 @@ public class ClearinvCmd implements CommandExecutor, TabCompleter {
                                     }
                                 }
                             } else {
-                                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                             }
                         } else {
-                            player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("clearinv.usage")));
+                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("clearinv.usage")));
                         }
                     } else {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     }
                 } else {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                 }
             }
         return true;

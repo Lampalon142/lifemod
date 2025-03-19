@@ -15,22 +15,10 @@ public class VanishedManager {
     private static final Map<UUID, Boolean> vanishedPlayers = new HashMap<>();
     private static final Map<UUID, BukkitRunnable> vanishTasks = new HashMap<>();
 
-    /**
-     * Check if a player is vanished.
-     *
-     * @param player The player to check.
-     * @return True if vanished, false otherwise.
-     */
     public static boolean isVanished(Player player) {
         return vanishedPlayers.getOrDefault(player.getUniqueId(), false);
     }
 
-    /**
-     * Set a player's vanish state.
-     *
-     * @param vanished True to vanish the player, false to unvanish.
-     * @param player   The player to set vanish state for.
-     */
     public static void setVanished(boolean vanished, Player player) {
         UUID playerId = player.getUniqueId();
         vanishedPlayers.put(playerId, vanished);
@@ -66,11 +54,6 @@ public class VanishedManager {
         }
     }
 
-    /**
-     * Handle vanish consistency for new players joining the server.
-     *
-     * @param joiningPlayer The player who joined.
-     */
     public static void handlePlayerJoin(Player joiningPlayer) {
         vanishedPlayers.forEach((uuid, vanished) -> {
             if (vanished) {
@@ -82,11 +65,6 @@ public class VanishedManager {
         });
     }
 
-    /**
-     * Handle cleanup for vanished players when they leave.
-     *
-     * @param player The player who quit.
-     */
     public static void handlePlayerQuit(Player player) {
         UUID playerId = player.getUniqueId();
         if (vanishTasks.containsKey(playerId)) {
@@ -96,11 +74,6 @@ public class VanishedManager {
         vanishedPlayers.remove(playerId);
     }
 
-    /**
-     * Get a map of vanished players.
-     *
-     * @return The map of vanished players.
-     */
     public static Map<UUID, Boolean> getVanishedPlayers() {
         return vanishedPlayers;
     }

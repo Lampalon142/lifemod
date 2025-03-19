@@ -25,17 +25,17 @@ public class SpectateCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+            sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
             return true;
         }
 
         if (!sender.hasPermission("lifemod.spectate")) {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+            sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
             return true;
         }
 
         if (args.length != 1) {
-            sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.usage")));
+            sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.usage")));
             return true;
         }
 
@@ -45,7 +45,7 @@ public class SpectateCmd implements CommandExecutor {
             case "leave":
                 if (spectateManager.isSpectating(player)) {
                     spectateManager.endSpectate(player, true);
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.leave.success")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.leave.success")));
                     if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                         DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
                         webhook.addEmbed(new DiscordWebhook.EmbedObject()
@@ -61,16 +61,16 @@ public class SpectateCmd implements CommandExecutor {
                         }
                     }
                 } else {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.leave.error")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.leave.error")));
                 }
                 break;
 
             case "fp":
                 if (spectateManager.isSpectating(player)) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.already-spectate")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.already-spectate")));
                 } else {
                     player.setGameMode(GameMode.SPECTATOR);
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.fp-spectate")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.fp-spectate")));
                     if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                         DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
                         webhook.addEmbed(new DiscordWebhook.EmbedObject()
@@ -95,12 +95,12 @@ public class SpectateCmd implements CommandExecutor {
                     return true;
                 }
                 if (spectateManager.isSpectating(player)) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.already-spectate")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.already-spectate")));
                     return true;
                 }
 
                 spectateManager.startSpectate(player, target);
-                player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.spectate").replace("%target%", target.getName())));
+                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("spectate.spectate").replace("%target%", target.getName())));
                 if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                     DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
                     webhook.addEmbed(new DiscordWebhook.EmbedObject()

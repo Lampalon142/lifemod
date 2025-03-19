@@ -23,19 +23,19 @@ public class TeleportCmd implements CommandExecutor, TabCompleter {
             if (label.equalsIgnoreCase("tp")) {
 
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
                 Player player = (Player) sender;
 
                 if (!player.hasPermission("lifemod.tp")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
 
                 if (args.length != 1 && args.length != 3 && args.length != 2) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tp.usage")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tp.usage")));
                     return true;
                 }
 
@@ -58,31 +58,31 @@ public class TeleportCmd implements CommandExecutor, TabCompleter {
                     Player target = Bukkit.getPlayer(targetName);
 
                     if (target == null) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         return true;
                     }
 
                     if (target == player) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tp.yourself")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tp.yourself")));
                         return false;
                     }
 
                     String target1 = LifeMod.getInstance().getLangConfig().getString("tp.success");
                     player.teleport(target);
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + target1.replace("%player%", target.getPlayer().getName())));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + target1.replace("%player%", target.getPlayer().getName())));
 
                 } else if (args.length == 2) {
                     Player target1 = Bukkit.getPlayer(args[0]);
                     Player target2 = Bukkit.getPlayer(args[1]);
 
                     if (target1 == null || target2 == null) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         return true;
                     }
 
                     target1.teleport(target2.getLocation());
                     String messages = LifeMod.getInstance().getLangConfig().getString("tp.twoplayers");
-                    player.sendMessage(MessageUtil.parseColors(messages.replace("%player1%", target1.getName()).replace("%player2%", target2.getName())));
+                    player.sendMessage(MessageUtil.formatMessage(messages.replace("%player1%", target1.getName()).replace("%player2%", target2.getName())));
                 } else if (args.length == 3) {
 
                     try {
@@ -93,28 +93,28 @@ public class TeleportCmd implements CommandExecutor, TabCompleter {
                         Location targetLocation = new Location(player.getWorld(), x, y, z);
                         String target1 = LifeMod.getInstance().getLangConfig().getString("tp.success");
                         player.teleport(targetLocation);
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + target1.replace("%player%", "coordinates")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + target1.replace("%player%", "coordinates")));
                     } catch (NumberFormatException e) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("invalidcoordinates")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("invalidcoordinates")));
                     }
                 }
 
                 return true;
             } else if (label.equalsIgnoreCase("tphere")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
                 Player player = (Player) sender;
 
                 if (!player.hasPermission("lifemod.tphere")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
 
                 if (args.length != 1) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tphere.usage")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("tphere.usage")));
                     return true;
                 }
 
@@ -122,13 +122,13 @@ public class TeleportCmd implements CommandExecutor, TabCompleter {
                 Player targetPlayer = Bukkit.getPlayer(args[0]);
 
                 if (targetPlayer == null) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                     return true;
                 }
 
                 String target2 = LifeMod.getInstance().getLangConfig().getString("tphere.success");
                 targetPlayer.teleport(senderPlayer.getLocation());
-                player.sendMessage(MessageUtil.parseColors(target2.replace("%player%", targetPlayer.getPlayer().getName())));
+                player.sendMessage(MessageUtil.formatMessage(target2.replace("%player%", targetPlayer.getPlayer().getName())));
                 return true;
             }
         return true;

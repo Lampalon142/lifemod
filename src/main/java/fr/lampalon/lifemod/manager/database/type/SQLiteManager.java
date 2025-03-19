@@ -29,6 +29,7 @@ public class SQLiteManager implements DatabaseProvider {
         try {
             File dbFile = new File(plugin.getDataFolder(), "database.db");
             if (!dbFile.exists()) {
+                plugin.getLogger().info("");
                 dbFile.getParentFile().mkdirs();
                 dbFile.createNewFile();
             }
@@ -37,13 +38,13 @@ public class SQLiteManager implements DatabaseProvider {
             connection = DriverManager.getConnection(url);
 
             if (connection != null) {
-                plugin.getLogger().info("[LifeMod] SQLite connection established successfully.");
+                plugin.getLogger().info("SQLite connection established successfully.");
             } else {
-                plugin.getLogger().severe("[LifeMod] ERROR: SQLite connection is NULL!");
+                plugin.getLogger().severe("ERROR: SQLite connection is NULL!");
             }
 
         } catch (IOException | SQLException e) {
-            plugin.getLogger().severe("[LifeMod] Unable to establish SQLite connection!");
+            plugin.getLogger().severe("Unable to establish SQLite connection!");
             e.printStackTrace();
         }
     }
@@ -51,7 +52,7 @@ public class SQLiteManager implements DatabaseProvider {
     @Override
     public void setupDatabase() {
         if (connection == null) {
-            plugin.getLogger().severe("[LifeMod] Unable to set up database: connection is NULL!");
+            plugin.getLogger().severe("Unable to set up database: connection is NULL!");
             return;
         }
 
@@ -97,7 +98,7 @@ public class SQLiteManager implements DatabaseProvider {
 
     public void savePlayerInventory(UUID uuid, Inventory inventory) {
         if (connection == null) {
-            plugin.getLogger().severe("[LifeMod] ERROR: SQLite connection NULL during savePlayerInventory!");
+            plugin.getLogger().severe("ERROR: SQLite connection NULL during savePlayerInventory!");
             return;
         }
 
@@ -111,14 +112,14 @@ public class SQLiteManager implements DatabaseProvider {
             statement.setString(2, serializedInventory);
             statement.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().severe("[LifeMod] Failed to save inventory for UUID: " + uuid);
+            plugin.getLogger().severe("Failed to save inventory for UUID: " + uuid);
             e.printStackTrace();
         }
     }
 
     public ItemStack[] getPlayerInventory(UUID uuid) {
         if (connection == null) {
-            plugin.getLogger().severe("[LifeMod] ERROR: SQLite connection NULL during getPlayerInventory!");
+            plugin.getLogger().severe("ERROR: SQLite connection NULL during getPlayerInventory!");
             return null;
         }
 
@@ -134,7 +135,7 @@ public class SQLiteManager implements DatabaseProvider {
             }
 
         } catch (SQLException e) {
-            plugin.getLogger().severe("[LifeMod] Failed to retrieve inventory for UUID: " + uuid);
+            plugin.getLogger().severe("Failed to retrieve inventory for UUID: " + uuid);
             e.printStackTrace();
         }
 
@@ -143,7 +144,7 @@ public class SQLiteManager implements DatabaseProvider {
 
     public void savePlayerCoords(UUID uuid, Location location) {
         if (connection == null) {
-            plugin.getLogger().severe("[LifeMod] ERROR: SQLite connection NULL during savePlayerCoords!");
+            plugin.getLogger().severe("ERROR: SQLite connection NULL during savePlayerCoords!");
             return;
         }
 
@@ -157,7 +158,7 @@ public class SQLiteManager implements DatabaseProvider {
             statement.setString(5, location.getWorld().getName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().severe("[LifeMod] Failed to save coordinates for UUID: " + uuid);
+            plugin.getLogger().severe("Failed to save coordinates for UUID: " + uuid);
             e.printStackTrace();
         }
     }
@@ -199,7 +200,7 @@ public class SQLiteManager implements DatabaseProvider {
 
     public Location getPlayerCoords(UUID uuid) {
         if (connection == null) {
-            plugin.getLogger().severe("[LifeMod] ERROR: SQLite connection NULL during getPlayerCoords!");
+            plugin.getLogger().severe("ERROR: SQLite connection NULL during getPlayerCoords!");
             return null;
         }
 
@@ -217,7 +218,7 @@ public class SQLiteManager implements DatabaseProvider {
 
                 World world = Bukkit.getWorld(worldName);
                 if (world == null) {
-                    plugin.getLogger().warning("[LifeMod] World '" + worldName + "' not found! Using default world.");
+                    plugin.getLogger().warning("World '" + worldName + "' not found! Using default world.");
                     world = Bukkit.getWorlds().get(0);
                 }
 
@@ -225,7 +226,7 @@ public class SQLiteManager implements DatabaseProvider {
             }
 
         } catch (SQLException e) {
-            plugin.getLogger().severe("[LifeMod] Failed to retrieve coordinates for UUID: " + uuid);
+            plugin.getLogger().severe("Failed to retrieve coordinates for UUID: " + uuid);
             e.printStackTrace();
         }
 

@@ -19,28 +19,28 @@ public class SpeedCmd implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
             if (label.equalsIgnoreCase("speed")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return false;
                 }
 
                 Player player = (Player) sender;
                 if (!player.hasPermission("speed.use")) {
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                 } else {
                     if (args.length == 0) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
                         return false;
                     }
                     int speed;
                     try {
                         speed = Integer.parseInt(args[0]);
                     } catch (NumberFormatException e) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
                         return false;
                     }
 
                     if (speed < 1 || speed > 10) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("speed.provide")));
                         return false;
                     }
 
@@ -66,7 +66,7 @@ public class SpeedCmd implements CommandExecutor, TabCompleter {
 
                     String s4 = LifeMod.getInstance().getLangConfig().getString("speed.success");
                     assert s4 != null;
-                    player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + s4.replace("%speed%", String.valueOf(speed))));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + s4.replace("%speed%", String.valueOf(speed))));
                 }
             }
         return false;

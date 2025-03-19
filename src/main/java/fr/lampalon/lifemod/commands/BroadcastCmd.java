@@ -21,11 +21,11 @@ public class BroadcastCmd implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
             if (cmd.getName().equalsIgnoreCase("broadcast")) {
                 if (!sender.hasPermission("lifemod.bc")) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
                 if (args.length < 1) {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("bc.usage")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("bc.usage")));
                     return true;
                 } else {
                     StringBuilder message = new StringBuilder();
@@ -34,7 +34,7 @@ public class BroadcastCmd implements CommandExecutor, TabCompleter {
                     }
 
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                        onlinePlayer.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("bc.prefix") + message.toString()));
+                        onlinePlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("bc.prefix") + message.toString()));
                     }
                     if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                         DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);

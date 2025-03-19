@@ -23,7 +23,7 @@ public class FlyCmd implements CommandExecutor, TabCompleter
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
       if (label.equalsIgnoreCase("fly")) {
         if (!(sender instanceof Player)) {
-          sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+          sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
           return true;
         }
 
@@ -47,15 +47,15 @@ public class FlyCmd implements CommandExecutor, TabCompleter
             if (player.getAllowFlight()) {
               player.setAllowFlight(false);
               player.setFlying(false);
-              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("fly.disable")));
+              player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("fly.disable")));
             } else {
               player.setAllowFlight(true);
               player.setFlying(true);
-              player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("fly.enable")));
+              player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("fly.enable")));
             }
           }
         } else {
-          player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+          player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
         }
 
         return true;

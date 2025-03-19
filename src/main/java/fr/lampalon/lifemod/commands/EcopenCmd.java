@@ -25,14 +25,14 @@ public class EcopenCmd implements CommandExecutor, TabCompleter {
                     Player player = (Player) sender;
 
                     if (args.length != 1) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("ec.usage")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("ec.usage")));
                         return true;
                     }
 
                     Player targetPlayer = Bukkit.getPlayer(args[0]);
 
                     if (!player.hasPermission("lifemod.ecopen")) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     } else {
                         if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                             DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
@@ -51,17 +51,17 @@ public class EcopenCmd implements CommandExecutor, TabCompleter {
                     }
 
                     if (targetPlayer == null) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         return true;
                     }
 
                     if (targetPlayer == player) {
-                        player.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("ec.yourself")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("ec.yourself")));
                         return true;
                     }
 
                 } else {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                 }
                 return true;
             }

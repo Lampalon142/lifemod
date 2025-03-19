@@ -21,7 +21,7 @@ public class StafflistCmd implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
 
-                    StringBuilder modList = new StringBuilder(MessageUtil.parseColors(LifeMod.getInstance().getLangConfig().getString("modlist.online")));
+                    StringBuilder modList = new StringBuilder(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("modlist.online")));
 
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                         if (onlinePlayer.hasPermission("lifemod.stafflist") && !VanishedManager.isVanished(onlinePlayer)) {
@@ -32,7 +32,7 @@ public class StafflistCmd implements CommandExecutor {
                     if (modList.length() > LifeMod.getInstance().getLangConfig().getString("modlist.online").length()) {
                         modList.delete(modList.length() - 2, modList.length());
                     } else {
-                        modList.append(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("modlist.none")));
+                        modList.append(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("modlist.none")));
                     }
 
                     if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
@@ -52,7 +52,7 @@ public class StafflistCmd implements CommandExecutor {
                     player.sendMessage(modList.toString());
                     return true;
                 } else {
-                    sender.sendMessage(MessageUtil.parseColors(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
             }
