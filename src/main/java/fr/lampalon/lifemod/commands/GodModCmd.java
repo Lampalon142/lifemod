@@ -23,7 +23,7 @@ public class GodModCmd implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
         if (!(sender instanceof Player) && args.length == 0) {
-            sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+            sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
             return true;
         }
 
@@ -31,7 +31,7 @@ public class GodModCmd implements CommandExecutor, TabCompleter {
         if (args.length > 0) {
             targetPlayer = Bukkit.getPlayer(args[0]);
             if (targetPlayer == null) {
-                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                 return true;
             }
         } else {
@@ -39,7 +39,7 @@ public class GodModCmd implements CommandExecutor, TabCompleter {
         }
 
         if (!sender.hasPermission("lifemod.god")) {
-            sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+            sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
             return true;
         }
 
@@ -59,15 +59,15 @@ public class GodModCmd implements CommandExecutor, TabCompleter {
 
         if (targetPlayer.isInvulnerable()) {
             targetPlayer.setInvulnerable(false);
-            targetPlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("god.deactivate.own")));
+            targetPlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("god.deactivate.own")));
             if (!targetPlayer.equals(sender)) {
-                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("god.deactivate.other").replace("%target%", targetPlayer.getName())));
+                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("god.deactivate.other").replace("%target%", targetPlayer.getName())));
             }
         } else {
             targetPlayer.setInvulnerable(true);
-            targetPlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("god.activate.own")));
+            targetPlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("god.activate.own")));
             if (!targetPlayer.equals(sender)) {
-                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("god.activate.other").replace("%target%", targetPlayer.getName())));
+                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("god.activate.other").replace("%target%", targetPlayer.getName())));
             }
         }
 

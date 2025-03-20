@@ -29,7 +29,7 @@ public class VanishCmd implements CommandExecutor {
             if (command.getName().equalsIgnoreCase("vanish")) {
 
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                     return true;
                 }
 
@@ -55,9 +55,9 @@ public class VanishCmd implements CommandExecutor {
                         boolean isVanished = VanishedManager.isVanished(player);
                         VanishedManager.setVanished(!isVanished, player);
                         if (!isVanished) {
-                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("vanish.activate")));
+                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("vanish.activate")));
                         } else {
-                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("vanish.deactivate")));
+                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("vanish.deactivate")));
                         }
                     } else if (args.length == 1) {
                         Player targetPlayer = Bukkit.getPlayer(args[0]);
@@ -66,18 +66,18 @@ public class VanishCmd implements CommandExecutor {
                             boolean isVanished = VanishedManager.isVanished(targetPlayer);
                             VanishedManager.setVanished(!isVanished, targetPlayer);
                             if (!isVanished) {
-                                targetPlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("vanish.activate")));
+                                targetPlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("vanish.activate")));
                             } else {
-                                targetPlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("vanish.deactivate")));
+                                targetPlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("vanish.deactivate")));
                             }
                         } else {
-                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         }
                     } else {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("vanish.usage")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("vanish.usage")));
                     }
                 } else {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                 }
 
                 return true;

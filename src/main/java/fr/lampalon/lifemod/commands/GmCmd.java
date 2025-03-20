@@ -21,129 +21,116 @@ import java.util.List;
 
 public class GmCmd implements CommandExecutor, TabCompleter {
 
-  private LuckPerms luckPerms;
+  private final LuckPerms luckPerms;
 
-  public GmCmd(){
-    if (Bukkit.getServer().getPluginManager().getPlugin("LuckPerms") != null){
-      luckPerms = LuckPermsProvider.get();
-    }
+  public GmCmd() {
+    this.luckPerms = Bukkit.getServicesManager().getRegistration(LuckPerms.class) != null
+            ? LuckPermsProvider.get()
+            : null;
   }
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    if (label.equalsIgnoreCase("gm") || label.equalsIgnoreCase("gamemode")) {
+      if (!sender.hasPermission("lifemod.gm")) {
+        sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+        return true;
+      }
 
-      if (label.equalsIgnoreCase("gm") || label.equalsIgnoreCase("gamemode")) {
-        if (!(sender instanceof Player)) {
-          sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
-        }
+      if (args.length < 1 || args.length > 2) {
+        sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
+        return true;
+      }
 
-        Player player = (Player) sender;
-        if (!player.hasPermission("lifemod.gm")) {
-          player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
-        } else {
+      Player targetPlayer;
+      String targetPlayerName = null;
 
-          if (args.length < 1 || args.length > 2) {
-            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
-            return true;
-          }
-
-          Player targetPlayer;
-          String targetPlayerName = null;
-
-          if (args.length == 2) {
-            targetPlayerName = args[1];
-            targetPlayer = Bukkit.getPlayer(targetPlayerName);
-            if (targetPlayer == null) {
-              player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
-              return true;
-            }
-          } else {
-            if (!(player instanceof Player)) {
-              player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
-              return true;
-            }
-            targetPlayer = (Player) sender;
-          }
-
-          GameMode gameMode;
-          String modeArg = args[0].toLowerCase();
-
-          if (modeArg.matches("\\d+")) {
-            int modeNum = Integer.parseInt(modeArg);
-            switch (modeNum) {
-              case 0:
-                gameMode = GameMode.SURVIVAL;
-                break;
-              case 1:
-                gameMode = GameMode.CREATIVE;
-                break;
-              case 2:
-                gameMode = GameMode.ADVENTURE;
-                break;
-              case 3:
-                gameMode = GameMode.SPECTATOR;
-                break;
-              default:
-                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
-                return true;
-            }
-          } else {
-            switch (modeArg) {
-              case "s":
-              case "survival":
-                gameMode = GameMode.SURVIVAL;
-                break;
-              case "c":
-              case "creative":
-                gameMode = GameMode.CREATIVE;
-                break;
-              case "a":
-              case "adventure":
-                gameMode = GameMode.ADVENTURE;
-                break;
-              case "sp":
-              case "spectator":
-                gameMode = GameMode.SPECTATOR;
-                break;
-              default:
-                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
-                return true;
-            }
-          }
-
-          if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
-            DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
-            webhook.addEmbed(new DiscordWebhook.EmbedObject()
-                    .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.title"))
-                    .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.description").replace("%player%", sender.getName()))
-                    .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.footer.logo").replace("%player%", sender.getName()))
-                    .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.color")))));
-            try {
-              webhook.execute();
-            } catch (IOException e) {
-              throw new RuntimeException(e);
-            }
-          }
-
-          String playerPrefix = "";
-          if (luckPerms != null){
-            User user = luckPerms.getUserManager().getUser(targetPlayer.getName());
-            if (user != null){
-              playerPrefix = user.getCachedData().getMetaData().getPrefix();
-            }
-            if (playerPrefix == null) playerPrefix = "";
-          }
-
-          targetPlayer.setGameMode(gameMode);
-          if (targetPlayerName != null) {
-            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.other").replace("%gamemode%", gameMode.name()).replace("%player%", targetPlayer.getName()).replace("%luckperms_prefix%", playerPrefix)));
-          } else {
-            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("gamemode.own").replace("%gamemode%", gameMode.name()).replace("%luckperms_prefix%", playerPrefix)));
-          }
+      if (args.length == 2) {
+        targetPlayerName = args[1];
+        targetPlayer = Bukkit.getPlayer(targetPlayerName);
+        if (targetPlayer == null) {
+          sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
           return true;
         }
+      } else {
+        if (!(sender instanceof Player)) {
+          sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+          return true;
+        }
+        targetPlayer = (Player) sender;
       }
+
+      GameMode gameMode = parseGameMode(args[0]);
+      if (gameMode == null) {
+        sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
+        return true;
+      }
+
+      sendDiscordWebhook(sender);
+
+      String playerPrefix = getPlayerPrefix(targetPlayer);
+
+      targetPlayer.setGameMode(gameMode);
+      String message = targetPlayerName != null
+              ? LifeMod.getInstance().getLangConfig().getString("gamemode.other")
+              : LifeMod.getInstance().getLangConfig().getString("gamemode.own");
+      
+      sender.sendMessage(MessageUtil.formatMessage(
+              message.replace("%gamemode%", gameMode.name())
+                      .replace("%player%", targetPlayer.getName())
+                      .replace("%luckperms_prefix%", playerPrefix)));
+      
+      return true;
+    }
     return false;
+  }
+
+  private GameMode parseGameMode(String modeArg) {
+    modeArg = modeArg.toLowerCase();
+    if (modeArg.matches("\\d+")) {
+      switch (Integer.parseInt(modeArg)) {
+        case 0: return GameMode.SURVIVAL;
+        case 1: return GameMode.CREATIVE;
+        case 2: return GameMode.ADVENTURE;
+        case 3: return GameMode.SPECTATOR;
+        default: return null;
+      }
+    } else {
+      switch (modeArg) {
+        case "s": case "survival": return GameMode.SURVIVAL;
+        case "c": case "creative": return GameMode.CREATIVE;
+        case "a": case "adventure": return GameMode.ADVENTURE;
+        case "sp": case "spectator": return GameMode.SPECTATOR;
+        default: return null;
+      }
+    }
+  }
+
+  private void sendDiscordWebhook(CommandSender sender) {
+    if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")) {
+      DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
+      webhook.addEmbed(new DiscordWebhook.EmbedObject()
+              .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.title"))
+              .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.description").replace("%player%", sender.getName()))
+              .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.footer.logo").replace("%player%", sender.getName()))
+              .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.color")))));
+      try {
+        webhook.execute();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private String getPlayerPrefix(Player player) {
+    if (luckPerms != null) {
+      User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+      if (user != null) {
+        String prefix = user.getCachedData().getMetaData().getPrefix();
+        return prefix != null ? prefix : "";
+      }
+    }
+    return "";
   }
 
   @Override
@@ -152,13 +139,11 @@ public class GmCmd implements CommandExecutor, TabCompleter {
       if (args.length == 1) {
         return Arrays.asList("survival", "creative", "adventure", "spectator", "s", "c", "a", "sp", "0", "1", "2", "3");
       } else if (args.length == 2) {
-        List<String> playerNames = new ArrayList<>();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-          playerNames.add(player.getName());
-        }
-        return playerNames;
+        return Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName)
+                .toList();
       }
     }
-    return null;
+    return Collections.emptyList();
   }
 }

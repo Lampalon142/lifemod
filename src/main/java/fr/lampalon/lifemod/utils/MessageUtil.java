@@ -4,6 +4,7 @@ import fr.lampalon.lifemod.LifeMod;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 
+import java.awt.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,7 @@ public class MessageUtil {
             int r = Integer.parseInt(rgbMatcher.group(1));
             int g = Integer.parseInt(rgbMatcher.group(2));
             int b = Integer.parseInt(rgbMatcher.group(3));
-            rgbMatcher.appendReplacement(sb, ChatColor.of(new java.awt.Color(r, g, b)).toString());
+            rgbMatcher.appendReplacement(sb, ChatColor.of(new Color(r, g, b)).toString());
         }
         rgbMatcher.appendTail(sb);
         message = sb.toString();
@@ -43,12 +44,20 @@ public class MessageUtil {
     }
 
     public static String formatMessage(String message) {
-        if (message == null || !message.contains(PREFIX_PLACEHOLDER)) {
-            return parseColors(message);
+        if (message == null) {
+            return "";
         }
 
         String prefix = LifeMod.getInstance().getConfigConfig().getString("prefix", "");
-        message = message.replace(PREFIX_PLACEHOLDER, prefix);
+        if (prefix == null) {
+            prefix = "";
+        }
+
+        if (message.contains(PREFIX_PLACEHOLDER)) {
+            message = message.replace(PREFIX_PLACEHOLDER, prefix);
+        } else {
+            message = prefix + message;
+        }
 
         return parseColors(message);
     }

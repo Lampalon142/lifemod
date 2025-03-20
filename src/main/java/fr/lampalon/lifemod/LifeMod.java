@@ -6,8 +6,8 @@ import fr.lampalon.lifemod.listeners.players.*;
 import fr.lampalon.lifemod.listeners.utils.*;
 import fr.lampalon.lifemod.manager.*;
 import fr.lampalon.lifemod.manager.database.DatabaseManager;
-import fr.lampalon.lifemod.utils.ConfigUpdater;
 import fr.lampalon.lifemod.utils.UpdateChecker;
+import fr.lampalon.lifemod.manager.PlayerManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
@@ -80,8 +80,6 @@ public class LifeMod extends JavaPlugin {
         FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(
                 new InputStreamReader(getResource(fileName))
         );
-
-        ConfigUpdater.updateConfig(this, file, config, defaultConfig);
 
         return config;
     }

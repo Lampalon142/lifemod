@@ -28,7 +28,7 @@ public class WeatherCmd implements CommandExecutor, TabCompleter {
             if (label.equalsIgnoreCase("weather")) {
 
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
@@ -36,12 +36,12 @@ public class WeatherCmd implements CommandExecutor, TabCompleter {
                 World world = player.getWorld();
 
                 if (args.length != 1) {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("weather.usage")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("weather.usage")));
                     return false;
                 }
 
                 if (!player.hasPermission("lifemod.weather")) {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return false;
                 }
 

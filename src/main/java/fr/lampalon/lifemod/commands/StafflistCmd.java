@@ -52,7 +52,7 @@ public class StafflistCmd implements CommandExecutor {
                     player.sendMessage(modList.toString());
                     return true;
                 } else {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
             }

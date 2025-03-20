@@ -22,7 +22,7 @@ public class StaffchatCmd implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                 return true;
             }
 
@@ -33,7 +33,7 @@ public class StaffchatCmd implements CommandExecutor, TabCompleter {
             if (cmd.getName().equalsIgnoreCase("staffchat")) {
                 if (player.hasPermission("lifemod.staffchat")) {
                     if (args.length == 0) {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("staffchat.usage")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("staffchat.usage")));
                         return true;
                     }
                     StringBuilder message = new StringBuilder();
@@ -60,10 +60,10 @@ public class StaffchatCmd implements CommandExecutor, TabCompleter {
                         }
                     }
 
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("staffchat.success")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("staffchat.success")));
                     return true;
                 } else {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
             }

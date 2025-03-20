@@ -41,13 +41,13 @@ public class ChatclearCmd implements CommandExecutor {
                         }
                     }
 
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("chatclear.message")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("chatclear.message")));
                 } else {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
             } else {
-                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
             }
 
         return true;

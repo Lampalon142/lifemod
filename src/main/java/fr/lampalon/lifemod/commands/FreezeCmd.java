@@ -33,7 +33,7 @@ public class FreezeCmd implements CommandExecutor, TabCompleter {
         FreezeManager freezeManager = LifeMod.getInstance().getFreezeManager();
             if (label.equalsIgnoreCase("freeze")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
                 Player player = (Player) sender;
@@ -66,8 +66,8 @@ public class FreezeCmd implements CommandExecutor, TabCompleter {
                                 if (freezeManager.isPlayerFrozen(target.getUniqueId()) && LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
                                     freezeManager.unfreezePlayer(player, target);
                                     LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-                                    target.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + s3.replace("%player%", player.getName())));
-                                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + s2.replace("%target%", target.getName())));
+                                    target.sendMessage(MessageUtil.formatMessage(s3.replace("%player%", player.getName())));
+                                    player.sendMessage(MessageUtil.formatMessage(s2.replace("%target%", target.getName())));
                                 } else {
                                     String s4 = LifeMod.getInstance().getLangConfig().getString("freeze.messages.freeze.mod");
                                     LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
@@ -81,19 +81,19 @@ public class FreezeCmd implements CommandExecutor, TabCompleter {
                                     }
 
                                     freezeManager.freezePlayer(player, target);
-                                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + s4.replace("%target%", target.getName())));
+                                    player.sendMessage(MessageUtil.formatMessage(s4.replace("%target%", target.getName())));
                                 }
                             } else {
-                                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("freeze.yourself")));
+                                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("freeze.yourself")));
                             }
                         } else {
-                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                         }
                     } else {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("freeze.usage")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("freeze.usage")));
                     }
                 } else {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
             }

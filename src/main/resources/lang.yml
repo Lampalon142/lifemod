@@ -1,8 +1,8 @@
 general:
-  nopermission: "&cYou don't have permission for this."
-  onlyplayer: "&cYou can't execute this command on the console."
-  offlineplayer: "&cThis person is not connected to the server."
-  config-reloaded: "&aThis config has been reloaded successfully!"
+  nopermission: "%prefix%&cYou don't have permission for this."
+  onlyplayer: "%prefix%&cYou can't execute this command on the console."
+  offlineplayer: "%prefix%&cThis person is not connected to the server."
+  config-reloaded: "%prefix%&aThis config has been reloaded successfully!"
   update:
     enabled: true
     message: |
@@ -16,34 +16,34 @@ general:
 
 ## Fly
 fly:
-  enable: "&aFly mod has been activated."
-  disable: "&cFly mod has been deactivated."
+  enable: "%prefix%&aFly mod has been activated."
+  disable: "%prefix%&cFly mod has been deactivated."
 
 ## Moderation
 mod:
-  enable: "&aModeration mod has been activated."
-  disable: "&cModeration mod has been deactivated."
+  enable: "%prefix%&aModeration mod has been activated."
+  disable: "%prefix%&cModeration mod has been deactivated."
 
 ## Game mode
 gamemode:
-  invalid: "&cInvalid usage. Please use : /gm or /gamemode [mode] <player>"
-  usage: "&cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
-  other: "&7Game mode has been changed to &b&l%gamemode% &7for &c&l%luckperms_prefix% %player%"
-  own: "&7Your game mode has been changed to &b&l%gamemode%"
+  invalid: "%prefix%&cInvalid usage. Please use : /gm or /gamemode [mode] <player>"
+  usage: "%prefix%&cUsage: '/gm (/gamemode) <0|1|2|3> or /gm (/gamemode) <creative|survival|adventure|spectator <player-name>'"
+  other: "%prefix%&7Game mode has been changed to &b&l%gamemode% &7for &c&l%luckperms_prefix% %player%"
+  own: "%prefix%&7Your game mode has been changed to &b&l%gamemode%"
 
 ## Freeze
 freeze:
-  usage: "&cUsage: /freeze <player-name>."
-  yourself: "&cYou can't freeze yourself."
+  usage: "%prefix%&cUsage: /freeze <player-name>."
+  yourself: "%prefix%&cYou can't freeze yourself."
   gui:
     title: "&cYou are frozen!"
     glass-title: "&aCome on the discord!"
   messages:
     unfreeze:
-      target: "&aYou have been unfrozen by %player%."
-      mod: "&aYou have unfrozen %target%."
+      target: "%prefix%&aYou have been unfrozen by %player%."
+      mod: "%prefix%&aYou have unfrozen %target%."
     freeze:
-      mod: "&cYou have frozen %target%."
+      mod: "%prefix%&cYou have frozen %target%."
     onfreeze:
       - "&7================"
       - "&cYou've been frozen"
@@ -54,7 +54,7 @@ freeze:
 ## Broadcast
 bc:
   prefix: "&7[&4&lAlert&7] &f"
-  usage: "&cUsage : /bc <message>"
+  usage: "%prefix%&cUsage : /bc <message>"
   tabcompleter:
     - Hello
     - Welcome
@@ -95,119 +95,116 @@ tools:
 
 ## Vanish
 vanish:
-  activate: "&cYou are now invisible!"
-  deactivate: "&aYou are now visible!"
-  cooldown: "§cPlease wait %cooldown% seconds before changing your invisible mode again."
-  usage: "&cIncorrect use of the command. Usage: /vanish <player name>."
+  activate: "%prefix%&cYou are now invisible!"
+  deactivate: "%prefix%&aYou are now visible!"
+  cooldown: "%prefix%§cPlease wait %cooldown% seconds before changing your invisible mode again."
+  usage: "%prefix%&cIncorrect use of the command. Usage: /vanish <player name>."
 
 ## Ender Chest
 ec:
-  usage: "&cUsage: /ecopen <player's name>"
-  yourself: "&cYou can't open your own ender chest."
+  usage: "%prefix%&cUsage: /ecopen <player's name>"
+  yourself: "%prefix%&cYou can't open your own ender chest."
 
 ## Clear Inventory
 clearinv:
-  message: "&bInventory deleted for &e%target%"
-  usage: "&cIncorrect use of the command. Usage: /clearinv <player name>."
+  message: "%prefix%&bInventory deleted for &e%target%"
+  usage: "%prefix%&cIncorrect use of the command. Usage: /clearinv <player name>."
 
 ## Moderators list
 modlist:
-  online: "&aOnline moderators: "
-  none: "&cThere are no moderators online at the moment."
+  online: "%prefix%&aOnline moderators: "
+  none: "%prefix%&cThere are no moderators online at the moment."
 
 ## Staff Chat
 staffchat:
-  usage: "&cUsage: /staffchat <message>"
+  usage: "%prefix%&cUsage: /staffchat <message>"
   message: "&b[StaffChat] &c%player%"
-  success: "&a[StaffChat] Message sent successfully!"
+  success: "%prefix%&a[StaffChat] Message sent successfully!"
   prefix: "@"  ## Default is : "@"
 
 ## Chat Clear
 chatclear:
-  message: "&cThe chat has been cleared."
+  message: "%prefix%&cThe chat has been cleared."
 
 ## Heal
 heal:
-  player: "&aYou have been healed"
-  mod: "&a%player% has been healed"
-  usage: "&cInvalid command usage. /heal [player]"
+  player: "%prefix%&aYou have been healed"
+  mod: "%prefix%&a%player% has been healed"
+  usage: "%prefix%&cInvalid command usage. /heal [player]"
 
 ## Kill
 kill:
-  target: "&cYou have been killed by %moderator%"
-  mod: "&aYou have killed &c%target%"
+  target: "%prefix%&cYou have been killed by %moderator%"
+  mod: "%prefix%&aYou have killed &c%target%"
 
 ## Teleport
 tp:
-  none: "&cThere are no players to teleport to."
-  twoplayers: "&aYou have teleported %player1% to %player2%"
-  yourself: "&aYou can't teleport to yourself"
-  success: "&aYou have been teleported to %player%."
-  invalidcoordinates: "&cInvalid coordinates. Please provide valid numbers for x, y, and z."
-  usage: "&cUsage: /tp <player> or <x> <y> <z> or <player1> <player2>"
+  none: "%prefix%&cThere are no players to teleport to."
+  twoplayers: "%prefix%&aYou have teleported %player1% to %player2%"
+  yourself: "%prefix%&aYou can't teleport to yourself"
+  success: "%prefix%&aYou have been teleported to %player%."
+  invalidcoordinates: "%prefix%&cInvalid coordinates. Please provide valid numbers for x, y, and z."
+  usage: "%prefix%&cUsage: /tp <player> or <x> <y> <z> or <player1> <player2>"
 
 ## tphere
 tphere:
-  usage: "&cUsage: /s <player_name>"
-  success: "&aYou have teleported %player%."
+  usage: "%prefix%&cUsage: /s <player_name>"
+  success: "%prefix%&aYou have teleported %player%."
 
 ## Weather
 weather:
-  usage: "&cInvalid weather type. Use /weather sun/rain/storm."
-  sun: "&aWeather set to clear/sun."
-  rain: "&aWeather set to rain."
-  storm: "&aWeather set to storm."
+  usage: "%prefix%&cInvalid weather type. Use /weather sun/rain/storm."
+  sun: "%prefix%&aWeather set to clear/sun."
+  rain: "%prefix%&aWeather set to rain."
+  storm: "%prefix%&aWeather set to storm."
 
 ## God Mode
 god:
   activate:
-    own: "&aYou are now invincible."
-    other: "&aYou have made %player% invincible to attack"
+    own: "%prefix%&aYou are now invincible."
+    other: "%prefix%&aYou have made %player% invincible to attack"
   deactivate:
-    own: "&cYou're no longer invincible."
-    other: "&aYou have made %player% not invincible to attack"
+    own: "%prefix%&cYou're no longer invincible."
+    other: "%prefix%&aYou have made %player% not invincible to attack"
 
 ## Inventory See
 invsee:
-  usage: "&cUsage : /invsee <playername>"
-  yourself: "&cYou can't invsee yourself."
+  usage: "%prefix%&cUsage : /invsee <playername>"
+  yourself: "%prefix%&cYou can't invsee yourself."
   name: "&cPlayer inventory %player%"
 
 ## Feed
 feed:
-  yourself: "&aYou've been feed!"
-  player: "&aYou have been feed!"
-  mod: "&aYou have feed %target%."
-  usage: "&cUsage : /feed <player>."
+  yourself: "%prefix%&aYou've been feed!"
+  player: "%prefix%&aYou have been feed!"
+  mod: "%prefix%&aYou have feed %target%."
+  usage: "%prefix%&cUsage : /feed <player>."
 
 ## Speed
 speed:
-  success: "&aYour speed has been changed to %speed%"
-  provide: "&cYou need to provide a valid speed multiplier (1 to 10)"
+  success: "%prefix%&aYour speed has been changed to %speed%"
+  provide: "%prefix%&cYou need to provide a valid speed multiplier (1 to 10)"
 
 ## Spectate
-
 spectate:
-  usage: "&cUsage: /spectate <player> | /spectate leave | /spectate fp"
-  already-spectate: "&cYou are already spectating! Use /spectate leave first."
-  spectate: "&aYou are now spectating &e%target% &a."
-  fp-spectate: "&aYou are now in first-person spectator mode."
+  usage: "%prefix%&cUsage: /spectate <player> | /spectate leave | /spectate fp"
+  already-spectate: "%prefix%&cYou are already spectating! Use /spectate leave first."
+  spectate: "%prefix%&aYou are now spectating &e%target% &a."
+  fp-spectate: "%prefix%&aYou are now in first-person spectator mode."
   leave:
-    success: "&aYou have exited Spectator mode and returned to your original location."
-    error: "&cYou are not spectating anyone!"
+    success: "%prefix%&aYou have exited Spectator mode and returned to your original location."
+    error: "%prefix%&cYou are not spectating anyone!"
 
 ##Otp
-
 otp:
-  usage: "&cUsage: /otp <player>"
-  player-not-found: "&cPlayer %target% doesn't exist or has never connected."
-  no-position: "&cNo saved position for %target%."
-  teleported: "&aYou have been teleported to %target%'s last position."
+  usage: "%prefix%&cUsage: /otp <player>"
+  player-not-found: "%prefix%&cPlayer %target% doesn't exist or has never connected."
+  no-position: "%prefix%&cNo saved position for %target%."
+  teleported: "%prefix%&aYou have been teleported to %target%'s last position."
 
 ## Oinvsee
-
 oinvsee:
-  usage: "&cUsage : /oinvsee <player>"
-  no-inventory: "&cNo saved inventory for %target%."
+  usage: "%prefix%&cUsage : /oinvsee <player>"
+  no-inventory: "%prefix%&cNo saved inventory for %target%."
   name: "&cPlayer inventory %target%"
-  success: "&aYou are now viewing %target%'s inventory."
+  success: "%prefix%&aYou are now viewing %target%'s inventory."

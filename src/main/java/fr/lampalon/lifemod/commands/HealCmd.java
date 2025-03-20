@@ -22,7 +22,7 @@ public class HealCmd implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
             if (label.equalsIgnoreCase("heal")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
                     return true;
                 }
 
@@ -31,7 +31,7 @@ public class HealCmd implements CommandExecutor, TabCompleter {
                 String s = LifeMod.getInstance().getLangConfig().getString("heaL.mod");
 
                 if (!player.hasPermission("lifemod.heal")) {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
                     return true;
                 }
 
@@ -53,19 +53,19 @@ public class HealCmd implements CommandExecutor, TabCompleter {
                     double maxHealth = player.getMaxHealth();
                     player.setHealth(maxHealth);
                     player.setFoodLevel(player.getFoodLevel());
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("heal.player")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("heal.player")));
                 } else if (args.length == 1) {
                     Player target = player.getServer().getPlayer(args[0]);
                     if (target != null) {
                         double maxHealth = player.getMaxHealth();
                         target.setHealth(maxHealth);
                         target.setFoodLevel(player.getFoodLevel());
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + s.replace("%player%", player.getPlayer().getName())));
+                        player.sendMessage(MessageUtil.formatMessage(s.replace("%player%", player.getPlayer().getName())));
                     } else {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
+                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
                     }
                 } else {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getConfigConfig().getString("prefix") + LifeMod.getInstance().getLangConfig().getString("heal.usage")));
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("heal.usage")));
                 }
             }
         return true;
