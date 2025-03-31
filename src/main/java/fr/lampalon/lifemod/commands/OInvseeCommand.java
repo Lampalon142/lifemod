@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.manager.database.DatabaseManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
@@ -8,12 +9,20 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class OInvseeCommand implements CommandExecutor {
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+public class OInvseeCommand implements CommandExecutor, TabCompleter {
 
     private final DatabaseManager databaseManager;
     private final FileConfiguration langConfig;
@@ -53,6 +62,21 @@ public class OInvseeCommand implements CommandExecutor {
             return true;
         }
 
+        if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
+            DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
+            webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                    .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.oinvsee.title"))
+                    .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.oinvsee.description").replace("%player%", sender.getName()))
+                    .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.oinvsee.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.oinvsee.footer.logo").replace("%player%", sender.getName()))
+                    .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.oinvsee.color")))));
+
+            try {
+                webhook.execute();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         String inventoryTitle = MessageUtil.formatMessage(langConfig.getString("oinvsee.name", "&cPlayer inventory %target%").replace("%target%", args[0]));
         Inventory inv = Bukkit.createInventory(null, 45, inventoryTitle);
         inv.setContents(savedInventory);
@@ -60,5 +84,22 @@ public class OInvseeCommand implements CommandExecutor {
 
         player.sendMessage(MessageUtil.formatMessage(langConfig.getString("oinvsee.success", "&aYou are now viewing %target%'s inventory.").replace("%target%", args[0])));
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        List<String> completions = new ArrayList<>();
+        if (cmd.getName().equalsIgnoreCase("oinvsee")){
+            if (args.length == 1){
+                String input = args[args.length - 1].toLowerCase();
+                completions = Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .filter(name -> name.toLowerCase().startsWith(input))
+                        .collect(Collectors.toList());
+
+                return completions;
+            }
+        }
+        return null;
     }
 }

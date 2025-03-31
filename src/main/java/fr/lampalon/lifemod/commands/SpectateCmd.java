@@ -76,7 +76,7 @@ public class SpectateCmd implements CommandExecutor {
                         webhook.addEmbed(new DiscordWebhook.EmbedObject()
                                 .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.spectate.title"))
                                 .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.spectate.description").replace("%player%", sender.getName()))
-                                .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.spectate.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.vanish.footer.logo").replace("%player%", sender.getName()))
+                                .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.spectate.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.spectate.footer.logo").replace("%player%", sender.getName()))
                                 .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.spectate.color")))));
 
                         try {
@@ -91,7 +91,7 @@ public class SpectateCmd implements CommandExecutor {
             default:
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target == null || !target.isOnline()) {
-                    player.sendMessage("§cPlayer not found!");
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("spectate.player-not-found").replace("%target%", args[0])));
                     return true;
                 }
                 if (spectateManager.isSpectating(player)) {

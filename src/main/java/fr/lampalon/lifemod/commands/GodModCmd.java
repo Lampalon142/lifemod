@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GodModCmd implements CommandExecutor, TabCompleter {
 
@@ -76,13 +77,16 @@ public class GodModCmd implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
         if (cmd.getName().equalsIgnoreCase("god")){
             if (args.length == 1){
-                List<String> playerNames = new ArrayList<>();
-                for (Player player : Bukkit.getOnlinePlayers()){
-                    playerNames.add(player.getName());
-                }
-                return playerNames;
+                String input = args[args.length - 1].toLowerCase();
+                completions = Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .filter(name -> name.toLowerCase().startsWith(input))
+                        .collect(Collectors.toList());
+
+                return completions;
             }
         }
         return null;

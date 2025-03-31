@@ -56,8 +56,9 @@ commands-enabled:
   weather: true
   lifemod: true
   speed: true
-  panel: true
   spectate: true
+  otp: true
+  oinvsee: true
 
 items-enabled:
   kbTester: true
@@ -110,140 +111,154 @@ discord:
     title: "New Alert!"
     description: "> %player% has execute broadcast command containing the message %message%!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   chatclear:
     title: "New Alert!"
     description: "> %player% has execute ChatClear command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   clearinv:
     title: "New Alert!"
     description: "> %player% has execute clearinv command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   lifemod:
     title: "New Alert!"
     description: "> %player% has execute lifemod command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   ecopen:
     title: "New Alert!"
     description: "> %player% has execute ecopen command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   feed:
     title: "New Alert!"
     description: "> %player% has execute feed command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   fly:
     title: "New Alert!"
     description: "> %player% has execute fly command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   freeze:
     title: "New Alert!"
     description: "> %player% has execute freeze command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   gamemode:
     title: "New Alert!"
     description: "> %player% has execute gamemode command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   god:
     title: "New Alert!"
     description: "> %player% has execute god command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   heal:
     title: "New Alert!"
     description: "> %player% has execute heal command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   invsee:
     title: "New Alert!"
     description: "> %player% has execute invsee command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   mod:
     title: "New Alert!"
     description: "> %player% has execute mod command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   speed:
     title: "New Alert!"
     description: "> %player% has execute speed command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   staffchat:
     title: "New Alert!"
     description: "> %player% has execute staffchat command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   stafflist:
     title: "New Alert!"
     description: "> %player% has execute stafflist command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   teleport:
     title: "New Alert!"
     description: "> %player% has execute teleport command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   vanish:
     title: "New Alert!"
     description: "> %player% has execute vanish command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   weather:
     title: "New Alert!"
     description: "> %player% has execute weather command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
   spectate:
     title: "New Alert!"
-    description: "> %player% has execute weather command!"
+    description: "> %player% has execute spectate command!"
     footer:
-      title: "Powered By ImproveDevelopment"
+      title: "Powered By LifeGroup"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  otp:
+    title: "New Alert!"
+    description: "> %player% has execute otp command!"
+    footer:
+      title: "Powered By LifeGroup"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  oinvsee:
+    title: "New Alert!"
+    description: "> %player% has execute oinvsee command!"
+    footer:
+      title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
 
@@ -252,5 +267,3 @@ discord:
 #+----------------Don't touch-----------------+#
 #+--------------------------------------------+#
 ################################################
-
-version: 1.6.7-RELEASE

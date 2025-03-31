@@ -18,6 +18,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GmCmd implements CommandExecutor, TabCompleter {
 
@@ -79,7 +80,6 @@ public class GmCmd implements CommandExecutor, TabCompleter {
               message.replace("%gamemode%", gameMode.name())
                       .replace("%player%", targetPlayer.getName())
                       .replace("%luckperms_prefix%", playerPrefix)));
-      
       return true;
     }
     return false;
@@ -135,13 +135,18 @@ public class GmCmd implements CommandExecutor, TabCompleter {
 
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+    List<String> completions = new ArrayList<>();
     if (cmd.getName().equalsIgnoreCase("gamemode") || cmd.getName().equalsIgnoreCase("gm")) {
       if (args.length == 1) {
         return Arrays.asList("survival", "creative", "adventure", "spectator", "s", "c", "a", "sp", "0", "1", "2", "3");
       } else if (args.length == 2) {
-        return Bukkit.getOnlinePlayers().stream()
+        String input = args[args.length - 1].toLowerCase();
+        completions = Bukkit.getOnlinePlayers().stream()
                 .map(Player::getName)
-                .toList();
+                .filter(name -> name.toLowerCase().startsWith(input))
+                .collect(Collectors.toList());
+
+        return completions;
       }
     }
     return Collections.emptyList();

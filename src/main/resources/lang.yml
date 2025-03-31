@@ -1,5 +1,3 @@
-version: 1.6.7-RELEASE
-
 general:
   nopermission: "%prefix%&cYou don't have permission for this."
   onlyplayer: "%prefix%&cYou can't execute this command on the console."
@@ -190,6 +188,7 @@ speed:
 ## Spectate
 spectate:
   usage: "%prefix%&cUsage: /spectate <player> | /spectate leave | /spectate fp"
+  player-not-found: "%prefix%&cPlayer not found."
   already-spectate: "%prefix%&cYou are already spectating! Use /spectate leave first."
   spectate: "%prefix%&aYou are now spectating &e%target% &a."
   fp-spectate: "%prefix%&aYou are now in first-person spectator mode."
@@ -210,3 +209,9 @@ oinvsee:
   no-inventory: "%prefix%&cNo saved inventory for %target%."
   name: "&cPlayer inventory %target%"
   success: "%prefix%&aYou are now viewing %target%'s inventory."
+
+################################################
+#+--------------------------------------------+#
+#+----------------Don't touch-----------------+#
+#+--------------------------------------------+#
+################################################
