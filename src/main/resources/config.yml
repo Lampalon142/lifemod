@@ -246,3 +246,11 @@ discord:
       title: "Powered By ImproveDevelopment"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+
+################################################
+#+--------------------------------------------+#
+#+----------------Don't touch-----------------+#
+#+--------------------------------------------+#
+################################################
+
+version: 1.6.7-RELEASE

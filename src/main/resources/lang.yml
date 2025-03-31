@@ -1,3 +1,5 @@
+version: 1.6.7-RELEASE
+
 general:
   nopermission: "%prefix%&cYou don't have permission for this."
   onlyplayer: "%prefix%&cYou can't execute this command on the console."

@@ -6,6 +6,7 @@ import fr.lampalon.lifemod.listeners.players.*;
 import fr.lampalon.lifemod.listeners.utils.*;
 import fr.lampalon.lifemod.manager.*;
 import fr.lampalon.lifemod.manager.database.DatabaseManager;
+import fr.lampalon.lifemod.utils.ConfigUpdater;
 import fr.lampalon.lifemod.utils.UpdateChecker;
 import fr.lampalon.lifemod.manager.PlayerManager;
 import org.bstats.bukkit.Metrics;
@@ -49,6 +50,7 @@ public class LifeMod extends JavaPlugin {
     public void onEnable() {
         instance = this;
         this.databaseManager = new DatabaseManager(this);
+        new ConfigUpdater(this).updateConfig();
         loadConfigurations();
         initializeManagers();
         registerEvents();
@@ -229,9 +231,9 @@ public class LifeMod extends JavaPlugin {
         return databaseManager;
     }
 
-
     public void reloadPluginConfig() {
         reloadConfig();
+        configConfig = loadConfig("config.yml");
         langConfig = loadConfig("lang.yml");
     }
 }
