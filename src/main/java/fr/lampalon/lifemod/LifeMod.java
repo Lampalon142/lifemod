@@ -232,7 +232,6 @@ public class LifeMod extends JavaPlugin {
     }
 
     public void reloadPluginConfig() {
-        reloadConfig();
         configConfig = loadConfig("config.yml");
         langConfig = loadConfig("lang.yml");
     }

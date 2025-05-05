@@ -22,12 +22,22 @@ import java.util.stream.Collectors;
 
 public class GmCmd implements CommandExecutor, TabCompleter {
 
-  private final LuckPerms luckPerms;
+  private final boolean useLuckPerms;
+  private LuckPerms luckPerms;
 
   public GmCmd() {
-    this.luckPerms = Bukkit.getServicesManager().getRegistration(LuckPerms.class) != null
-            ? LuckPermsProvider.get()
-            : null;
+
+    this.useLuckPerms = LifeMod.getInstance().getConfigConfig().getBoolean("UseLuckPerms");
+
+    if(this.useLuckPerms) {
+      this.luckPerms = Bukkit.getServicesManager().getRegistration(LuckPerms.class) != null
+              ? LuckPermsProvider.get()
+              : null;
+
+      if(this.luckPerms == null) {
+        Bukkit.getLogger().warning("[LifeMod] LuckPerms is configured but not detected !");
+      }
+    }
   }
 
   @Override
@@ -123,7 +133,7 @@ public class GmCmd implements CommandExecutor, TabCompleter {
   }
 
   private String getPlayerPrefix(Player player) {
-    if (luckPerms != null) {
+    if(this.useLuckPerms && this.luckPerms != null) {
       User user = luckPerms.getUserManager().getUser(player.getUniqueId());
       if (user != null) {
         String prefix = user.getCachedData().getMetaData().getPrefix();

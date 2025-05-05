@@ -26,6 +26,10 @@ public class VanishedManager {
         if (vanished) {
             Bukkit.getOnlinePlayers().forEach(p -> p.hidePlayer(LifeMod.getInstance(), player));
 
+            player.setCollidable(false);
+
+            player.setCanPickupItems(false);
+
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false, false));
 
             BukkitRunnable task = new BukkitRunnable() {
@@ -39,13 +43,16 @@ public class VanishedManager {
                     Bukkit.getOnlinePlayers().forEach(p -> p.hidePlayer(LifeMod.getInstance(), player));
                 }
             };
-            task.runTaskTimer(LifeMod.getInstance(), 0L, 20L); // Runs every second
+            task.runTaskTimer(LifeMod.getInstance(), 0L, 20L);
             vanishTasks.put(playerId, task);
 
         } else {
             Bukkit.getOnlinePlayers().forEach(p -> p.showPlayer(LifeMod.getInstance(), player));
 
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
+
+            player.setCollidable(true);
+            player.setCanPickupItems(true);
 
             if (vanishTasks.containsKey(playerId)) {
                 vanishTasks.get(playerId).cancel();

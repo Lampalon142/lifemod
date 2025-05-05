@@ -34,7 +34,7 @@ public class BroadcastCmd implements CommandExecutor, TabCompleter {
                     }
 
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                        onlinePlayer.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("bc.prefix") + message.toString()));
+                        onlinePlayer.sendMessage(MessageUtil.formatMessage(message.toString()));
                     }
                     if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                         DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
