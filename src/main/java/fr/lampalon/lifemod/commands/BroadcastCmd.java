@@ -33,8 +33,10 @@ public class BroadcastCmd implements CommandExecutor, TabCompleter {
                         message.append(arg).append(" ");
                     }
 
+                    String formattedMessage = message.toString().replace("\\n", "\n");
+
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                        onlinePlayer.sendMessage(MessageUtil.formatMessage(message.toString()));
+                        onlinePlayer.sendMessage(MessageUtil.formatMessage(formattedMessage));
                     }
                     if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
                         DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
