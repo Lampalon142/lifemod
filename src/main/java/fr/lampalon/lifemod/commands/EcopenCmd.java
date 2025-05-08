@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
@@ -12,76 +13,89 @@ import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class EcopenCmd implements CommandExecutor, TabCompleter {
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-            if (label.equalsIgnoreCase("ecopen")) {
-                if (sender instanceof Player) {
+    private final LifeMod plugin;
+    private final DebugManager debug;
 
-                    Player player = (Player) sender;
-
-                    if (args.length != 1) {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("ec.usage")));
-                        return true;
-                    }
-
-                    Player targetPlayer = Bukkit.getPlayer(args[0]);
-
-                    if (!player.hasPermission("lifemod.ecopen")) {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
-                    } else {
-                        if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
-                            DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
-                            webhook.addEmbed(new DiscordWebhook.EmbedObject()
-                                    .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.ecopen.title"))
-                                    .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.ecopen.description").replace("%player%", sender.getName()))
-                                    .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.ecopen.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.ecopen.footer.logo").replace("%player%", sender.getName()))
-                                    .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.ecopen.color")))));
-                            try {
-                                webhook.execute();
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        player.openInventory(targetPlayer.getEnderChest());
-                    }
-
-                    if (targetPlayer == null) {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
-                        return true;
-                    }
-
-                    if (targetPlayer == player) {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("ec.yourself")));
-                        return true;
-                    }
-
-                } else {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
-                }
-                return true;
-            }
-        return false;
+    public EcopenCmd(LifeMod plugin) {
+        this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
     }
 
     @Override
-    public java.util.List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-        List<String> completions = new ArrayList<>();
-        if (cmd.getName().equalsIgnoreCase("ecopen")){
-            if (args.length == 1){
-                String input = args[args.length - 1].toLowerCase();
-                completions = Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .filter(name -> name.toLowerCase().startsWith(input))
-                        .collect(Collectors.toList());
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!label.equalsIgnoreCase("ecopen")) return false;
 
-                return completions;
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.onlyplayer")));
+            return true;
+        }
+
+        Player player = (Player) sender;
+
+        if (!player.hasPermission("lifemod.ecopen")) {
+            player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+            debug.log("commands", "Permission denied for /ecopen by " + player.getName());
+            return true;
+        }
+
+        if (args.length != 1) {
+            player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("ec.usage")));
+            return true;
+        }
+
+        Player targetPlayer = Bukkit.getPlayer(args[0]);
+        if (targetPlayer == null) {
+            player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.offlineplayer")));
+            return true;
+        }
+
+        if (targetPlayer == player) {
+            player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("ec.yourself")));
+            return true;
+        }
+
+        player.openInventory(targetPlayer.getEnderChest());
+        debug.log("ecopen", player.getName() + " opened ender chest of " + targetPlayer.getName());
+
+        if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
+            try {
+                DiscordWebhook webhook = new DiscordWebhook(plugin.webHookUrl);
+                webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                        .setTitle(plugin.getConfigConfig().getString("discord.ecopen.title"))
+                        .setDescription(plugin.getConfigConfig().getString("discord.ecopen.description")
+                                .replace("%player%", sender.getName()))
+                        .setFooter(
+                                plugin.getConfigConfig().getString("discord.ecopen.footer.title"),
+                                plugin.getConfigConfig().getString("discord.ecopen.footer.logo")
+                                        .replace("%player%", sender.getName())
+                        )
+                        .setColor(Color.decode(Objects.requireNonNull(
+                                plugin.getConfigConfig().getString("discord.ecopen.color")
+                        ))));
+                webhook.execute();
+            } catch (IOException e) {
+                debug.userError(sender, "Failed to send Discord ecopen alert", e);
+                debug.log("discord", "Webhook error: " + e.getMessage());
             }
+        }
+
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+        if (!cmd.getName().equalsIgnoreCase("ecopen")) return null;
+        if (args.length == 1) {
+            String input = args[0].toLowerCase();
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(name -> name.toLowerCase().startsWith(input))
+                    .collect(Collectors.toList());
         }
         return null;
     }

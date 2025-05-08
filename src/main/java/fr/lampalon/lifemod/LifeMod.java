@@ -33,6 +33,7 @@ public class LifeMod extends JavaPlugin {
     private FreezeManager freezeManager;
     private DatabaseManager databaseManager;
     private UpdateChecker updateChecker;
+    private DebugManager debugManager;
     private ChatManager chatManager;
     private VanishedManager playerManager;
     private FileConfiguration configConfig;
@@ -48,16 +49,32 @@ public class LifeMod extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        long start = System.currentTimeMillis();
         instance = this;
-        this.databaseManager = new DatabaseManager(this);
+        saveDefaultConfig();
         new ConfigUpdater(this).updateConfig();
         loadConfigurations();
+        this.debugManager = new DebugManager(this);
+        this.databaseManager = new DatabaseManager(this);
         initializeManagers();
         registerEvents();
         registerCommands();
-        saveDefaultConfig();
         setupMetrics();
-        Bukkit.getConsoleSender().sendMessage("§aLifeMod developed by Lampalon with §4<3 §awas been successfully initialised");
+        String dbStatus = "§cFailed";
+        try {
+            if (databaseManager != null && databaseManager.getConnection() != null && !databaseManager.getConnection().isClosed()) {
+                dbStatus = "§aConnected";
+            }
+        } catch (Exception e) {
+            dbStatus = "§cError";
+        }
+        long elapsed = System.currentTimeMillis() - start;
+        Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
+        Bukkit.getConsoleSender().sendMessage("§6LifeMod §7v" + getDescription().getVersion() + " §8| §fby Lampalon");
+        Bukkit.getConsoleSender().sendMessage("§7Java: §e" + System.getProperty("java.version") + " §8| §7Server: §e" + Bukkit.getVersion());
+        Bukkit.getConsoleSender().sendMessage("§7Database: " + dbStatus);
+        Bukkit.getConsoleSender().sendMessage("§7Startup time: §b" + elapsed + "ms");
+        Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
     }
 
     private void loadConfigurations() {
@@ -118,27 +135,27 @@ public class LifeMod extends JavaPlugin {
     private void registerCommands() {
         commandMap = getCommandMap();
         registerCommand("freeze", new FreezeCmd(this));
-        registerCommand("mod", new ModCommand());
-        registerCommand("staff", new ModCommand());
-        registerCommand("broadcast", new BroadcastCmd());
-        registerCommand("bc", new BroadcastCmd());
-        registerCommand("gamemode", new GmCmd());
-        registerCommand("gm", new GmCmd());
-        registerCommand("fly", new FlyCmd());
-        registerCommand("ecopen", new EcopenCmd());
+        registerCommand("mod", new ModCommand(this));
+        registerCommand("staff", new ModCommand(this));
+        registerCommand("broadcast", new BroadcastCmd(this));
+        registerCommand("bc", new BroadcastCmd(this));
+        registerCommand("gamemode", new GmCmd(this));
+        registerCommand("gm", new GmCmd(this));
+        registerCommand("fly", new FlyCmd(this));
+        registerCommand("ecopen", new EcopenCmd(this));
         registerCommand("vanish", new VanishCmd(playerManager));
-        registerCommand("clearinv", new ClearinvCmd());
+        registerCommand("clearinv", new ClearinvCmd(this));
         registerCommand("stafflist", new StafflistCmd());
         registerCommand("staffchat", new StaffchatCmd());
-        registerCommand("chatclear", new ChatclearCmd());
-        registerCommand("heal", new HealCmd());
+        registerCommand("chatclear", new ChatclearCmd(this));
+        registerCommand("heal", new HealCmd(this));
         registerCommand("tp", new TeleportCmd());
         registerCommand("tphere", new TeleportCmd());
-        registerCommand("god", new GodModCmd());
+        registerCommand("god", new GodModCmd(this));
         registerCommand("invsee", new InvseeCmd(this));
-        registerCommand("feed", new FeedCmd());
+        registerCommand("feed", new FeedCmd(this));
         registerCommand("weather", new WeatherCmd(this));
-        registerCommand("lifemod", new lifemodCmd(this));
+        registerCommand("lifemod", new LifemodCmd(this));
         registerCommand("speed", new SpeedCmd());
         registerCommand("spectate", new SpectateCmd(this));
         registerCommand("otp", new OtpCommand(databaseManager));
@@ -203,6 +220,8 @@ public class LifeMod extends JavaPlugin {
     public FileConfiguration getConfigConfig() {
         return configConfig;
     }
+
+    public DebugManager getDebugManager() { return debugManager; }
 
     public ChatManager getChatManager() {
         return chatManager;

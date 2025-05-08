@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.listeners.moderation;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.PlayerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +19,8 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class ModCancels implements Listener {
 
+  private final DebugManager debug = LifeMod.getInstance().getDebugManager();
+
   private boolean isRestricted(Player player) {
     return PlayerManager.isInModerationMod(player) || LifeMod.getInstance().isFreeze(player);
   }
@@ -26,6 +29,7 @@ public class ModCancels implements Listener {
   public void onItemDrop(PlayerDropItemEvent e) {
     if (isRestricted(e.getPlayer())) {
       e.setCancelled(true);
+      debug.log("mod", e.getPlayer().getName() + " tried to drop item in mod/freeze mode");
     }
   }
 
@@ -33,6 +37,7 @@ public class ModCancels implements Listener {
   public void onBlockPlace(BlockPlaceEvent e) {
     if (isRestricted(e.getPlayer())) {
       e.setCancelled(true);
+      debug.log("mod", e.getPlayer().getName() + " tried to place block in mod/freeze mode");
     }
   }
 
@@ -40,6 +45,7 @@ public class ModCancels implements Listener {
   public void onBlockBreak(BlockBreakEvent e) {
     if (isRestricted(e.getPlayer())) {
       e.setCancelled(true);
+      debug.log("mod", e.getPlayer().getName() + " tried to break block in mod/freeze mode");
     }
   }
 
@@ -47,6 +53,7 @@ public class ModCancels implements Listener {
   public void onItemPickup(PlayerPickupItemEvent e) {
     if (isRestricted(e.getPlayer())) {
       e.setCancelled(true);
+      debug.log("mod", e.getPlayer().getName() + " tried to pick up item in mod/freeze mode");
     }
   }
 
@@ -58,12 +65,14 @@ public class ModCancels implements Listener {
     Player player = (Player) e.getEntity();
     if (isRestricted(player)) {
       e.setCancelled(true);
+      debug.log("mod", player.getName() + " tried to take damage in mod/freeze mode");
     }
 
     if (e instanceof EntityDamageByEntityEvent) {
       EntityDamageByEntityEvent ev = (EntityDamageByEntityEvent) e;
       if (ev.getDamager() instanceof Player && isRestricted((Player) ev.getDamager())) {
         e.setCancelled(true);
+        debug.log("mod", ((Player) ev.getDamager()).getName() + " tried to deal damage in mod/freeze mode");
       }
     }
   }
@@ -72,6 +81,7 @@ public class ModCancels implements Listener {
   public void onPlayerInteract(PlayerInteractEvent e) {
     if (isRestricted(e.getPlayer())) {
       e.setCancelled(true);
+      debug.log("mod", e.getPlayer().getName() + " tried to interact in mod/freeze mode");
     }
   }
 
@@ -83,6 +93,7 @@ public class ModCancels implements Listener {
 
     if (isRestricted(player)) {
       event.setCancelled(true);
+      debug.log("mod", player.getName() + " tried to click inventory in mod/freeze mode");
     }
   }
 
@@ -90,6 +101,7 @@ public class ModCancels implements Listener {
   public void onMove(PlayerMoveEvent e) {
     if (LifeMod.getInstance().isFreeze(e.getPlayer())) {
       e.setTo(e.getFrom());
+      debug.log("freeze", e.getPlayer().getName() + " tried to move while frozen");
     }
   }
 }

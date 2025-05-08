@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.manager.database.type;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.database.DatabaseProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,10 +19,12 @@ import java.util.UUID;
 public class SQLiteManager implements DatabaseProvider {
 
     private final LifeMod plugin;
+    private final DebugManager debug;
     private Connection connection;
 
     public SQLiteManager(LifeMod plugin) {
         this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
         connect();
     }
 
@@ -29,30 +32,29 @@ public class SQLiteManager implements DatabaseProvider {
         try {
             File dbFile = new File(plugin.getDataFolder(), "database.db");
             if (!dbFile.exists()) {
-                plugin.getLogger().info("");
                 dbFile.getParentFile().mkdirs();
                 dbFile.createNewFile();
+                debug.log("database", "Created new SQLite database file.");
             }
 
             String url = "jdbc:sqlite:" + dbFile.getAbsolutePath();
             connection = DriverManager.getConnection(url);
 
-            if (connection != null) {
-                plugin.getLogger().info("SQLite connection established successfully.");
+            if (connection == null) {
+                debug.log("database", "ERROR: SQLite connection is NULL!");
             } else {
-                plugin.getLogger().severe("ERROR: SQLite connection is NULL!");
+                debug.log("database", "SQLite connection established.");
             }
-
         } catch (IOException | SQLException e) {
-            plugin.getLogger().severe("Unable to establish SQLite connection!");
-            e.printStackTrace();
+            debug.log("database", "Unable to establish SQLite connection!");
+            debug.userError(null, "SQLite connection error", e);
         }
     }
 
     @Override
     public void setupDatabase() {
         if (connection == null) {
-            plugin.getLogger().severe("Unable to set up database: connection is NULL!");
+            debug.log("database", "Unable to set up database: connection is NULL!");
             return;
         }
 
@@ -72,9 +74,10 @@ public class SQLiteManager implements DatabaseProvider {
                     + ");";
             statement.executeUpdate(sql2);
 
+            debug.log("database", "SQLite tables initialized.");
         } catch (SQLException e) {
-            plugin.getLogger().severe("[LifeMod] ERROR: Failed to initialize \"setupDatabase()\"!");
-            e.printStackTrace();
+            debug.log("database", "ERROR: Failed to initialize setupDatabase()!");
+            debug.userError(null, "SQLite table creation error", e);
         }
     }
 
@@ -88,17 +91,17 @@ public class SQLiteManager implements DatabaseProvider {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                plugin.getLogger().info("[LifeMod] SQLite connection closed.");
+                debug.log("database", "SQLite connection closed.");
             }
         } catch (SQLException e) {
-            plugin.getLogger().severe("[LifeMod] Error while closing SQLite connection!");
-            e.printStackTrace();
+            debug.log("database", "Error while closing SQLite connection!");
+            debug.userError(null, "SQLite close connection error", e);
         }
     }
 
     public void savePlayerInventory(UUID uuid, Inventory inventory) {
         if (connection == null) {
-            plugin.getLogger().severe("ERROR: SQLite connection NULL during savePlayerInventory!");
+            debug.log("database", "ERROR: SQLite connection NULL during savePlayerInventory!");
             return;
         }
 
@@ -111,15 +114,16 @@ public class SQLiteManager implements DatabaseProvider {
             statement.setString(1, uuid.toString());
             statement.setString(2, serializedInventory);
             statement.executeUpdate();
+            debug.log("database", "Saved inventory for UUID: " + uuid);
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to save inventory for UUID: " + uuid);
-            e.printStackTrace();
+            debug.log("database", "Failed to save inventory for UUID: " + uuid);
+            debug.userError(null, "SQLite savePlayerInventory error", e);
         }
     }
 
     public ItemStack[] getPlayerInventory(UUID uuid) {
         if (connection == null) {
-            plugin.getLogger().severe("ERROR: SQLite connection NULL during getPlayerInventory!");
+            debug.log("database", "ERROR: SQLite connection NULL during getPlayerInventory!");
             return null;
         }
 
@@ -131,12 +135,13 @@ public class SQLiteManager implements DatabaseProvider {
 
             if (resultSet.next()) {
                 String inventoryData = resultSet.getString("inventory_data");
+                debug.log("database", "Loaded inventory for UUID: " + uuid);
                 return deserializeInventory(inventoryData);
             }
 
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to retrieve inventory for UUID: " + uuid);
-            e.printStackTrace();
+            debug.log("database", "Failed to retrieve inventory for UUID: " + uuid);
+            debug.userError(null, "SQLite getPlayerInventory error", e);
         }
 
         return null;
@@ -144,7 +149,7 @@ public class SQLiteManager implements DatabaseProvider {
 
     public void savePlayerCoords(UUID uuid, Location location) {
         if (connection == null) {
-            plugin.getLogger().severe("ERROR: SQLite connection NULL during savePlayerCoords!");
+            debug.log("database", "ERROR: SQLite connection NULL during savePlayerCoords!");
             return;
         }
 
@@ -157,50 +162,16 @@ public class SQLiteManager implements DatabaseProvider {
             statement.setDouble(4, location.getZ());
             statement.setString(5, location.getWorld().getName());
             statement.executeUpdate();
+            debug.log("database", "Saved coords for UUID: " + uuid);
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to save coordinates for UUID: " + uuid);
-            e.printStackTrace();
-        }
-    }
-
-    private String serializeInventory(Inventory inventory) {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
-
-            dataOutput.writeInt(inventory.getContents().length);
-            for (ItemStack item : inventory.getContents()) {
-                dataOutput.writeObject(item);
-            }
-            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private ItemStack[] deserializeInventory(String base64) {
-        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(base64));
-             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
-
-            int size = dataInput.readInt();
-            ItemStack[] inventoryContents = new ItemStack[size];
-
-            for (int i = 0; i < size; i++) {
-                inventoryContents[i] = (ItemStack) dataInput.readObject();
-            }
-
-            return inventoryContents;
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return new ItemStack[0];
+            debug.log("database", "Failed to save coordinates for UUID: " + uuid);
+            debug.userError(null, "SQLite savePlayerCoords error", e);
         }
     }
 
     public Location getPlayerCoords(UUID uuid) {
         if (connection == null) {
-            plugin.getLogger().severe("ERROR: SQLite connection NULL during getPlayerCoords!");
+            debug.log("database", "ERROR: SQLite connection NULL during getPlayerCoords!");
             return null;
         }
 
@@ -218,18 +189,55 @@ public class SQLiteManager implements DatabaseProvider {
 
                 World world = Bukkit.getWorld(worldName);
                 if (world == null) {
-                    plugin.getLogger().warning("World '" + worldName + "' not found! Using default world.");
+                    debug.log("database", "World '" + worldName + "' not found! Using default world.");
                     world = Bukkit.getWorlds().get(0);
                 }
 
+                debug.log("database", "Loaded coords for UUID: " + uuid);
                 return new Location(world, x, y, z);
             }
 
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to retrieve coordinates for UUID: " + uuid);
-            e.printStackTrace();
+            debug.log("database", "Failed to retrieve coordinates for UUID: " + uuid);
+            debug.userError(null, "SQLite getPlayerCoords error", e);
         }
 
         return null;
+    }
+
+    private String serializeInventory(Inventory inventory) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
+
+            dataOutput.writeInt(inventory.getContents().length);
+            for (ItemStack item : inventory.getContents()) {
+                dataOutput.writeObject(item);
+            }
+            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+
+        } catch (IOException e) {
+            debug.log("database", "Failed to serialize inventory!");
+            debug.userError(null, "SQLite serializeInventory error", e);
+            return null;
+        }
+    }
+
+    private ItemStack[] deserializeInventory(String base64) {
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(base64));
+             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
+
+            int size = dataInput.readInt();
+            ItemStack[] inventoryContents = new ItemStack[size];
+
+            for (int i = 0; i < size; i++) {
+                inventoryContents[i] = (ItemStack) dataInput.readObject();
+            }
+            return inventoryContents;
+
+        } catch (IOException | ClassNotFoundException e) {
+            debug.log("database", "Failed to deserialize inventory!");
+            debug.userError(null, "SQLite deserializeInventory error", e);
+            return new ItemStack[0];
+        }
     }
 }

@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.manager.database;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.database.type.SQLiteManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -9,11 +10,13 @@ import java.sql.Connection;
 public class DatabaseManager {
 
     private final LifeMod plugin;
+    private final DebugManager debug;
     private DatabaseProvider databaseProvider;
     private SQLiteManager sqliteManager;
 
     public DatabaseManager(LifeMod plugin) {
         this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
         this.sqliteManager = new SQLiteManager(plugin);
     }
 
@@ -21,20 +24,30 @@ public class DatabaseManager {
         FileConfiguration config = plugin.getConfig();
         String type = config.getString("database.type", "sqlite").toLowerCase();
 
-        switch (type) {
-            case "sqlite":
-                databaseProvider = new SQLiteManager(plugin);
-                break;
-            default:
-                break;
-        }
+        try {
+            switch (type) {
+                case "sqlite":
+                    databaseProvider = new SQLiteManager(plugin);
+                    break;
+                default:
+                    debug.log("database", "Unknown database type: " + type);
+                    break;
+            }
 
-        databaseProvider.setupDatabase();
-        sqliteManager.setupDatabase();
-        plugin.getLogger().info("[LifeMod] " + type.toUpperCase() + " database initialized successfully.");
+            if (databaseProvider != null) {
+                databaseProvider.setupDatabase();
+                debug.log("database", type + " database initialized.");
+            }
+            if (sqliteManager != null) {
+                sqliteManager.setupDatabase();
+            }
+            plugin.getLogger().info("[LifeMod] " + type.toUpperCase() + " database initialized successfully.");
+        } catch (Exception e) {
+            debug.userError(null, "Error during database initialization.", e);
+        }
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return databaseProvider.getConnection();
     }
 
@@ -42,9 +55,14 @@ public class DatabaseManager {
         return sqliteManager;
     }
 
-    public void closeConnection(){
-        if (databaseProvider != null){
-            databaseProvider.closeConnection();
+    public void closeConnection() {
+        try {
+            if (databaseProvider != null) {
+                databaseProvider.closeConnection();
+                debug.log("database", "Database connection closed.");
+            }
+        } catch (Exception e) {
+            debug.userError(null, "Error while closing database connection.", e);
         }
     }
 }

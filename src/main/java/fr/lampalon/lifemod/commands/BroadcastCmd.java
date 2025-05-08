@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
@@ -10,60 +11,87 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.stream.Collectors;
 
 public class BroadcastCmd implements CommandExecutor, TabCompleter {
+    private final LifeMod plugin;
+    private final DebugManager debug;
+
+    public BroadcastCmd(LifeMod plugin) {
+        this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
+    }
+
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-            if (cmd.getName().equalsIgnoreCase("broadcast")) {
-                if (!sender.hasPermission("lifemod.bc")) {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
-                    return true;
-                }
-                if (args.length < 1) {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("bc.usage")));
-                    return true;
-                } else {
-                    StringBuilder message = new StringBuilder();
-                    for (String arg : args) {
-                        message.append(arg).append(" ");
-                    }
+        if (!cmd.getName().equalsIgnoreCase("broadcast")) return false;
 
-                    String formattedMessage = message.toString().replace("\\n", "\n");
+        if (!sender.hasPermission("lifemod.bc")) {
+            String noPerm = plugin.getLangConfig().getString("general.nopermission");
+            sender.sendMessage(MessageUtil.formatMessage(noPerm));
+            debug.log("commands", "Permission denied for /broadcast by " + sender.getName());
+            return true;
+        }
 
-                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                        onlinePlayer.sendMessage(MessageUtil.formatMessage(formattedMessage));
-                    }
-                    if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
-                        DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
-                        webhook.addEmbed(new DiscordWebhook.EmbedObject()
-                                .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.broadcast.title"))
-                                .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.broadcast.description").replace("%player%", sender.getName()).replace("%message%", message))
-                                .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.broadcast.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.broadcast.footer.logo").replace("%player%", sender.getName()))
-                                .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.broadcast.color")))));
-                        try {
-                            webhook.execute();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-                return true;
+        if (args.length < 1) {
+            String usage = plugin.getLangConfig().getString("bc.usage");
+            sender.sendMessage(MessageUtil.formatMessage(usage));
+            return true;
+        }
+
+        String message = String.join(" ", args).replace("\\n", "\n");
+        String formattedMessage = MessageUtil.formatMessage(message);
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(formattedMessage);
+        }
+        debug.log("broadcast", "Broadcast sent by " + sender.getName() + ": " + message);
+
+        if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
+            try {
+                DiscordWebhook webhook = new DiscordWebhook(plugin.webHookUrl);
+                webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                        .setTitle(plugin.getConfigConfig().getString("discord.broadcast.title"))
+                        .setDescription(plugin.getConfigConfig()
+                                .getString("discord.broadcast.description")
+                                .replace("%player%", sender.getName())
+                                .replace("%message%", message))
+                        .setFooter(
+                                plugin.getConfigConfig().getString("discord.broadcast.footer.title"),
+                                plugin.getConfigConfig().getString("discord.broadcast.footer.logo")
+                                        .replace("%player%", sender.getName())
+                        )
+                        .setColor(Color.decode(Objects.requireNonNull(
+                                plugin.getConfigConfig().getString("discord.broadcast.color")
+                        ))));
+                webhook.execute();
+            } catch (IOException e) {
+                debug.userError(sender, "Failed to send Discord alert", e);
+                debug.log("discord", "Webhook error: " + e.getMessage());
             }
-        return false;
+        }
+
+        return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("broadcast") || cmd.getName().equalsIgnoreCase("bc")){
-            if (args.length == 1) {
-                return LifeMod.getInstance().getLangConfig().getStringList("bc.tabcompleter");
-            }
+        if (!cmd.getName().equalsIgnoreCase("broadcast") && !cmd.getName().equalsIgnoreCase("bc")) {
+            return Collections.emptyList();
         }
-        return null;
+
+        if (args.length == 1) {
+            List<String> suggestions = plugin.getLangConfig().getStringList("bc.tabcompleter");
+            return suggestions.stream()
+                    .filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
     }
 }

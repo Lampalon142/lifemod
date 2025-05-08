@@ -32,7 +32,7 @@ public class ConfigUpdater {
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         String currentVersion = plugin.getDescription().getVersion();
-        String fileVersion = config.getString(versionKey, "0");
+        String fileVersion = config.getString(versionKey, "168");
 
         if (!config.contains(versionKey)) {
             config.set(versionKey, currentVersion);

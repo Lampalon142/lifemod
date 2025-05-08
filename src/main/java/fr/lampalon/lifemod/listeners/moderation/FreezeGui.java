@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.listeners.moderation;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -12,25 +13,35 @@ import java.util.UUID;
 
 public class FreezeGui implements Listener {
     private final LifeMod plugin;
+    private final DebugManager debug;
 
     public FreezeGui(LifeMod plugin){
         this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (event.getView().getTitle().equals(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("freeze.gui.title")))) {
+        String freezeTitle = MessageUtil.formatMessage(plugin.getLangConfig().getString("freeze.gui.title"));
+        if (event.getView().getTitle().equals(freezeTitle)) {
             UUID playerId = event.getPlayer().getUniqueId();
-            if (LifeMod.getInstance().getFreezeManager().isPlayerFrozen(playerId)) {
-                Bukkit.getScheduler().runTaskLater(plugin, () -> event.getPlayer().openInventory(event.getInventory()), 1L);
+            if (plugin.getFreezeManager().isPlayerFrozen(playerId)) {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    event.getPlayer().openInventory(event.getInventory());
+                    debug.log("freeze", event.getPlayer().getName() + " tried to close Freeze GUI (reopened)");
+                }, 1L);
+            } else {
+                debug.log("freeze", event.getPlayer().getName() + " closed Freeze GUI (not frozen)");
             }
         }
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getView().getTitle().equals(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("freeze.gui.title")))) {
+        String freezeTitle = MessageUtil.formatMessage(plugin.getLangConfig().getString("freeze.gui.title"));
+        if (event.getView().getTitle().equals(freezeTitle)) {
             event.setCancelled(true);
+            debug.log("freeze", event.getWhoClicked().getName() + " tried to click in Freeze GUI (cancelled)");
         }
     }
 }

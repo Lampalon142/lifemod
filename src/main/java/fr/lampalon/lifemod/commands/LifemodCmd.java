@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
@@ -15,49 +16,58 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class lifemodCmd implements CommandExecutor, TabCompleter {
+public class LifemodCmd implements CommandExecutor, TabCompleter {
     private final LifeMod plugin;
+    private final DebugManager debug;
 
-    public lifemodCmd(LifeMod plugin){
+    public LifemodCmd(LifeMod plugin){
         this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (label.equalsIgnoreCase("lifemod")) {
-            if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")) {
-                DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
+        if (!label.equalsIgnoreCase("lifemod")) return false;
+
+        if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
+            try {
+                DiscordWebhook webhook = new DiscordWebhook(plugin.webHookUrl);
                 webhook.addEmbed(new DiscordWebhook.EmbedObject()
-                        .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.lifemod.title"))
-                        .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.lifemod.description").replace("%player%", sender.getName()))
-                        .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.lifemod.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.lifemod.footer.logo").replace("%player%", sender.getName()))
-                        .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.lifemod.color")))));
-                try {
-                    webhook.execute();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                        .setTitle(plugin.getConfigConfig().getString("discord.lifemod.title"))
+                        .setDescription(plugin.getConfigConfig().getString("discord.lifemod.description").replace("%player%", sender.getName()))
+                        .setFooter(plugin.getConfigConfig().getString("discord.lifemod.footer.title"),
+                                plugin.getConfigConfig().getString("discord.lifemod.footer.logo").replace("%player%", sender.getName()))
+                        .setColor(Color.decode(Objects.requireNonNull(plugin.getConfigConfig().getString("discord.lifemod.color")))));
+                webhook.execute();
+                debug.log("lifemod", sender.getName() + " used /lifemod (Discord notified)");
+            } catch (IOException e) {
+                debug.userError(sender, "Failed to send Discord lifemod alert", e);
+                debug.log("discord", "Webhook error: " + e.getMessage());
             }
-            if (sender.hasPermission("lifemod.use")) {
-                if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+        } else {
+            debug.log("lifemod", sender.getName() + " used /lifemod");
+        }
 
-                    plugin.reloadConfig();
-                    plugin.reloadPluginConfig();
-
-                    sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.config-reloaded")));
-                } else if (args.length == 1 && args[0].equalsIgnoreCase("info")){
-                    sendInfo(sender);
-                    return true;
-                }
-                else {
-                    sender.sendMessage(MessageUtil.formatMessage(plugin.getConfigConfig().getString("lifemod.usage")));
-                }
+        if (sender.hasPermission("lifemod.use")) {
+            if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+                plugin.reloadConfig();
+                plugin.reloadPluginConfig();
+                sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.config-reloaded")));
+                debug.log("lifemod", sender.getName() + " reloaded LifeMod config");
+            } else if (args.length == 1 && args[0].equalsIgnoreCase("info")){
+                sendInfo(sender);
+                debug.log("lifemod", sender.getName() + " requested LifeMod info");
                 return true;
             } else {
-                sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
-                return false;
+                sender.sendMessage(MessageUtil.formatMessage(plugin.getConfigConfig().getString("lifemod.usage")));
+                debug.log("lifemod", sender.getName() + " used /lifemod with wrong arguments");
             }
+            return true;
+        } else {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+            debug.log("lifemod", "Permission denied for /lifemod by " + sender.getName());
+            return false;
         }
-        return false;
     }
 
     private void sendInfo(CommandSender sender) {
@@ -84,7 +94,7 @@ public class lifemodCmd implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (command.getName().equalsIgnoreCase("lifemod")) {
             if (args.length == 1){
                 List<String> suggestions = new ArrayList<>();

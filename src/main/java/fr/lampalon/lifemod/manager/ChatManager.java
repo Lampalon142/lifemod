@@ -12,11 +12,13 @@ import java.util.List;
 
 public class ChatManager implements Listener {
     private final LifeMod plugin;
+    private final DebugManager debug;
     private boolean enabled;
     private List<String> blacklist;
 
     public ChatManager(LifeMod plugin) {
         this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
         reloadConfig();
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -25,17 +27,20 @@ public class ChatManager implements Listener {
     public void reloadConfig() {
         enabled = plugin.getConfig().getBoolean("chatManager.enabled", true);
         blacklist = plugin.getConfig().getStringList("chatManager.blacklist");
+        debug.log("chat", "ChatManager configuration reloaded. Enabled: " + enabled + ", Blacklist: " + blacklist);
     }
 
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (enabled) {
             String message = event.getMessage();
-            if (!event.getPlayer().hasPermission("lifemod.chat.bypass")){
+            Player player = event.getPlayer();
+            if (!player.hasPermission("lifemod.chat.bypass")) {
                 for (String word : blacklist) {
-                    if (message.contains(word)) {
+                    if (message.toLowerCase().contains(word.toLowerCase())) {
                         event.setMessage(filterWord(message, word));
-                        notifyViewers(event.getPlayer());
+                        notifyViewers(player, word);
+                        debug.log("chat", player.getName() + " used blacklisted word: " + word);
                         break;
                     }
                 }
@@ -43,32 +48,37 @@ public class ChatManager implements Listener {
         }
     }
 
-    private String filterWord(String message, String word) { return message.replaceAll(word, "***"); }
+    private String filterWord(String message, String word) {
+        return message.replaceAll("(?i)" + word, "***");
+    }
 
-    private void notifyViewers(Player sender) {
+    private void notifyViewers(Player sender, String word) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("lifemod.chat.views")) {
-                String notificationMessage = LifeMod.getInstance().getConfigConfig().getString("chatManager.notification", "");
-                player.sendMessage(MessageUtil.formatMessage("%prefix%" + notificationMessage.replace("%player%", sender.getName())));
+                String notificationMessage = plugin.getConfigConfig().getString("chatManager.notification", "");
+                player.sendMessage(MessageUtil.formatMessage("%prefix%" + notificationMessage.replace("%player%", sender.getName()).replace("%word%", word)));
             }
         }
     }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        plugin.getConfig().set("chatFilter.enabled", enabled);
+        plugin.getConfig().set("chatManager.enabled", enabled);
         plugin.saveConfig();
+        debug.log("chat", "ChatManager enabled set to " + enabled);
     }
 
     public void addToBlacklist(String word) {
         blacklist.add(word);
-        plugin.getConfig().set("chatFilter.blacklist", blacklist);
+        plugin.getConfig().set("chatManager.blacklist", blacklist);
         plugin.saveConfig();
+        debug.log("chat", "Added word to blacklist: " + word);
     }
 
     public void removeFromBlacklist(String word) {
         blacklist.remove(word);
-        plugin.getConfig().set("chatFilter.blacklist", blacklist);
+        plugin.getConfig().set("chatManager.blacklist", blacklist);
         plugin.saveConfig();
+        debug.log("chat", "Removed word from blacklist: " + word);
     }
 }

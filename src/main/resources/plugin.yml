@@ -1,8 +1,10 @@
 name: LifeMod
 authors: [Lampalon]
-version: '1.6.7-RELEASE'
+version: '1.6.8-DEV-VERSION'
 main: fr.lampalon.lifemod.LifeMod
 api-version: "1.16"
+softdepend:
+  - LuckPerms
 commands:
   mod:
     description: Moderate your server

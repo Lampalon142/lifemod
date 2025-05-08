@@ -1,6 +1,28 @@
 ## Created and Directed by Lampalon_
 ## For help please come on : https://discord.gg/VndbGNgZ5R
 
+debug:
+  enabled: false
+  log-level: INFO # DEBUG / INFO / WARNING / ERROR
+  modules:
+    commands: true
+    events: true
+    database: true
+    discord: true
+    vanish: true
+    freeze: true
+    spectate: true
+    chat: true
+  messages:
+    prefix: "&8[&bLifeMod&8] "
+    user-error: "&cOops! An error occurred: &e%context%"
+    user-help: "&7If this keeps happening, contact an admin or check your config."
+    admin-error: "&8[Debug] Error: %error% - %message%"
+    admin-location: "&8[Debug] At: %location%"
+    dependency-missing: "&eDependency &6%dependency% &eis not installed. Some features will be disabled."
+    config-ok: "&aConfig reloaded successfully!"
+    config-error: "&cConfiguration file is invalid or missing required keys."
+
 ################################################
 #+--------------------------------------------+#
 #+------------------Notes---------------------+#

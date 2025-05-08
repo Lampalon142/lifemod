@@ -1,120 +1,121 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.manager.FreezeManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.yaml.snakeyaml.Yaml;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FreezeCmd implements CommandExecutor, TabCompleter {
-    private LifeMod main;
+    private final LifeMod plugin;
+    private final DebugManager debug;
+    private final FreezeManager freezeManager;
 
-    public FreezeCmd(LifeMod main){
-        this.main = main;
+    public FreezeCmd(LifeMod plugin) {
+        this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
+        this.freezeManager = plugin.getFreezeManager();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        FreezeManager freezeManager = LifeMod.getInstance().getFreezeManager();
-            if (label.equalsIgnoreCase("freeze")) {
-                if (!(sender instanceof Player)) {
-                    sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
-                    return true;
-                }
-                Player player = (Player) sender;
+        if (!label.equalsIgnoreCase("freeze")) return false;
 
-                if (player.hasPermission("lifemod.freeze")) {
-                    if (args.length == 1) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.onlyplayer")));
+            return true;
+        }
 
-                        Player target = Bukkit.getPlayer(args[0]);
+        Player player = (Player) sender;
 
-                        ItemStack air = new ItemStack(Material.AIR);
-                        ItemStack packedice = new ItemStack(Material.PACKED_ICE);
+        if (!player.hasPermission("lifemod.freeze")) {
+            player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+            debug.log("commands", "Permission denied for /freeze by " + player.getName());
+            return true;
+        }
 
-                        if (target != null) {
-                            if (!target.equals(player)) {
-                                if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")) {
-                                    DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
-                                    webhook.addEmbed(new DiscordWebhook.EmbedObject()
-                                            .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.title"))
-                                            .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.description").replace("%player%", sender.getName()))
-                                            .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.freeze.footer.logo").replace("%player%", sender.getName()))
-                                            .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.freeze.color")))));
-                                    try {
-                                        webhook.execute();
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-                                String s2 = LifeMod.getInstance().getLangConfig().getString("freeze.messages.unfreeze.mod");
-                                String s3 = LifeMod.getInstance().getLangConfig().getString("freeze.messages.unfreeze.target");
-                                if (freezeManager.isPlayerFrozen(target.getUniqueId()) && LifeMod.getInstance().getFrozenPlayers().containsKey(target.getUniqueId())) {
-                                    freezeManager.unfreezePlayer(player, target);
-                                    LifeMod.getInstance().getFrozenPlayers().remove(target.getUniqueId());
-                                    target.sendMessage(MessageUtil.formatMessage(s3.replace("%player%", player.getName())));
-                                    player.sendMessage(MessageUtil.formatMessage(s2.replace("%target%", target.getName())));
-                                } else {
-                                    String s4 = LifeMod.getInstance().getLangConfig().getString("freeze.messages.freeze.mod");
-                                    LifeMod.getInstance().getFrozenPlayers().put(target.getUniqueId(), target.getLocation());
-                                    InputStream input = LifeMod.getInstance().getClass().getClassLoader().getResourceAsStream("lang.yml");
-                                    Yaml yaml = new Yaml();
-                                    Map<String, List<String>> config = yaml.load(input);
-                                    List<String> freezeMsg = config.get("freeze.messages.onfreeze");
+        if (args.length != 1) {
+            player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("freeze.usage")));
+            return true;
+        }
 
-                                    for (String msg : freezeMsg) {
-                                        target.sendMessage(MessageUtil.formatMessage(msg));
-                                    }
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
+            player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.offlineplayer")));
+            return true;
+        }
 
-                                    freezeManager.freezePlayer(player, target);
-                                    player.sendMessage(MessageUtil.formatMessage(s4.replace("%target%", target.getName())));
-                                }
-                            } else {
-                                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("freeze.yourself")));
-                            }
-                        } else {
-                            player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
-                        }
-                    } else {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("freeze.usage")));
-                    }
-                } else {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
-                    return true;
-                }
+        if (target.equals(player)) {
+            player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("freeze.yourself")));
+            return true;
+        }
+
+        if (freezeManager.isPlayerFrozen(target.getUniqueId())) {
+            freezeManager.unfreezePlayer(player, target);
+            target.sendMessage(MessageUtil.formatMessage(
+                    plugin.getLangConfig().getString("freeze.messages.unfreeze.target")
+                            .replace("%player%", player.getName())));
+            player.sendMessage(MessageUtil.formatMessage(
+                    plugin.getLangConfig().getString("freeze.messages.unfreeze.mod")
+                            .replace("%target%", target.getName())));
+            debug.log("freeze", player.getName() + " unfroze " + target.getName());
+        } else {
+            freezeManager.freezePlayer(player, target);
+            plugin.getLangConfig().getStringList("freeze.messages.onfreeze")
+                    .forEach(msg -> target.sendMessage(MessageUtil.formatMessage(msg)));
+            player.sendMessage(MessageUtil.formatMessage(
+                    plugin.getLangConfig().getString("freeze.messages.freeze.mod")
+                            .replace("%target%", target.getName())));
+            debug.log("freeze", player.getName() + " froze " + target.getName());
+        }
+
+        if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
+            try {
+                DiscordWebhook webhook = new DiscordWebhook(plugin.webHookUrl);
+                webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                        .setTitle(plugin.getConfigConfig().getString("discord.freeze.title"))
+                        .setDescription(plugin.getConfigConfig().getString("discord.freeze.description")
+                                .replace("%player%", sender.getName()))
+                        .setFooter(
+                                plugin.getConfigConfig().getString("discord.freeze.footer.title"),
+                                plugin.getConfigConfig().getString("discord.freeze.footer.logo")
+                                        .replace("%player%", sender.getName())
+                        )
+                        .setColor(Color.decode(Objects.requireNonNull(
+                                plugin.getConfigConfig().getString("discord.freeze.color")
+                        ))));
+                webhook.execute();
+            } catch (IOException e) {
+                debug.userError(sender, "Failed to send Discord freeze alert", e);
+                debug.log("discord", "Webhook error: " + e.getMessage());
             }
-        return false;
+        }
+
+        return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-        List<String> completions = new ArrayList<>();
-        if (cmd.getName().equalsIgnoreCase("freeze")) {
-            if (args.length == 1) {
-                String input = args[args.length - 1].toLowerCase();
-                completions = Bukkit.getOnlinePlayers().stream()
-                        .map(Player::getName)
-                        .filter(name -> name.toLowerCase().startsWith(input))
-                        .collect(Collectors.toList());
-
-                return completions;
-            }
+        if (!cmd.getName().equalsIgnoreCase("freeze")) return List.of();
+        if (args.length == 1) {
+            String input = args[0].toLowerCase();
+            return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(name -> name.toLowerCase().startsWith(input))
+                    .collect(Collectors.toList());
         }
-        return null;
+        return List.of();
     }
 }

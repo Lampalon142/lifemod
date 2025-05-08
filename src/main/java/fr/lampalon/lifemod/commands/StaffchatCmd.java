@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
@@ -13,60 +14,67 @@ import org.bukkit.entity.Player;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class StaffchatCmd implements CommandExecutor, TabCompleter {
+    private final DebugManager debug = LifeMod.getInstance().getDebugManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
-                return true;
-            }
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+            debug.log("staffchat", "Console tried to use /staffchat");
+            return true;
+        }
 
-            Player player = (Player) sender;
+        Player player = (Player) sender;
+        String playermsg = LifeMod.getInstance().getLangConfig().getString("staffchat.message");
 
-            String playermsg = LifeMod.getInstance().getLangConfig().getString("staffchat.message");
-
-            if (cmd.getName().equalsIgnoreCase("staffchat")) {
-                if (player.hasPermission("lifemod.staffchat")) {
-                    if (args.length == 0) {
-                        player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("staffchat.usage")));
-                        return true;
+        if (cmd.getName().equalsIgnoreCase("staffchat")) {
+            if (player.hasPermission("lifemod.staffchat")) {
+                if (args.length == 0) {
+                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("staffchat.usage")));
+                    debug.log("staffchat", "No message provided by " + player.getName());
+                    return true;
+                }
+                StringBuilder message = new StringBuilder();
+                for (String arg : args) {
+                    message.append(arg).append(" ");
+                }
+                for (Player staff : Bukkit.getOnlinePlayers()) {
+                    if (staff.hasPermission("lifemod.staffchat")) {
+                        staff.sendMessage(MessageUtil.formatMessage(playermsg.replace("%player%", player.getPlayer().getName()) + ": " + message.toString()));
                     }
-                    StringBuilder message = new StringBuilder();
-                    for (String arg : args) {
-                        message.append(arg).append(" ");
-                    }
-                    for (Player staff : Bukkit.getOnlinePlayers()) {
-                        if (staff.hasPermission("lifemod.staffchat")) {
-                            staff.sendMessage(MessageUtil.formatMessage(playermsg.replace("%player%", player.getPlayer().getName()) + ": " + message.toString()));
-                        }
-                    }
+                }
 
-                    if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
+                if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")){
+                    try {
                         DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
                         webhook.addEmbed(new DiscordWebhook.EmbedObject()
                                 .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.staffchat.title"))
                                 .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.staffchat.description").replace("%player%", sender.getName()))
-                                .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.staffchat.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.staffchat.footer.logo").replace("%player%", sender.getName()))
+                                .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.staffchat.footer.title"),
+                                        LifeMod.getInstance().getConfigConfig().getString("discord.staffchat.footer.logo").replace("%player%", sender.getName()))
                                 .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.staffchat.color")))));
-                        try {
-                            webhook.execute();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        webhook.execute();
+                        debug.log("staffchat", player.getName() + " sent staffchat message (Discord notified)");
+                    } catch (IOException e) {
+                        debug.userError(sender, "Failed to send Discord staffchat alert", e);
+                        debug.log("discord", "Webhook error: " + e.getMessage());
                     }
-
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("staffchat.success")));
-                    return true;
                 } else {
-                    player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
-                    return true;
+                    debug.log("staffchat", player.getName() + " sent staffchat message");
                 }
+
+                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("staffchat.success")));
+                return true;
+            } else {
+                player.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+                debug.log("staffchat", "Permission denied for /staffchat by " + player.getName());
+                return true;
             }
+        }
         return false;
     }
 

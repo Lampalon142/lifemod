@@ -1,6 +1,7 @@
 package fr.lampalon.lifemod.commands;
 
 import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import net.luckperms.api.LuckPerms;
@@ -24,17 +25,18 @@ public class GmCmd implements CommandExecutor, TabCompleter {
 
   private final boolean useLuckPerms;
   private LuckPerms luckPerms;
+  private final LifeMod plugin;
+  private final DebugManager debug;
 
-  public GmCmd() {
-
-    this.useLuckPerms = LifeMod.getInstance().getConfigConfig().getBoolean("UseLuckPerms");
-
-    if(this.useLuckPerms) {
+  public GmCmd(LifeMod plugin) {
+    this.plugin = plugin;
+    this.debug = plugin.getDebugManager();
+    this.useLuckPerms = plugin.getConfigConfig().getBoolean("UseLuckPerms");
+    if (this.useLuckPerms) {
       this.luckPerms = Bukkit.getServicesManager().getRegistration(LuckPerms.class) != null
               ? LuckPermsProvider.get()
               : null;
-
-      if(this.luckPerms == null) {
+      if (this.luckPerms == null) {
         Bukkit.getLogger().warning("[LifeMod] LuckPerms is configured but not detected !");
       }
     }
@@ -42,57 +44,79 @@ public class GmCmd implements CommandExecutor, TabCompleter {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    if (label.equalsIgnoreCase("gm") || label.equalsIgnoreCase("gamemode")) {
-      if (!sender.hasPermission("lifemod.gm")) {
-        sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
-        return true;
-      }
+    if (!label.equalsIgnoreCase("gm") && !label.equalsIgnoreCase("gamemode")) return false;
 
-      if (args.length < 1 || args.length > 2) {
-        sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
-        return true;
-      }
-
-      Player targetPlayer;
-      String targetPlayerName = null;
-
-      if (args.length == 2) {
-        targetPlayerName = args[1];
-        targetPlayer = Bukkit.getPlayer(targetPlayerName);
-        if (targetPlayer == null) {
-          sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.offlineplayer")));
-          return true;
-        }
-      } else {
-        if (!(sender instanceof Player)) {
-          sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
-          return true;
-        }
-        targetPlayer = (Player) sender;
-      }
-
-      GameMode gameMode = parseGameMode(args[0]);
-      if (gameMode == null) {
-        sender.sendMessage(MessageUtil.formatMessage(LifeMod.getInstance().getLangConfig().getString("gamemode.invalid")));
-        return true;
-      }
-
-      sendDiscordWebhook(sender);
-
-      String playerPrefix = getPlayerPrefix(targetPlayer);
-
-      targetPlayer.setGameMode(gameMode);
-      String message = targetPlayerName != null
-              ? LifeMod.getInstance().getLangConfig().getString("gamemode.other")
-              : LifeMod.getInstance().getLangConfig().getString("gamemode.own");
-      
-      sender.sendMessage(MessageUtil.formatMessage(
-              message.replace("%gamemode%", gameMode.name())
-                      .replace("%player%", targetPlayer.getName())
-                      .replace("%luckperms_prefix%", playerPrefix)));
+    if (!sender.hasPermission("lifemod.gm")) {
+      sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+      debug.log("commands", "Permission denied for /gm by " + sender.getName());
       return true;
     }
-    return false;
+
+    if (args.length < 1 || args.length > 2) {
+      sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("gamemode.invalid")));
+      debug.log("gm", "Invalid usage by " + sender.getName());
+      return true;
+    }
+
+    Player targetPlayer;
+    String targetPlayerName = null;
+
+    if (args.length == 2) {
+      targetPlayerName = args[1];
+      targetPlayer = Bukkit.getPlayer(targetPlayerName);
+      if (targetPlayer == null) {
+        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.offlineplayer")));
+        debug.log("gm", "Target player offline: " + args[1]);
+        return true;
+      }
+    } else {
+      if (!(sender instanceof Player)) {
+        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.onlyplayer")));
+        debug.log("gm", "Console tried to use /gm without player argument");
+        return true;
+      }
+      targetPlayer = (Player) sender;
+    }
+
+    GameMode gameMode = parseGameMode(args[0]);
+    if (gameMode == null) {
+      sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("gamemode.invalid")));
+      debug.log("gm", "Invalid gamemode: " + args[0]);
+      return true;
+    }
+
+    if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
+      try {
+        DiscordWebhook webhook = new DiscordWebhook(plugin.webHookUrl);
+        webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                .setTitle(plugin.getConfigConfig().getString("discord.gamemode.title"))
+                .setDescription(plugin.getConfigConfig().getString("discord.gamemode.description").replace("%player%", sender.getName()))
+                .setFooter(plugin.getConfigConfig().getString("discord.gamemode.footer.title"),
+                        plugin.getConfigConfig().getString("discord.gamemode.footer.logo").replace("%player%", sender.getName()))
+                .setColor(Color.decode(Objects.requireNonNull(plugin.getConfigConfig().getString("discord.gamemode.color")))));
+        webhook.execute();
+        debug.log("gm", sender.getName() + " changed gamemode of " + targetPlayer.getName() + " (Discord notified)");
+      } catch (IOException e) {
+        debug.userError(sender, "Failed to send Discord gamemode alert", e);
+        debug.log("discord", "Webhook error: " + e.getMessage());
+      }
+    } else {
+      debug.log("gm", sender.getName() + " changed gamemode of " + targetPlayer.getName());
+    }
+
+    String playerPrefix = getPlayerPrefix(targetPlayer);
+
+    targetPlayer.setGameMode(gameMode);
+    String message = targetPlayerName != null
+            ? plugin.getLangConfig().getString("gamemode.other")
+            : plugin.getLangConfig().getString("gamemode.own");
+
+    sender.sendMessage(MessageUtil.formatMessage(
+            message.replace("%gamemode%", gameMode.name())
+                    .replace("%player%", targetPlayer.getName())
+                    .replace("%luckperms_prefix%", playerPrefix)));
+    debug.log("gm", "Gamemode set to " + gameMode.name() + " for " + targetPlayer.getName() + " by " + sender.getName());
+    return true;
   }
 
   private GameMode parseGameMode(String modeArg) {
@@ -112,22 +136,6 @@ public class GmCmd implements CommandExecutor, TabCompleter {
         case "a": case "adventure": return GameMode.ADVENTURE;
         case "sp": case "spectator": return GameMode.SPECTATOR;
         default: return null;
-      }
-    }
-  }
-
-  private void sendDiscordWebhook(CommandSender sender) {
-    if (LifeMod.getInstance().getConfigConfig().getBoolean("discord.enabled")) {
-      DiscordWebhook webhook = new DiscordWebhook(LifeMod.getInstance().webHookUrl);
-      webhook.addEmbed(new DiscordWebhook.EmbedObject()
-              .setTitle(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.title"))
-              .setDescription(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.description").replace("%player%", sender.getName()))
-              .setFooter(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.footer.title"), LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.footer.logo").replace("%player%", sender.getName()))
-              .setColor(Color.decode(Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("discord.gamemode.color")))));
-      try {
-        webhook.execute();
-      } catch (IOException e) {
-        e.printStackTrace();
       }
     }
   }
