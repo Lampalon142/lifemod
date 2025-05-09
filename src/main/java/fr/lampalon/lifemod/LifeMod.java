@@ -30,6 +30,7 @@ import java.util.*;
 public class LifeMod extends JavaPlugin {
     private static LifeMod instance;
     private CommandMap commandMap;
+    private SpectateManager spectateManager;
     private FreezeManager freezeManager;
     private DatabaseManager databaseManager;
     private UpdateChecker updateChecker;
@@ -54,6 +55,7 @@ public class LifeMod extends JavaPlugin {
         saveDefaultConfig();
         new ConfigUpdater(this).updateConfig();
         loadConfigurations();
+        this.spectateManager = new SpectateManager();
         this.debugManager = new DebugManager(this);
         this.databaseManager = new DatabaseManager(this);
         initializeManagers();
@@ -220,6 +222,8 @@ public class LifeMod extends JavaPlugin {
     public FileConfiguration getConfigConfig() {
         return configConfig;
     }
+
+    public SpectateManager getSpectateManager() { return spectateManager; }
 
     public DebugManager getDebugManager() { return debugManager; }
 

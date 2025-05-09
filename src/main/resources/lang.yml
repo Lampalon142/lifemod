@@ -188,13 +188,13 @@ speed:
 ## Spectate
 spectate:
   usage: "%prefix%&cUsage: /spectate <player> | /spectate leave | /spectate fp"
-  player-not-found: "%prefix%&cPlayer not found."
-  already-spectate: "%prefix%&cYou are already spectating! Use /spectate leave first."
-  spectate: "%prefix%&aYou are now spectating &e%target% &a."
-  fp-spectate: "%prefix%&aYou are now in first-person spectator mode."
+  yourself: "%prefix%&cYou can't spectate yourself"
+  nothing-player: "%prefix%&cYou are not spectating anyone."
+  start: "%prefix%&aYou are now spectating §e%target%§a."
+  freecam: "%prefix%&aYou are now in freecam mode. Use /spectate leave to return."
   leave:
-    success: "%prefix%&aYou have exited Spectator mode and returned to your original location."
-    error: "%prefix%&cYou are not spectating anyone!"
+    with-position: "%prefix%&aYou have left spectate mode and returned to your original location."
+    without-position: "%prefix%&aYou have left spectate mode but not returned because your original location was not found."
 
 ##Otp
 otp:
