@@ -187,14 +187,26 @@ speed:
 
 ## Spectate
 spectate:
-  usage: "%prefix%&cUsage: /spectate <player> | /spectate leave | /spectate fp"
-  yourself: "%prefix%&cYou can't spectate yourself"
-  nothing-player: "%prefix%&cYou are not spectating anyone."
-  start: "%prefix%&aYou are now spectating §e%target%§a."
-  freecam: "%prefix%&aYou are now in freecam mode. Use /spectate leave to return."
-  leave:
-    with-position: "%prefix%&aYou have left spectate mode and returned to your original location."
-    without-position: "%prefix%&aYou have left spectate mode but not returned because your original location was not found."
+  usage: |
+    &6Spectate commands:
+    &e/spectate <player> &7- Spectate a player (see through their eyes)
+    &e/spectate fp &7- Freecam mode
+    &e/spectate leave &7- Leave spectate mode
+
+  self: "&cYou can't spectate yourself!"
+  already: "&cYou are already spectating. Use &e/spectate leave &cfirst."
+  not-spectating: "&cYou are not spectating anyone."
+  player-not-found: "&cPlayer &e%target% &cis not online."
+  spectate-start: "&aYou are now spectating &e%target%&a. Use &e/spectate leave &ato stop."
+  freecam-start: "&aYou are now in freecam mode. Use &e/spectate leave &ato return."
+  spectate-leave: "&aYou have left spectate mode and returned to your original location."
+  spectate-leave-no-pos: "&aYou have left spectate mode."
+  random-success: "&aYou are now spectating &e%target%&a (random)."
+  random-error: "&cNo available players to spectate."
+  back-success: "&aYou are now spectating your last target: &e%target%&a."
+  back-error: "&cNo previous spectate target found."
+  list-header: "&eOnline players (click to spectate):"
+  list-player: "&7- &a%player%"
 
 ##Otp
 otp:

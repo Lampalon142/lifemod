@@ -13,53 +13,70 @@ public class SpectateManager {
     private final Map<UUID, Location> originalLocations = new HashMap<>();
     private final Map<UUID, UUID> lastTargets = new HashMap<>();
     private final Map<UUID, Boolean> freecamMode = new HashMap<>();
+    private final Map<UUID, Boolean> isFreecam = new HashMap<>();
+    private final Map<UUID, UUID> spectateTarget = new HashMap<>();
 
-    public void startSpectate(Player spectator, Player target) {
-        if (spectator.equals(target)) {
-            spectator.sendMessage(MessageUtil.formatMessage(
-                    LifeMod.getInstance().getLangConfig().getString("spectate.self-spectate")));
-            return;
-        }
-        if (!isSpectating(spectator)) {
-            originalLocations.put(spectator.getUniqueId(), spectator.getLocation());
-        }
-        lastTargets.put(spectator.getUniqueId(), target.getUniqueId());
-        freecamMode.put(spectator.getUniqueId(), false);
-
-        spectator.setGameMode(GameMode.SPECTATOR);
-        spectator.teleport(target.getLocation());
-        spectator.sendMessage(MessageUtil.formatMessage(
-                LifeMod.getInstance().getLangConfig().getString("spectate.spectate")
-                        .replace("%target%", target.getName())));
+    private String getLang(String key) {
+        String msg = LifeMod.getInstance().getLangConfig().getString(key);
+        return msg != null ? msg : "§c[Lang] Missing key: " + key;
     }
 
-    public void startFreecam(Player spectator) {
-        if (!isSpectating(spectator)) {
-            originalLocations.put(spectator.getUniqueId(), spectator.getLocation());
-        }
-        freecamMode.put(spectator.getUniqueId(), true);
-
-        spectator.setGameMode(GameMode.SPECTATOR);
-        spectator.sendMessage(MessageUtil.formatMessage(
-                LifeMod.getInstance().getLangConfig().getString("spectate.fp-spectate")));
-    }
-
-    public void leaveSpectate(Player spectator) {
-        if (!isSpectating(spectator)) {
-            spectator.sendMessage(MessageUtil.formatMessage(
-                    LifeMod.getInstance().getLangConfig().getString("spectate.leave.error")));
+    public void startSpectate(Player staff, Player target) {
+        if (staff.equals(target)) {
+            staff.sendMessage(MessageUtil.formatMessage(getLang("spectate.self")));
             return;
         }
-        Location originalLocation = originalLocations.remove(spectator.getUniqueId());
-        freecamMode.remove(spectator.getUniqueId());
-        lastTargets.remove(spectator.getUniqueId());
+        if (isSpectating(staff)) {
+            staff.sendMessage(MessageUtil.formatMessage(getLang("spectate.already")));
+            return;
+        }
+        originalLocations.put(staff.getUniqueId(), staff.getLocation());
+        isFreecam.put(staff.getUniqueId(), false);
+        spectateTarget.put(staff.getUniqueId(), target.getUniqueId());
 
-        spectator.setGameMode(GameMode.SURVIVAL);
+        staff.setGameMode(GameMode.SPECTATOR);
+        staff.setSpectatorTarget(target);
+        staff.sendMessage(MessageUtil.formatMessage(
+                getLang("spectate.spectate-start").replace("%target%", target.getName())));
+    }
+
+    public void startFreecam(Player staff) {
+        if (isSpectating(staff) && !isFreecam.get(staff.getUniqueId())) {
+            isFreecam.put(staff.getUniqueId(), true);
+            staff.setSpectatorTarget(null);
+            staff.sendMessage(MessageUtil.formatMessage(getLang("spectate.freecam-start")));
+            return;
+        }
+        if (!isSpectating(staff)) {
+            originalLocations.put(staff.getUniqueId(), staff.getLocation());
+        }
+        isFreecam.put(staff.getUniqueId(), true);
+        spectateTarget.remove(staff.getUniqueId());
+        staff.setGameMode(GameMode.SPECTATOR);
+        staff.setSpectatorTarget(null);
+        staff.sendMessage(MessageUtil.formatMessage(getLang("spectate.freecam-start")));
+    }
+
+    public void leaveSpectate(Player staff) {
+        if (!isSpectating(staff)) {
+            staff.sendMessage(MessageUtil.formatMessage(getLang("spectate.not-spectating")));
+            return;
+        }
+
+        staff.setSpectatorTarget(null);
+
+        Location originalLocation = originalLocations.remove(staff.getUniqueId());
+        isFreecam.remove(staff.getUniqueId());
+        spectateTarget.remove(staff.getUniqueId());
+
+        staff.setGameMode(GameMode.SURVIVAL);
+
         if (originalLocation != null && originalLocation.getWorld() != null) {
-            spectator.teleport(originalLocation);
+            staff.teleport(originalLocation);
+            staff.sendMessage(MessageUtil.formatMessage(getLang("spectate.spectate-leave")));
+        } else {
+            staff.sendMessage(MessageUtil.formatMessage(getLang("spectate.spectate-leave-no-pos")));
         }
-        spectator.sendMessage(MessageUtil.formatMessage(
-                LifeMod.getInstance().getLangConfig().getString("spectate.leave.success")));
     }
 
     public void spectateRandom(Player spectator) {
@@ -70,45 +87,38 @@ public class SpectateManager {
             }
         }
         if (candidates.isEmpty()) {
-            spectator.sendMessage(MessageUtil.formatMessage(
-                    LifeMod.getInstance().getLangConfig().getString("spectate.random-error")));
+            spectator.sendMessage(MessageUtil.formatMessage(getLang("spectate.random-error")));
             return;
         }
         Player target = candidates.get(new Random().nextInt(candidates.size()));
         startSpectate(spectator, target);
         spectator.sendMessage(MessageUtil.formatMessage(
-                LifeMod.getInstance().getLangConfig().getString("spectate.random-success")
-                        .replace("%target%", target.getName())));
+                getLang("spectate.random-success").replace("%target%", target.getName())));
     }
 
     public void spectateBack(Player spectator) {
         UUID last = lastTargets.get(spectator.getUniqueId());
         if (last == null) {
-            spectator.sendMessage(MessageUtil.formatMessage(
-                    LifeMod.getInstance().getLangConfig().getString("spectate.back-error")));
+            spectator.sendMessage(MessageUtil.formatMessage(getLang("spectate.back-error")));
             return;
         }
         Player target = Bukkit.getPlayer(last);
         if (target == null || !target.isOnline()) {
             spectator.sendMessage(MessageUtil.formatMessage(
-                    LifeMod.getInstance().getLangConfig().getString("spectate.player-not-found")
-                            .replace("%target%", "last")));
+                    getLang("spectate.player-not-found").replace("%target%", "last")));
             return;
         }
         startSpectate(spectator, target);
         spectator.sendMessage(MessageUtil.formatMessage(
-                LifeMod.getInstance().getLangConfig().getString("spectate.back-success")
-                        .replace("%target%", target.getName())));
+                getLang("spectate.back-success").replace("%target%", target.getName())));
     }
 
     public void sendPlayerList(Player spectator) {
-        spectator.sendMessage(MessageUtil.formatMessage(
-                LifeMod.getInstance().getLangConfig().getString("spectate.list-header")));
+        spectator.sendMessage(MessageUtil.formatMessage(getLang("spectate.list-header")));
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (!p.equals(spectator)) {
                 String display = MessageUtil.formatMessage(
-                        LifeMod.getInstance().getLangConfig().getString("spectate.list-player")
-                                .replace("%player%", p.getName()));
+                        getLang("spectate.list-player").replace("%player%", p.getName()));
                 net.md_5.bungee.api.chat.TextComponent msg =
                         new net.md_5.bungee.api.chat.TextComponent(display);
                 msg.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(

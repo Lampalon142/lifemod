@@ -16,23 +16,25 @@ public class SpectateCmd implements CommandExecutor {
         this.spectateManager = plugin.getSpectateManager();
     }
 
+    private String getLang(String key) {
+        String msg = LifeMod.getInstance().getLangConfig().getString(key);
+        return msg != null ? msg : "§c[Lang] Missing key: " + key;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(MessageUtil.formatMessage(
-                    LifeMod.getInstance().getLangConfig().getString("general.onlyplayer")));
+            sender.sendMessage(MessageUtil.formatMessage(getLang("general.onlyplayer")));
             return true;
         }
 
         if (!player.hasPermission("lifemod.spectate")) {
-            player.sendMessage(MessageUtil.formatMessage(
-                    LifeMod.getInstance().getLangConfig().getString("general.nopermission")));
+            player.sendMessage(MessageUtil.formatMessage(getLang("general.nopermission")));
             return true;
         }
 
         if (args.length == 0) {
-            player.sendMessage(MessageUtil.formatMessage(
-                    LifeMod.getInstance().getLangConfig().getString("spectate.usage")));
+            player.sendMessage(MessageUtil.formatMessage(getLang("spectate.usage")));
             return true;
         }
 
@@ -48,8 +50,7 @@ public class SpectateCmd implements CommandExecutor {
                 Player target = Bukkit.getPlayer(arg);
                 if (target == null || !target.isOnline()) {
                     player.sendMessage(MessageUtil.formatMessage(
-                            LifeMod.getInstance().getLangConfig().getString("spectate.player-not-found")
-                                    .replace("%target%", arg)));
+                            getLang("spectate.player-not-found").replace("%target%", arg)));
                     return true;
                 }
                 spectateManager.startSpectate(player, target);
