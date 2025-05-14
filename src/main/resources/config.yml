@@ -19,9 +19,6 @@ debug:
     user-help: "&7If this keeps happening, contact an admin or check your config."
     admin-error: "&8[Debug] Error: %error% - %message%"
     admin-location: "&8[Debug] At: %location%"
-    dependency-missing: "&eDependency &6%dependency% &eis not installed. Some features will be disabled."
-    config-ok: "&aConfig reloaded successfully!"
-    config-error: "&cConfiguration file is invalid or missing required keys."
 
 ################################################
 #+--------------------------------------------+#
@@ -272,3 +269,4 @@ discord:
 #+----------------Don't touch-----------------+#
 #+--------------------------------------------+#
 ################################################
+version: 168
