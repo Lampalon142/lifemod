@@ -53,7 +53,7 @@ public class LifeMod extends JavaPlugin {
         long start = System.currentTimeMillis();
         instance = this;
         saveDefaultConfig();
-        new ConfigUpdater(this).updateConfig();
+        new ConfigUpdater(this).updateConfigs();
         loadConfigurations();
         this.spectateManager = new SpectateManager();
         this.debugManager = new DebugManager(this);
@@ -255,7 +255,11 @@ public class LifeMod extends JavaPlugin {
     }
 
     public void reloadPluginConfig() {
-        configConfig = loadConfig("config.yml");
-        langConfig = loadConfig("lang.yml");
+        File configFile = new File(getDataFolder(), "config.yml");
+        this.configConfig = YamlConfiguration.loadConfiguration(configFile);
+    }
+    public void reloadLangConfig() {
+        File langFile = new File(getDataFolder(), "lang.yml");
+        this.langConfig = YamlConfiguration.loadConfiguration(langFile);
     }
 }

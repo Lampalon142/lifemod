@@ -1,72 +1,80 @@
 package fr.lampalon.lifemod.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStreamReader;
+import java.util.Set;
 
 public class ConfigUpdater {
     private final JavaPlugin plugin;
-    private final String CONFIG_VERSION_KEY = "version";
-    private final String LANG_VERSION_KEY = "version";
+    private final String VERSION_KEY = "version";
 
     public ConfigUpdater(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public void updateConfig() {
-        updateFile("config.yml", CONFIG_VERSION_KEY);
-        updateFile("lang.yml", LANG_VERSION_KEY);
+    public void updateConfigs() {
+        updateFile("config.yml");
+        updateFile("lang.yml");
     }
 
-    private void updateFile(String fileName, String versionKey) {
+    private void updateFile(String fileName) {
         File file = new File(plugin.getDataFolder(), fileName);
+
         if (!file.exists()) {
             plugin.saveResource(fileName, false);
+            logSection("§aCreated missing §f" + fileName + "§a from plugin resources.");
             return;
         }
 
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        String currentVersion = plugin.getDescription().getVersion();
-        String fileVersion = config.getString(versionKey, "168");
+        FileConfiguration userConfig = YamlConfiguration.loadConfiguration(file);
 
-        if (!config.contains(versionKey)) {
-            config.set(versionKey, currentVersion);
-            try {
-                config.save(file);
-                plugin.getLogger().info("Added missing version updater to config.yml and lang.yml");
-            } catch (IOException e) {
-                plugin.getLogger().warning("Failed to add missing version key in " + fileName);
+        FileConfiguration defaultConfig;
+        try (InputStreamReader reader = new InputStreamReader(plugin.getResource(fileName))) {
+            defaultConfig = YamlConfiguration.loadConfiguration(reader);
+        } catch (Exception e) {
+            logSection("§cFailed to load default §f" + fileName + "§c: " + e.getMessage());
+            return;
+        }
+
+        boolean changed = false;
+        int added = 0;
+
+        Set<String> keys = defaultConfig.getKeys(true);
+        for (String key : keys) {
+            if (!userConfig.contains(key)) {
+                userConfig.set(key, defaultConfig.get(key));
+                added++;
+                changed = true;
             }
         }
 
-        if (!currentVersion.equals(fileVersion)) {
-            backupOldFile(fileName, fileVersion);
-            generateNewFile(fileName);
+        String defaultVersion = defaultConfig.getString(VERSION_KEY);
+        if (defaultVersion != null && !defaultVersion.equals(userConfig.getString(VERSION_KEY))) {
+            userConfig.set(VERSION_KEY, defaultVersion);
+            changed = true;
         }
-    }
 
-    private void backupOldFile(String fileName, String oldVersion) {
-        File file = new File(plugin.getDataFolder(), fileName);
-        File backupFile = new File(plugin.getDataFolder(), "backup-" + oldVersion + "-" + fileName);
-        try {
-            Files.copy(file.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            plugin.getLogger().warning("Failed to create backup for " + fileName + ": " + e.getMessage());
-        }
-    }
-
-    private void generateNewFile(String fileName) {
-        File file = new File(plugin.getDataFolder(), fileName);
-        if (file.delete()) {
-            plugin.saveResource(fileName, false);
-            plugin.getLogger().info("Generated a fresh " + fileName + " with new settings.");
+        if (changed) {
+            try {
+                userConfig.save(file);
+                logSection("§6LifeMod §8| §f" + fileName + " §aupdated! §7(§a+" + added + " new keys§7, §eversion: " + defaultVersion + "§7)");
+            } catch (IOException e) {
+                logSection("§cFailed to save updated §f" + fileName + "§c: " + e.getMessage());
+            }
         } else {
-            plugin.getLogger().warning("Failed to delete old " + fileName + ". Check permissions.");
+            logSection("§6LifeMod §8| §f" + fileName + " §7is up-to-date (§eversion: " + defaultVersion + "§7)");
         }
+    }
+
+    private void logSection(String message) {
+        Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
+        Bukkit.getConsoleSender().sendMessage(message);
+        Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
     }
 }

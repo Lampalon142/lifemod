@@ -69,33 +69,4 @@ public class DebugManager {
             sender.sendMessage(locMsg);
         }
     }
-
-    public void dependencyWarning(String dependency) {
-        String msg = MessageUtil.formatMessage(plugin.getConfigConfig().getString("debug.messages.dependency-missing", "&eDependency &6%dependency% &eis not installed. Some features will be disabled."))
-                .replace("%dependency%", dependency);
-        Bukkit.getLogger().warning(msg);
-        if (isEnabled()) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.hasPermission("lifemod.debug")) p.sendMessage(msg);
-            }
-        }
-    }
-
-    public void configReloaded(CommandSender sender, boolean ok) {
-        String prefix = MessageUtil.formatMessage(plugin.getConfigConfig().getString("debug.messages.prefix", "[LifeMod] "));
-        if (ok) {
-            sender.sendMessage(prefix + MessageUtil.formatMessage(plugin.getConfigConfig().getString("debug.messages.config-ok", "&aConfig reloaded successfully!")));
-        } else {
-            sender.sendMessage(prefix + MessageUtil.formatMessage(plugin.getConfigConfig().getString("debug.messages.config-error", "&cConfiguration file is invalid or missing required keys.")));
-        }
-    }
-
-    public void checkDependencies() {
-        List<String> deps = Arrays.asList("LuckPerms", "PlaceholderAPI");
-        for (String dep : deps) {
-            if (Bukkit.getPluginManager().getPlugin(dep) == null) {
-                dependencyWarning(dep);
-            }
-        }
-    }
 }

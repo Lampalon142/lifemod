@@ -29,27 +29,27 @@ public class BroadcastCmd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!cmd.getName().equalsIgnoreCase("broadcast")) return false;
+        if (!cmd.getName().equalsIgnoreCase("broadcast") && !cmd.getName().equalsIgnoreCase("bc")) return false;
 
         if (!sender.hasPermission("lifemod.bc")) {
-            String noPerm = plugin.getLangConfig().getString("general.nopermission");
-            sender.sendMessage(MessageUtil.formatMessage(noPerm));
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
             debug.log("commands", "Permission denied for /broadcast by " + sender.getName());
             return true;
         }
 
         if (args.length < 1) {
-            String usage = plugin.getLangConfig().getString("bc.usage");
-            sender.sendMessage(MessageUtil.formatMessage(usage));
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("bc.usage")));
             return true;
         }
 
         String message = String.join(" ", args).replace("\\n", "\n");
-        String formattedMessage = MessageUtil.formatMessage(message);
+        String broadcast = MessageUtil.parseColors(plugin.getLangConfig().getString("bc.prefix", "") + message);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(formattedMessage);
+            player.sendMessage(broadcast);
         }
+        Bukkit.getConsoleSender().sendMessage(broadcast);
+
         debug.log("broadcast", "Broadcast sent by " + sender.getName() + ": " + message);
 
         if (plugin.getConfigConfig().getBoolean("discord.enabled")) {

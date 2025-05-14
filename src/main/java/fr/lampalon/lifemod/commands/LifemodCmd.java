@@ -50,11 +50,26 @@ public class LifemodCmd implements CommandExecutor, TabCompleter {
 
         if (sender.hasPermission("lifemod.use")) {
             if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-                plugin.reloadConfig();
-                plugin.reloadPluginConfig();
-                sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.config-reloaded")));
-                debug.log("lifemod", sender.getName() + " reloaded LifeMod config");
-            } else if (args.length == 1 && args[0].equalsIgnoreCase("info")){
+                long start = System.currentTimeMillis();
+                try {
+                    plugin.reloadConfig();
+                    plugin.reloadPluginConfig();
+                    plugin.reloadLangConfig();
+                    sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.config-reloaded")));
+                    Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
+                    Bukkit.getConsoleSender().sendMessage("§6LifeMod §8| §aConfig & Lang reloaded by §e" + sender.getName() + " §7(§b" + (System.currentTimeMillis()-start) + "ms§7)");
+                    Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
+                    debug.log("lifemod", sender.getName() + " reloaded LifeMod config in " + (System.currentTimeMillis()-start) + "ms");
+                } catch (Exception e) {
+                    sender.sendMessage("§c[LifeMod] §cError while reloading config: " + e.getMessage());
+                    Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
+                    Bukkit.getConsoleSender().sendMessage("§c[LifeMod] §cReload error: " + e.getMessage());
+                    Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
+                    debug.log("lifemod", "Reload error: " + e.getMessage());
+                }
+                return true;
+            }
+            else if (args.length == 1 && args[0].equalsIgnoreCase("info")){
                 sendInfo(sender);
                 debug.log("lifemod", sender.getName() + " requested LifeMod info");
                 return true;
