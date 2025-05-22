@@ -95,17 +95,38 @@ public class LifemodCmd implements CommandExecutor, TabCompleter {
         boolean useLuckPerms = plugin.getConfigConfig().getBoolean("UseLuckPerms", false);
         String authors = String.join(", ", plugin.getDescription().getAuthors());
 
-        sender.sendMessage("§8§m--------------------------------------------------");
-        sender.sendMessage("§6§lLifeMod §7§o- §fPlugin Info");
-        sender.sendMessage(" §e• §fPlugin version: §a" + pluginVersion);
-        sender.sendMessage(" §e• §fServer version: §a" + serverVersion + " §7(" + bukkitVersion + ")");
-        sender.sendMessage(" §e• §fAuthors: §b" + authors);
-        sender.sendMessage(" §e• §fDatabase: §d" + databaseType);
-        sender.sendMessage(" §e• §fDiscord integration: " + (discordEnabled ? "§aEnabled" : "§cDisabled"));
-        sender.sendMessage(" §e• §fLuckPerms integration: " + (useLuckPerms ? "§aEnabled" : "§cDisabled"));
-        sender.sendMessage(" §e• §fUpdate notifier: " + (updateNotifier ? "§aEnabled" : "§cDisabled"));
-        sender.sendMessage(" §e• §fGithub: §9https://github.com/Lampalon/LifeMod");
-        sender.sendMessage("§8§m--------------------------------------------------");
+        List<String> lines = plugin.getConfigConfig().getStringList("lifemod.info");
+        if (lines.isEmpty()) {
+            lines = List.of(
+                    "§8§m--------------------------------------------------",
+                    "§6§lLifeMod §7§o- §fPlugin Info",
+                    " §e• §fPlugin version: §a" + pluginVersion,
+                    " §e• §fServer version: §a" + serverVersion + " §7(" + bukkitVersion + ")",
+                    " §e• §fAuthors: §b" + authors,
+                    " §e• §fDatabase: §d" + databaseType,
+                    " §e• §fDiscord integration: " + (discordEnabled ? "§aEnabled" : "§cDisabled"),
+                    " §e• §fLuckPerms integration: " + (useLuckPerms ? "§aEnabled" : "§cDisabled"),
+                    " §e• §fUpdate notifier: " + (updateNotifier ? "§aEnabled" : "§cDisabled"),
+                    " §e• §fGithub: §9https://github.com/Lampalon/LifeMod",
+                    "§8§m--------------------------------------------------"
+            );
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (String line : lines) {
+            sb.append(line
+                    .replace("%plugin_version%", pluginVersion)
+                    .replace("%server_version%", serverVersion)
+                    .replace("%bukkit_version%", bukkitVersion)
+                    .replace("%authors%", authors)
+                    .replace("%database_type%", databaseType)
+                    .replace("%discord_status%", discordEnabled ? "§aEnabled" : "§cDisabled")
+                    .replace("%luckperms_status%", useLuckPerms ? "§aEnabled" : "§cDisabled")
+                    .replace("%update_status%", updateNotifier ? "§aEnabled" : "§cDisabled")
+            ).append('\n');
+        }
+
+        sender.sendMessage(MessageUtil.formatMessage(sb.toString()));
     }
 
     @Override

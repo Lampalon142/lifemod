@@ -2,7 +2,6 @@ package fr.lampalon.lifemod.utils;
 
 import fr.lampalon.lifemod.LifeMod;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 
 import java.awt.*;
 import java.util.regex.Matcher;
@@ -55,8 +54,6 @@ public class MessageUtil {
 
         if (message.contains(PREFIX_PLACEHOLDER)) {
             message = message.replace(PREFIX_PLACEHOLDER, prefix);
-        } else {
-            message = prefix + message;
         }
 
         return parseColors(message);

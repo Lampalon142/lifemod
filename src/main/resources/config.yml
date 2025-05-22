@@ -1,6 +1,8 @@
 ## Created and Directed by Lampalon_
 ## For help please come on : https://discord.gg/VndbGNgZ5R
 
+fkeopfekspf:
+  feksopfkesfs: "test"
 debug:
   enabled: false
   log-level: INFO # DEBUG / INFO / WARNING / ERROR
@@ -92,7 +94,7 @@ items-enabled:
 ## LifeMod config
 
 lifemod:
-  usage: "&cUsage: /lifemod [reload|help]"
+  usage: "&cUsage: /lifemod [reload|info]"
   help:
     title: "&a&lHelp menu for usage and description of commands"
     slots: 54
@@ -103,6 +105,19 @@ lifemod:
         name: '&aLifeMod Command'
         lore:
           - '&7'
+  info:
+    - "§8§m--------------------------------------------------"
+    - "§6§lLifeMod §7§o- §fPlugin Info"
+    - " §e• §fPlugin version: §a%plugin_version%"
+    - " §e• §fServer version: §a%server_version% §7(%bukkit_version%)"
+    - " §e• §fAuthors: §b%authors%"
+    - " §e• §fDatabase: §d%database_type%"
+    - " §e• §fDiscord integration: %discord_status%"
+    - " §e• §fLuckPerms integration: %luckperms_status%"
+    - " §e• §fUpdate notifier: %update_status%"
+    - " §e• §fGithub: §9https://github.com/Lampalon/LifeMod"
+    - "§8§m--------------------------------------------------"
+
 
 discord:
   enabled: false
@@ -269,4 +284,5 @@ discord:
 #+----------------Don't touch-----------------+#
 #+--------------------------------------------+#
 ################################################
-version: 168
+
+version: 169

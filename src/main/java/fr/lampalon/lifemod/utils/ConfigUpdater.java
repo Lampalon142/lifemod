@@ -8,6 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 public class ConfigUpdater {
@@ -61,6 +65,7 @@ public class ConfigUpdater {
         }
 
         if (changed) {
+            backupOldFile(file, fileName, userConfig.getString(VERSION_KEY, "unknown"));
             try {
                 userConfig.save(file);
                 logSection("§6LifeMod §8| §f" + fileName + " §aupdated! §7(§a+" + added + " new keys§7, §eversion: " + defaultVersion + "§7)");
@@ -69,6 +74,22 @@ public class ConfigUpdater {
             }
         } else {
             logSection("§6LifeMod §8| §f" + fileName + " §7is up-to-date (§eversion: " + defaultVersion + "§7)");
+        }
+    }
+
+    private void backupOldFile(File file, String fileName, String oldVersion) {
+        try {
+            File backupDir = new File(plugin.getDataFolder(), "backups");
+            if (!backupDir.exists()) backupDir.mkdirs();
+
+            String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+            String backupName = fileName.replace(".yml", "") + "-v" + oldVersion + "-" + timestamp + ".yml.bak";
+            File backupFile = new File(backupDir, backupName);
+
+            Files.copy(file.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Bukkit.getConsoleSender().sendMessage("§7[§6LifeMod§7] §eBackup created: §fbackups/" + backupName);
+        } catch (IOException e) {
+            Bukkit.getConsoleSender().sendMessage("§c[LifeMod] Failed to backup " + fileName + ": " + e.getMessage());
         }
     }
 
