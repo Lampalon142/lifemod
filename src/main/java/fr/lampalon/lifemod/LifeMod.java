@@ -137,8 +137,8 @@ public class LifeMod extends JavaPlugin {
     private void registerCommands() {
         commandMap = getCommandMap();
         registerCommand("freeze", new FreezeCmd(this));
-        registerCommand("mod", new ModCommand(this));
-        registerCommand("staff", new ModCommand(this));
+        registerCommand("mod", new ModCmd(this));
+        registerCommand("staff", new ModCmd(this));
         registerCommand("broadcast", new BroadcastCmd(this));
         registerCommand("bc", new BroadcastCmd(this));
         registerCommand("gamemode", new GmCmd(this));
@@ -160,8 +160,11 @@ public class LifeMod extends JavaPlugin {
         registerCommand("lifemod", new LifemodCmd(this));
         registerCommand("speed", new SpeedCmd());
         registerCommand("spectate", new SpectateCmd(this));
-        registerCommand("otp", new OtpCommand(databaseManager));
-        registerCommand("oinvsee", new OInvseeCommand(databaseManager));
+        registerCommand("otp", new OtpCmd(databaseManager));
+        registerCommand("oinvsee", new OInvseeCmd(databaseManager));
+        registerCommand("settime", new TimeCmd(this));
+        registerCommand("difficulty", new DifficultyCmd(this));
+        registerCommand("hearts", new HeartsCmd(this));
     }
 
     private CommandMap getCommandMap() {

@@ -55,9 +55,15 @@ commands:
   spectate:
     description: See player from a command.
   otp:
-    description: "teleport to an offline player."
+    description: teleport to an offline player.
   oinvsee:
-    description: "See the inventory of a offline player."
+    description: See the inventory of a offline player.
+  hearts:
+    description: "Manage player hearts: set or add a specific amount of hearts to any player."
+  settime:
+    description: Quickly set the world time to day, night, noon, or midnight.
+  difficulty:
+    description: Change the server difficulty to peaceful, easy, normal, or hard.
 permissions:
   lifemod.*:
     default: op
@@ -85,3 +91,6 @@ permissions:
       - lifemod.spectate
       - lifemod.otp
       - lifemod.oinvsee
+      - lifemod.time
+      - lifemod.difficulty
+      - lifemod.hearts

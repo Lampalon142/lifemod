@@ -1,0 +1,77 @@
+package fr.lampalon.lifemod.commands;
+
+
+import fr.lampalon.lifemod.LifeMod;
+import fr.lampalon.lifemod.manager.DebugManager;
+import fr.lampalon.lifemod.manager.DiscordWebhook;
+import fr.lampalon.lifemod.utils.MessageUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+public class DifficultyCmd implements CommandExecutor, TabCompleter {
+    private final LifeMod plugin;
+    private final DebugManager debug;
+
+    public DifficultyCmd(LifeMod plugin) {
+        this.plugin = plugin;
+        this.debug = plugin.getDebugManager();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!sender.hasPermission("lifemod.difficulty")) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+            return true;
+        }
+
+        if (args.length != 1) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("difficulty.usage")));
+            return true;
+        }
+
+        String difficultyStr = args[0].toUpperCase();
+        try {
+            Difficulty difficulty = Difficulty.valueOf(difficultyStr);
+            Bukkit.getWorlds().forEach(world -> world.setDifficulty(difficulty));
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("difficulty.success").replace("%difficulty%", difficulty.name())));
+        } catch (IllegalArgumentException e) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("difficulty.invalid")));
+        }
+
+        if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
+            try {
+                DiscordWebhook webhook = new DiscordWebhook(plugin.webHookUrl);
+                webhook.addEmbed(new DiscordWebhook.EmbedObject()
+                        .setTitle(plugin.getConfigConfig().getString("discord.difficulty.title"))
+                        .setDescription(plugin.getConfigConfig().getString("discord.difficulty.description")
+                                .replace("%player%", sender.getName())
+                                .replace("%difficulty%", difficultyStr))
+                        .setFooter(plugin.getConfigConfig().getString("discord.difficulty.footer.title"),
+                                plugin.getConfigConfig().getString("discord.difficulty.footer.logo"))
+                        .setColor(Color.decode(Objects.requireNonNull(plugin.getConfigConfig().getString("discord.difficulty.color")))));
+                webhook.execute();
+            } catch (IOException e) {
+                debug.log("discord", "Webhook error: " + e.getMessage());
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+        if (args.length == 1) return Arrays.stream(Difficulty.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.toList());
+        return new ArrayList<>();
+    }
+}
