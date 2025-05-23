@@ -1,8 +1,6 @@
 ## Created and Directed by Lampalon_
 ## For help please come on : https://discord.gg/VndbGNgZ5R
 
-fkeopfekspf:
-  feksopfkesfs: "test"
 debug:
   enabled: false
   log-level: INFO # DEBUG / INFO / WARNING / ERROR
@@ -42,6 +40,8 @@ prefix: "&7[&6Moderation&7] &f» "
 
 database:
   type: "sqlite"
+  sqlite:
+    file: "database.db"
 
 UseLuckPerms: false
 
@@ -82,6 +82,9 @@ commands-enabled:
   spectate: true
   otp: true
   oinvsee: true
+  settime: true
+  difficulty: true
+  hearts: true
 
 items-enabled:
   kbTester: true
@@ -274,6 +277,20 @@ discord:
   oinvsee:
     title: "New Alert!"
     description: "> %player% has execute oinvsee command!"
+    footer:
+      title: "Powered By LifeGroup"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  hearts:
+    title: "New Alert!"
+    description: "> %player% has execute hearts command!"
+    footer:
+      title: "Powered By LifeGroup"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  title:
+    title: "New Alert!"
+    description: "> %player% has execute time command!"
     footer:
       title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"

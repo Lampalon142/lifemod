@@ -18,6 +18,10 @@ general:
 fly:
   enable: "%prefix%&aFly mod has been activated."
   disable: "%prefix%&cFly mod has been deactivated."
+  enabled-other: "%prefix%&aEnabled flight for %target%!"
+  disabled-other: "%prefix%&cDisabled flight for %target%!"
+  enabled-by: "%prefix%&aYour flight was enabled by %player%!"
+  disabled-by: "%prefix%&cYour flight was disabled by %player%!"
 
 ## Moderation
 mod:
@@ -221,6 +225,25 @@ oinvsee:
   no-inventory: "%prefix%&cNo saved inventory for %target%."
   name: "&cPlayer inventory %target%"
   success: "%prefix%&aYou are now viewing %target%'s inventory."
+
+# Hearts
+hearts:
+  usage: "%prefix%&cUsage: /hearts <set|add> <player> <amount>"
+  invalid-amount: "%prefix%&cInvalid amount!"
+  max-reached: "%prefix%&cThe player already has 10 hearts!"
+  success: "%prefix%&aSuccessfully %action% %amount% hearts to %target%!"
+
+# Time
+time:
+  usage: "%prefix%&cUsage: /settime <day|noon|night|midnight>"
+  invalid: "%prefix%&cInvalid time!"
+  success: "%prefix%&aTime set to %time%!"
+
+# Difficulty
+difficulty:
+  usage: "%prefix%&cUsage: /difficulty <peaceful|easy|normal|hard>"
+  invalid: "%prefix%&cInvalid difficulty!"
+  success: "%prefix%&aDifficulty set to %difficulty%!"
 
 ################################################
 #+--------------------------------------------+#
