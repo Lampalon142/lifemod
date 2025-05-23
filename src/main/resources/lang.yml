@@ -19,7 +19,7 @@ fly:
   enable: "%prefix%&aFly mod has been activated."
   disable: "%prefix%&cFly mod has been deactivated."
   enabled-other: "%prefix%&aEnabled flight for %target%!"
-  disabled-other: "%prefix%&cDisabled flight for %target%!"
+  disabled-other: "%prefix%&cDisabled flight for %target%!l"
   enabled-by: "%prefix%&aYour flight was enabled by %player%!"
   disabled-by: "%prefix%&cYour flight was disabled by %player%!"
 
