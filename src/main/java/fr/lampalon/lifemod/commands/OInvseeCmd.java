@@ -18,18 +18,17 @@ import org.bukkit.inventory.ItemStack;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class OInvseeCommand implements CommandExecutor, TabCompleter {
+public class OInvseeCmd implements CommandExecutor, TabCompleter {
 
     private final DatabaseManager databaseManager;
     private final FileConfiguration langConfig;
     private final DebugManager debug;
 
-    public OInvseeCommand(DatabaseManager databaseManager) {
+    public OInvseeCmd(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
         this.langConfig = LifeMod.getInstance().getLangConfig();
         this.debug = LifeMod.getInstance().getDebugManager();

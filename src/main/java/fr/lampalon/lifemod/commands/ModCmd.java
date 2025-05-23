@@ -14,11 +14,11 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
-public class ModCommand implements CommandExecutor {
+public class ModCmd implements CommandExecutor {
     private final LifeMod plugin;
     private final DebugManager debug;
 
-    public ModCommand(LifeMod plugin) {
+    public ModCmd(LifeMod plugin) {
         this.plugin = plugin;
         this.debug = plugin.getDebugManager();
     }
