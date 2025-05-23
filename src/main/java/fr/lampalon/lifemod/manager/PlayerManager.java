@@ -4,6 +4,7 @@ import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.utils.ItemBuilder;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,42 +33,27 @@ public class PlayerManager {
             this.player.addPotionEffect(PotionEffectType.NIGHT_VISION.createEffect(1000000000, 255));
             vanished.setVanished(true, this.player);
 
-            if (plugin.getConfigConfig().getBoolean("items-enabled.invSee")) {
-                ItemBuilder invSee = new ItemBuilder(Material.valueOf(plugin.getLangConfig().getString("tools.invsee.material")))
-                        .setName(MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.invsee.name")))
-                        .setLore(new String[]{MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.invsee.description"))});
-                this.player.getInventory().setItem(plugin.getLangConfig().getInt("tools.kbtester.slot"), invSee.toItemStack());
-            }
-            if (plugin.getConfigConfig().getBoolean("items-enabled.freeze")) {
-                ItemBuilder freeze = new ItemBuilder(Material.valueOf(plugin.getLangConfig().getString("tools.freeze.material")))
-                        .setName(MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.freeze.name")))
-                        .setLore(new String[]{MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.freeze.description"))});
-                this.player.getInventory().setItem(plugin.getLangConfig().getInt("tools.freeze.slot"), freeze.toItemStack());
-            }
-            if (plugin.getConfigConfig().getBoolean("items-enabled.tpRandom")) {
-                ItemBuilder tpRandom = new ItemBuilder(Material.valueOf(plugin.getLangConfig().getString("tools.tprandom.material")))
-                        .setName(MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.tprandom.name")))
-                        .setLore(new String[]{MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.tprandom.description"))});
-                this.player.getInventory().setItem(plugin.getLangConfig().getInt("tools.tprandom.slot"), tpRandom.toItemStack());
-            }
-            if (plugin.getConfigConfig().getBoolean("items-enabled.vanish")) {
-                ItemBuilder vanish = new ItemBuilder(Material.valueOf(plugin.getLangConfig().getString("tools.vanish.material")))
-                        .setName(MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.vanish.name")))
-                        .setLore(new String[]{MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.vanish.description"))});
-                this.player.getInventory().setItem(plugin.getLangConfig().getInt("tools.vanish.slot"), vanish.toItemStack());
-            }
-            if (plugin.getConfigConfig().getBoolean("items-enabled.killItem")) {
-                ItemBuilder kill = new ItemBuilder(Material.valueOf(plugin.getLangConfig().getString("tools.kill.material")))
-                        .setName(MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.kill.name")))
-                        .setLore(new String[]{MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.kill.description"))});
-                this.player.getInventory().setItem(plugin.getLangConfig().getInt("tools.kill.slot"), kill.toItemStack());
-            }
-            if (plugin.getConfigConfig().getBoolean("items-enabled.kbTester")) {
-                ItemBuilder kbTester = new ItemBuilder(Material.valueOf(plugin.getLangConfig().getString("tools.kbtester.material")))
-                        .setName(MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.kbtester.name")))
-                        .setLore(new String[]{MessageUtil.formatMessage(plugin.getLangConfig().getString("tools.kbtester.description"))})
-                        .addUnsafeEnchantment(Enchantment.KNOCKBACK, 5);
-                this.player.getInventory().setItem(plugin.getLangConfig().getInt("tools.kbtester.slot"), kbTester.toItemStack());
+            ConfigurationSection section = plugin.getConfigConfig().getConfigurationSection("moderation-items");
+            for (String key : section.getKeys(false)) {
+                ConfigurationSection itemSec = section.getConfigurationSection(key);
+                if (!itemSec.getBoolean("enabled", false)) continue;
+
+                Material material = Material.valueOf(itemSec.getString("material", "STONE"));
+                int slot = itemSec.getInt("slot", 0);
+                String name = MessageUtil.formatMessage(itemSec.getString("name", key));
+                String desc = MessageUtil.formatMessage(itemSec.getString("description", ""));
+                ItemBuilder builder = new ItemBuilder(material)
+                        .setName(name)
+                        .setLore(new String[]{desc});
+
+                if (itemSec.isConfigurationSection("enchantments")) {
+                    for (String ench : itemSec.getConfigurationSection("enchantments").getKeys(false)) {
+                        int level = itemSec.getConfigurationSection("enchantments").getInt(ench);
+                        builder.addUnsafeEnchantment(Enchantment.getByName(ench), level);
+                    }
+                }
+
+                this.player.getInventory().setItem(slot, builder.toItemStack());
             }
             debug.log("mod", player.getName() + " entered moderation mode.");
         } catch (Exception e) {
