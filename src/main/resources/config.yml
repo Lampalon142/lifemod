@@ -83,13 +83,45 @@ commands-enabled:
   otp: true
   oinvsee: true
 
-items-enabled:
-  kbTester: true
-  invSee: true
-  freeze: true
-  tpRandom: true
-  vanish: true
-  killItem: true
+moderation-items:
+  invSee:
+    enabled: true
+    material: PAPER
+    slot: 0
+    name: "&bInventory Viewer"
+    description: "&7Right-click a player to view their inventory."
+  freeze:
+    enabled: true
+    material: PACKED_ICE
+    slot: 1
+    name: "&bFreeze Player"
+    description: "&7Right-click a player to freeze or unfreeze them."
+  tpRandom:
+    enabled: true
+    material: ENDER_PEARL
+    slot: 2
+    name: "&bRandom Teleport"
+    description: "&7Right-click to teleport to a random player."
+  vanish:
+    enabled: true
+    material: BLAZE_POWDER
+    slot: 3
+    name: "&bVanish"
+    description: "&7Right-click to toggle vanish mode."
+  killItem:
+    enabled: true
+    material: BLAZE_ROD
+    slot: 4
+    name: "&cKill Player"
+    description: "&7Right-click a player to instantly kill them."
+  kbTester:
+    enabled: true
+    material: STICK
+    slot: 5
+    name: "&eKnockback Tester"
+    description: "&7Test knockback on players."
+    enchantments:
+      KNOCKBACK: 5
 
 ## LifeMod config
 
