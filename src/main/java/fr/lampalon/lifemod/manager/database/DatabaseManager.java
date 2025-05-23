@@ -41,7 +41,7 @@ public class DatabaseManager {
             if (sqliteManager != null) {
                 sqliteManager.setupDatabase();
             }
-            plugin.getLogger().info("[LifeMod] " + type.toUpperCase() + " database initialized successfully.");
+            plugin.getLogger().info( type.toUpperCase() + " database initialized successfully.");
         } catch (Exception e) {
             debug.userError(null, "Error during database initialization.", e);
         }
