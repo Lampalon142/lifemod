@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -28,19 +29,37 @@ public class FlyCmd implements CommandExecutor, TabCompleter {
 
   @Override
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    if (!label.equalsIgnoreCase("fly")) return false;
+    if (!cmd.getName().equalsIgnoreCase("fly")) return false;
 
-    if (!(sender instanceof Player)) {
-      sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.onlyplayer")));
-      return true;
-    }
+    Player target;
+    boolean isSelf = false;
 
-    Player player = (Player) sender;
+    // Gestion de la cible
+    if (args.length > 0) {
+      if (!sender.hasPermission("lifemod.fly.others")) {
+        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+        debug.log("commands", "Permission denied for /fly others by " + sender.getName());
+        return true;
+      }
 
-    if (!player.hasPermission("lifemod.fly")) {
-      player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
-      debug.log("commands", "Permission denied for /fly by " + player.getName());
-      return true;
+      target = Bukkit.getPlayer(args[0]);
+      if (target == null) {
+        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.offlineplayer")));
+        return true;
+      }
+    } else {
+      if (!(sender instanceof Player)) {
+        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.onlyplayer")));
+        return true;
+      }
+      target = (Player) sender;
+      isSelf = true;
+
+      if (!sender.hasPermission("lifemod.fly")) {
+        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+        debug.log("commands", "Permission denied for /fly by " + sender.getName());
+        return true;
+      }
     }
 
     if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
@@ -49,7 +68,8 @@ public class FlyCmd implements CommandExecutor, TabCompleter {
         webhook.addEmbed(new DiscordWebhook.EmbedObject()
                 .setTitle(plugin.getConfigConfig().getString("discord.fly.title"))
                 .setDescription(plugin.getConfigConfig().getString("discord.fly.description")
-                        .replace("%player%", sender.getName()))
+                        .replace("%player%", sender.getName())
+                        .replace("%target%", target.getName()))
                 .setFooter(
                         plugin.getConfigConfig().getString("discord.fly.footer.title"),
                         plugin.getConfigConfig().getString("discord.fly.footer.logo")
@@ -65,29 +85,38 @@ public class FlyCmd implements CommandExecutor, TabCompleter {
       }
     }
 
-    if (player.getAllowFlight()) {
-      player.setAllowFlight(false);
-      player.setFlying(false);
-      player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("fly.disable")));
-    } else {
-      player.setAllowFlight(true);
-      player.setFlying(true);
-      player.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("fly.enable")));
+    boolean newState = !target.getAllowFlight();
+    target.setAllowFlight(newState);
+    if (newState) target.setFlying(true);
+
+    String statusKey = newState ? "fly.enabled" : "fly.disabled";
+
+    if (!isSelf) {
+      sender.sendMessage(MessageUtil.formatMessage(
+              plugin.getLangConfig().getString(statusKey + "-other")
+                      .replace("%target%", target.getName())
+      ));
     }
+
+    target.sendMessage(MessageUtil.formatMessage(
+            plugin.getLangConfig().getString(statusKey + (isSelf ? "" : "-by"))
+                    .replace("%player%", sender.getName())
+    ));
 
     return true;
   }
 
   @Override
   public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-    if (!cmd.getName().equalsIgnoreCase("fly")) return null;
-    if (args.length == 1) {
-      String input = args[0].toLowerCase();
+    if (!cmd.getName().equalsIgnoreCase("fly")) return Collections.emptyList();
+
+    if (args.length == 1 && sender.hasPermission("lifemod.fly.others")) {
       return Bukkit.getOnlinePlayers().stream()
               .map(Player::getName)
-              .filter(name -> name.toLowerCase().startsWith(input))
+              .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
               .collect(Collectors.toList());
     }
-    return null;
+
+    return Collections.emptyList();
   }
 }
