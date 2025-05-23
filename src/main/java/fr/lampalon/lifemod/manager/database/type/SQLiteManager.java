@@ -14,6 +14,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import java.io.*;
 import java.sql.*;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.UUID;
 
 public class SQLiteManager implements DatabaseProvider {
@@ -30,7 +31,7 @@ public class SQLiteManager implements DatabaseProvider {
 
     private void connect() {
         try {
-            File dbFile = new File(plugin.getDataFolder(), "database.db");
+            File dbFile = new File(plugin.getDataFolder(), Objects.requireNonNull(LifeMod.getInstance().getConfigConfig().getString("database.sqlite.file")));
             if (!dbFile.exists()) {
                 dbFile.getParentFile().mkdirs();
                 dbFile.createNewFile();
