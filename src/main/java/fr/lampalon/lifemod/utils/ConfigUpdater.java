@@ -11,8 +11,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigUpdater {
     private final JavaPlugin plugin;
@@ -37,7 +36,6 @@ public class ConfigUpdater {
         }
 
         FileConfiguration userConfig = YamlConfiguration.loadConfiguration(file);
-
         FileConfiguration defaultConfig;
         try (InputStreamReader reader = new InputStreamReader(plugin.getResource(fileName))) {
             defaultConfig = YamlConfiguration.loadConfiguration(reader);
@@ -46,14 +44,19 @@ public class ConfigUpdater {
             return;
         }
 
+        backupFile(file, fileName, userConfig.getString(VERSION_KEY, "unknown"));
+
         boolean changed = false;
         int added = 0;
+        List<String> addedKeys = new ArrayList<>();
 
-        Set<String> keys = defaultConfig.getKeys(true);
-        for (String key : keys) {
+        Set<String> defaultKeys = defaultConfig.getKeys(true);
+        for (String key : defaultKeys) {
             if (!userConfig.contains(key)) {
-                userConfig.set(key, defaultConfig.get(key));
+                Object defaultVal = defaultConfig.get(key);
+                userConfig.set(key, defaultVal);
                 added++;
+                addedKeys.add(key);
                 changed = true;
             }
         }
@@ -65,10 +68,9 @@ public class ConfigUpdater {
         }
 
         if (changed) {
-            backupOldFile(file, fileName, userConfig.getString(VERSION_KEY, "unknown"));
             try {
                 userConfig.save(file);
-                logSection("§6LifeMod §8| §f" + fileName + " §aupdated! §7(§a+" + added + " new keys§7, §eversion: " + defaultVersion + "§7)");
+                logSection("§6LifeMod §8| §f" + fileName + " §aupgraded! §7(§a+" + added + " new keys§7, §eversion: " + defaultVersion + "§7)\n§7Added keys: §f" + String.join(", ", addedKeys));
             } catch (IOException e) {
                 logSection("§cFailed to save updated §f" + fileName + "§c: " + e.getMessage());
             }
@@ -77,7 +79,7 @@ public class ConfigUpdater {
         }
     }
 
-    private void backupOldFile(File file, String fileName, String oldVersion) {
+    private void backupFile(File file, String fileName, String oldVersion) {
         try {
             File backupDir = new File(plugin.getDataFolder(), "backups");
             if (!backupDir.exists()) backupDir.mkdirs();
