@@ -10,10 +10,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -77,8 +79,29 @@ public class InvseeCmd implements CommandExecutor, TabCompleter {
             debug.log("invsee", sender.getName() + " opened inventory of " + targetPlayer.getName());
         }
 
-        player.openInventory(targetPlayer.getInventory());
+        player.openInventory(openTargetInventory(player, targetPlayer));
         return true;
+    }
+
+    private Inventory openTargetInventory(Player player, Player target) {
+        String invTitle = LifeMod.getInstance().getLangConfig().getString("invsee.name");
+        Inventory targetInventory = Bukkit.createInventory(null, 45, MessageUtil.formatMessage(invTitle.replace("%player%", target.getName())));
+        PlayerInventory targetPlayerInventory = target.getInventory();
+
+        for (int i = 0; i < 36; i++) {
+            ItemStack item = targetPlayerInventory.getItem(i);
+            if (item != null) {
+                targetInventory.setItem(i, item.clone());
+            }
+        }
+        targetInventory.setItem(36, targetPlayerInventory.getHelmet());
+        targetInventory.setItem(37, targetPlayerInventory.getChestplate());
+        targetInventory.setItem(38, targetPlayerInventory.getLeggings());
+        targetInventory.setItem(39, targetPlayerInventory.getBoots());
+
+        player.openInventory(targetInventory);
+        debug.log("mod", player.getName() + " opened inventory of " + target.getName());
+        return targetInventory;
     }
 
     @Override

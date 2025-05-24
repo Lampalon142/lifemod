@@ -36,8 +36,9 @@ public class HeartsCmd implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args.length < 2) {
+        if (args.length < 3) {
             sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.usage")));
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.unit-info")));
             return true;
         }
 
@@ -48,27 +49,50 @@ public class HeartsCmd implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        double amount;
+        double hearts;
         try {
-            amount = Double.parseDouble(args[2]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            hearts = Double.parseDouble(args[2]);
+        } catch (NumberFormatException e) {
             sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.invalid-amount")));
             return true;
         }
 
-        double newHealth = switch (action) {
-            case "set" -> Math.min(amount, MAX_HEARTS);
-            case "add" -> Math.min(target.getHealth() + amount, MAX_HEARTS);
-            default -> target.getHealth();
-        };
+        hearts = Math.round(hearts * 2.0) / 2.0;
 
-        if (newHealth >= MAX_HEARTS) {
+        if (hearts <= 0) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.invalid-amount")));
+            return true;
+        }
+
+        if (hearts > MAX_HEARTS) {
             sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.max-reached")));
             return true;
         }
 
-        target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
-        target.setHealth(newHealth);
+        double healthPoints = hearts * 2.0;
+        double newMaxHealth;
+        switch (action) {
+            case "set" -> newMaxHealth = healthPoints;
+            case "add" -> newMaxHealth = Math.min(target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + healthPoints, MAX_HEARTS * 2.0);
+            default -> {
+                sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.usage")));
+                return true;
+            }
+        }
+
+        newMaxHealth = Math.round(newMaxHealth * 2.0) / 2.0;
+
+        if (newMaxHealth > MAX_HEARTS * 2.0) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.max-reached")));
+            return true;
+        }
+
+        if (newMaxHealth % 1 != 0) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.half-heart-warning")));
+        }
+
+        target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
+        target.setHealth(Math.min(target.getHealth(), newMaxHealth));
 
         if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
             try {
@@ -79,7 +103,7 @@ public class HeartsCmd implements CommandExecutor, TabCompleter {
                                 .replace("%player%", sender.getName())
                                 .replace("%target%", target.getName())
                                 .replace("%action%", action)
-                                .replace("%amount%", String.valueOf(amount)))
+                                .replace("%amount%", String.valueOf(hearts)))
                         .setFooter(plugin.getConfigConfig().getString("discord.hearts.footer.title"),
                                 plugin.getConfigConfig().getString("discord.hearts.footer.logo"))
                         .setColor(Color.decode(Objects.requireNonNull(plugin.getConfigConfig().getString("discord.hearts.color")))));
@@ -92,7 +116,11 @@ public class HeartsCmd implements CommandExecutor, TabCompleter {
         sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.success")
                 .replace("%action%", action)
                 .replace("%target%", target.getName())
-                .replace("%amount%", String.valueOf(amount))));
+                .replace("%amount%", String.valueOf(hearts))));
+
+        target.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.changed")
+                .replace("%amount%", String.valueOf(newMaxHealth / 2.0))));
+
         return true;
     }
 

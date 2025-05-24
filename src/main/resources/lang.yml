@@ -228,10 +228,13 @@ oinvsee:
 
 # Hearts
 hearts:
+  success: "%prefix%&a%action% %amount% hearts to %target% successfully!"
+  changed: "%prefix%&aYour maximum hearts have been changed to %amount%."
   usage: "%prefix%&cUsage: /hearts <set|add> <player> <amount>"
+  unit-info: "%prefix%&7Amount is in hearts (1 heart = 2 health points)."
   invalid-amount: "%prefix%&cInvalid amount!"
-  max-reached: "%prefix%&cThe player already has 10 hearts!"
-  success: "%prefix%&aSuccessfully %action% %amount% hearts to %target%!"
+  max-reached: "%prefix%&cThe player already has the maximum number of hearts!"
+  half-heart-warning: "%prefix%&eWarning: The value includes a half-heart."
 
 # Time
 time:
@@ -245,9 +248,4 @@ difficulty:
   invalid: "%prefix%&cInvalid difficulty!"
   success: "%prefix%&aDifficulty set to %difficulty%!"
 
-################################################
-#+--------------------------------------------+#
-#+----------------Don't touch-----------------+#
-#+--------------------------------------------+#
-################################################
 version: 169

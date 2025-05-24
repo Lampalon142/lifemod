@@ -3,6 +3,7 @@ package fr.lampalon.lifemod.commands;
 import fr.lampalon.lifemod.LifeMod;
 import fr.lampalon.lifemod.manager.DebugManager;
 import fr.lampalon.lifemod.manager.DiscordWebhook;
+import fr.lampalon.lifemod.manager.VanishedManager;
 import fr.lampalon.lifemod.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -73,7 +74,35 @@ public class LifemodCmd implements CommandExecutor, TabCompleter {
                 sendInfo(sender);
                 debug.log("lifemod", sender.getName() + " requested LifeMod info");
                 return true;
-            } else {
+            } else if (args.length == 1 && args[0].equalsIgnoreCase("serverinfo")){
+                List<String> lines = plugin.getConfigConfig().getStringList("lifemod.serverinfo");
+
+                String version = Bukkit.getVersion();
+                String type = Bukkit.getServer().getName();
+                int maxPlayers = Bukkit.getMaxPlayers();
+                String difficulty = Bukkit.getWorlds().get(0).getDifficulty().name().toLowerCase();
+                int onlinePlayers = Bukkit.getOnlinePlayers().size();
+
+                int vanishedPlayers = 0;
+                for (org.bukkit.entity.Player p : Bukkit.getOnlinePlayers()) {
+                    try {
+                        if (VanishedManager.isVanished(p)) vanishedPlayers++;
+                    } catch (Exception ignored) {}
+                }
+
+                StringBuilder sb = new StringBuilder();
+                for (String line : lines) {
+                    sb.append(line
+                            .replace("%version%", version)
+                            .replace("%type%", type)
+                            .replace("%max_players%", String.valueOf(maxPlayers))
+                            .replace("%difficulty%", difficulty)
+                            .replace("%online_players%", String.valueOf(onlinePlayers))
+                            .replace("%vanished_players%", String.valueOf(vanishedPlayers))
+                    ).append('\n');
+                }
+                sender.sendMessage(MessageUtil.formatMessage(sb.toString()));
+            }else {
                 sender.sendMessage(MessageUtil.formatMessage(plugin.getConfigConfig().getString("lifemod.usage")));
                 debug.log("lifemod", sender.getName() + " used /lifemod with wrong arguments");
             }

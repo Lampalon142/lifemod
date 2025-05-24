@@ -7,9 +7,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class SpectateCmd implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class SpectateCmd implements CommandExecutor, TabCompleter {
     private final SpectateManager spectateManager;
 
     public SpectateCmd(LifeMod plugin) {
@@ -57,5 +62,25 @@ public class SpectateCmd implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+        List<String> suggestions = new ArrayList<>();
+
+        if (args.length == 1) {
+            List<String> subCommands = Arrays.asList("leave", "fp", "random", "back", "list");
+            String input = args[0].toLowerCase();
+            for (String sub : subCommands) {
+                if (sub.startsWith(input)) {
+                    suggestions.add(sub);
+                }
+            }
+            Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName)
+                    .filter(name -> name.toLowerCase().startsWith(input))
+                    .forEach(suggestions::add);
+        }
+        return suggestions;
     }
 }

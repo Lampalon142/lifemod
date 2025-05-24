@@ -12,7 +12,6 @@ import java.util.*;
 public class SpectateManager {
     private final Map<UUID, Location> originalLocations = new HashMap<>();
     private final Map<UUID, UUID> lastTargets = new HashMap<>();
-    private final Map<UUID, Boolean> freecamMode = new HashMap<>();
     private final Map<UUID, Boolean> isFreecam = new HashMap<>();
     private final Map<UUID, UUID> spectateTarget = new HashMap<>();
 
@@ -32,6 +31,12 @@ public class SpectateManager {
         }
         originalLocations.put(staff.getUniqueId(), staff.getLocation());
         isFreecam.put(staff.getUniqueId(), false);
+
+        UUID previousTarget = spectateTarget.get(staff.getUniqueId());
+        if (previousTarget != null) {
+            lastTargets.put(staff.getUniqueId(), previousTarget);
+        }
+
         spectateTarget.put(staff.getUniqueId(), target.getUniqueId());
 
         staff.setGameMode(GameMode.SPECTATOR);
@@ -136,6 +141,6 @@ public class SpectateManager {
     }
 
     public boolean isFreecam(Player player) {
-        return freecamMode.getOrDefault(player.getUniqueId(), false);
+        return isFreecam.getOrDefault(player.getUniqueId(), false);
     }
 }

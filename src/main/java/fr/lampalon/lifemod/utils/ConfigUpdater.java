@@ -70,12 +70,35 @@ public class ConfigUpdater {
         if (changed) {
             try {
                 userConfig.save(file);
+                moveVersionKeyToTop(file);
                 logSection("§6LifeMod §8| §f" + fileName + " §aupgraded! §7(§a+" + added + " new keys§7, §eversion: " + defaultVersion + "§7)\n§7Added keys: §f" + String.join(", ", addedKeys));
             } catch (IOException e) {
                 logSection("§cFailed to save updated §f" + fileName + "§c: " + e.getMessage());
             }
         } else {
             logSection("§6LifeMod §8| §f" + fileName + " §7is up-to-date (§eversion: " + defaultVersion + "§7)");
+        }
+    }
+
+    private void moveVersionKeyToTop(File file) {
+        try {
+            List<String> lines = Files.readAllLines(file.toPath());
+            String versionLine = null;
+            Iterator<String> it = lines.iterator();
+            while (it.hasNext()) {
+                String line = it.next();
+                if (line.trim().startsWith("version:")) {
+                    versionLine = line;
+                    it.remove();
+                    break;
+                }
+            }
+            if (versionLine != null) {
+                lines.add(0, versionLine);
+                Files.write(file.toPath(), lines);
+            }
+        } catch (IOException e) {
+            Bukkit.getConsoleSender().sendMessage("§c[LifeMod] Failed to move version key to top: " + e.getMessage());
         }
     }
 

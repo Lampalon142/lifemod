@@ -93,30 +93,45 @@ moderation-items:
     slot: 0
     name: "&bInventory Viewer"
     description: "&7Right-click a player to view their inventory."
+    customModelData:
+      enabled: false
+      id: 0
   freeze:
     enabled: true
     material: PACKED_ICE
     slot: 1
     name: "&bFreeze Player"
     description: "&7Right-click a player to freeze or unfreeze them."
+    customModelData:
+      enabled: false
+      id: 0
   tpRandom:
     enabled: true
     material: ENDER_PEARL
     slot: 2
     name: "&bRandom Teleport"
     description: "&7Right-click to teleport to a random player."
+    customModelData:
+      enabled: false
+      id: 0
   vanish:
     enabled: true
     material: BLAZE_POWDER
     slot: 3
     name: "&bVanish"
     description: "&7Right-click to toggle vanish mode."
+    customModelData:
+      enabled: false
+      id: 0
   killItem:
     enabled: true
     material: BLAZE_ROD
     slot: 4
     name: "&cKill Player"
     description: "&7Right-click a player to instantly kill them."
+    customModelData:
+      enabled: false
+      id: 0
   kbTester:
     enabled: true
     material: STICK
@@ -125,6 +140,9 @@ moderation-items:
     description: "&7Test knockback on players."
     enchantments:
       KNOCKBACK: 5
+    customModelData:
+      enabled: false
+      id: 0
 
 ## LifeMod config
 
@@ -152,7 +170,16 @@ lifemod:
     - " §e• §fUpdate notifier: %update_status%"
     - " §e• §fGithub: §9https://github.com/Lampalon/LifeMod"
     - "§8§m--------------------------------------------------"
-
+  serverinfo:
+    - "&8&m--------------------------------------------------"
+    - "&6&lServer Info"
+    - " &e• &fVersion: &a%version%"
+    - " &e• &fType: &a%type%"
+    - " &e• &fMax players: &a%max_players%"
+    - " &e• &fDifficulty: &a%difficulty%"
+    - " &e• &fOnline players: &a%online_players%"
+    - " &e• &fVanished players: &a%vanished_players%"
+    - "&8&m--------------------------------------------------"
 
 discord:
   enabled: false
@@ -327,11 +354,5 @@ discord:
       title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
-
-################################################
-#+--------------------------------------------+#
-#+----------------Don't touch-----------------+#
-#+--------------------------------------------+#
-################################################
 
 version: 169

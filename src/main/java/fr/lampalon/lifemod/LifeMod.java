@@ -238,6 +238,10 @@ public class LifeMod extends JavaPlugin {
         return moderators;
     }
 
+    public VanishedManager getPlayerManager() {
+        return playerManager;
+    }
+
     public Map<UUID, PlayerManager> getPlayers() {
         return players;
     }

@@ -46,6 +46,14 @@ public class PlayerManager {
                         .setName(name)
                         .setLore(new String[]{desc});
 
+                if (itemSec.isConfigurationSection("customModelData")) {
+                    ConfigurationSection cmdSec = itemSec.getConfigurationSection("customModelData");
+                    if (cmdSec.getBoolean("enabled", false)) {
+                        int id = cmdSec.getInt("id", 0);
+                        builder.setCustomModelData(id);
+                    }
+                }
+
                 if (itemSec.isConfigurationSection("enchantments")) {
                     for (String ench : itemSec.getConfigurationSection("enchantments").getKeys(false)) {
                         int level = itemSec.getConfigurationSection("enchantments").getInt(ench);
@@ -55,6 +63,7 @@ public class PlayerManager {
 
                 this.player.getInventory().setItem(slot, builder.toItemStack());
             }
+
             debug.log("mod", player.getName() + " entered moderation mode.");
         } catch (Exception e) {
             debug.userError(player, "Error while entering moderation mode.", e);

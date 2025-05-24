@@ -28,6 +28,11 @@ public class TimeCmd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!sender.hasPermission("lifemod.time")) {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+            return true;
+        }
+
         if (args.length != 1) {
             sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("time.usage")));
             return true;
@@ -44,11 +49,6 @@ public class TimeCmd implements CommandExecutor, TabCompleter {
 
         if (ticks == -1) {
             sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("time.invalid")));
-            return true;
-        }
-
-        if (!sender.hasPermission("lifemod.time")) {
-            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
             return true;
         }
 

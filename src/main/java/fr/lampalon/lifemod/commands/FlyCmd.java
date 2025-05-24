@@ -34,32 +34,32 @@ public class FlyCmd implements CommandExecutor, TabCompleter {
     Player target;
     boolean isSelf = false;
 
-    // Gestion de la cible
-    if (args.length > 0) {
-      if (!sender.hasPermission("lifemod.fly.others")) {
-        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
-        debug.log("commands", "Permission denied for /fly others by " + sender.getName());
-        return true;
-      }
-
-      target = Bukkit.getPlayer(args[0]);
-      if (target == null) {
-        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.offlineplayer")));
-        return true;
-      }
-    } else {
+    if (args.length == 0) {
       if (!(sender instanceof Player)) {
         sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.onlyplayer")));
         return true;
       }
       target = (Player) sender;
       isSelf = true;
-
       if (!sender.hasPermission("lifemod.fly")) {
         sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
         debug.log("commands", "Permission denied for /fly by " + sender.getName());
         return true;
       }
+    } else if (args.length == 1) {
+      if (!sender.hasPermission("lifemod.fly.others")) {
+        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("general.nopermission")));
+        debug.log("commands", "Permission denied for /fly others by " + sender.getName());
+        return true;
+      }
+      target = Bukkit.getPlayer(args[0]);
+      if (target == null) {
+        sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("fly.usage")));
+        return true;
+      }
+    } else {
+      sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("fly.usage")));
+      return true;
     }
 
     if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
@@ -89,19 +89,21 @@ public class FlyCmd implements CommandExecutor, TabCompleter {
     target.setAllowFlight(newState);
     if (newState) target.setFlying(true);
 
-    String statusKey = newState ? "fly.enabled" : "fly.disabled";
-
-    if (!isSelf) {
+    if (isSelf) {
+      String msgKey = newState ? "fly.enabled-self" : "fly.disabled-self";
+      target.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString(msgKey)));
+    } else {
+      String msgKeySender = newState ? "fly.enabled" : "fly.disabled";
+      String msgKeyTarget = newState ? "fly.enabled-self" : "fly.disabled-self";
       sender.sendMessage(MessageUtil.formatMessage(
-              plugin.getLangConfig().getString(statusKey + "-other")
-                      .replace("%target%", target.getName())
+              plugin.getLangConfig().getString(msgKeySender)
+                      .replace("%player%", target.getName())
+      ));
+      target.sendMessage(MessageUtil.formatMessage(
+              plugin.getLangConfig().getString(msgKeyTarget)
+                      .replace("%player%", sender.getName())
       ));
     }
-
-    target.sendMessage(MessageUtil.formatMessage(
-            plugin.getLangConfig().getString(statusKey + (isSelf ? "" : "-by"))
-                    .replace("%player%", sender.getName())
-    ));
 
     return true;
   }

@@ -1,6 +1,6 @@
 name: LifeMod
 authors: [Lampalon]
-version: '1.6.8-DEV-VERSION'
+version: '1.6.8-RELEASE'
 main: fr.lampalon.lifemod.LifeMod
 api-version: "1.16"
 softdepend:
@@ -69,6 +69,7 @@ permissions:
     default: op
     children:
       - lifemod.fly
+      - lifemod.fly.others
       - lifemod.gm
       - lifemod.mod
       - lifemod.bc
