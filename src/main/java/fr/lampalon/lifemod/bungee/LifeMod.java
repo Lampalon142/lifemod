@@ -4,17 +4,19 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
-import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.bukkit.command.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 public class LifeMod extends Plugin {
     public static LifeMod instance;
@@ -62,6 +64,49 @@ public class LifeMod extends Plugin {
 
     private void registerCommands() {
         PluginManager pm = ProxyServer.getInstance().getPluginManager();
+    }
+
+    private CommandMap getCommandMap() {
+        try {
+            Field commandMapField = getProxy().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            return (CommandMap) commandMapField.get( getProxy());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void registerCommand(String commandName, CommandExecutor executor) {
+        if (getConfigYml().getBoolean("commands-enabled." + commandName, true)) {
+            getCommand(commandName).setExecutor(executor);
+            if (executor instanceof TabCompleter) {
+                getCommand(commandName).setTabCompleter((TabCompleter) executor);
+            }
+        } else {
+            unregisterCommand(commandName);
+        }
+    }
+
+    private PluginCommand getCommand(String commandName) {}
+
+    private void unregisterCommand(String commandName) {
+        try {
+            Field commandMapField = getProxy().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            SimpleCommandMap commandMap = (SimpleCommandMap) commandMapField.get(getProxy());
+
+            Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
+            knownCommandsField.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            Map<String, org.bukkit.command.Command> knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
+
+            if (knownCommands.containsKey(commandName)) {
+                knownCommands.remove(commandName).unregister(commandMap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void copyResourceIfNotExists(String resourceName, File destinationFile) {

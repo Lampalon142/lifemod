@@ -2,3 +2,12 @@ name: LifeMod
 author: Lampalon_
 version: 1.0-SNAPSHOT
 main: fr.lampalon.lifemod.bungee.LifeMod
+commands:
+  staffchat:
+    description: Permit you to send a message to all staff on all server or on one server
+    aliases:
+      - sc
+  stafflist:
+    description: Permit you to see all staff connected on the server
+    aliases:
+      - sl

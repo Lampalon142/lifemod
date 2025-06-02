@@ -1,0 +1,8 @@
+staffchat:
+  usage: "%prefix%&cUsage: /sc <message>"
+  format: "%prefix% &7%server% &8» &e%sender%&8: &f%message%"
+
+stafflist:
+  no-staff-online: "&cNo staff members are currently online."
+  header: "\n&6&lOnline Staff &8(&7%count%&8)\n"
+  line: " &8- &e%player% &7on &b%server%"
