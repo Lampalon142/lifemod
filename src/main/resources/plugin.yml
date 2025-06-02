@@ -1,7 +1,7 @@
 name: LifeMod
 authors: [Lampalon]
 version: '1.6.8-RELEASE'
-main: fr.lampalon.lifemod.LifeMod
+main: fr.lampalon.lifemod.bukkit.LifeMod
 api-version: "1.16"
 softdepend:
   - LuckPerms
