@@ -1,12 +1,14 @@
 package fr.lampalon.lifemod.bukkit;
 
+import com.zaxxer.hikari.HikariDataSource;
 import fr.lampalon.lifemod.bukkit.commands.*;
 import fr.lampalon.lifemod.bukkit.listeners.*;
-import fr.lampalon.lifemod.bukkit.manager.*;
-import fr.lampalon.lifemod.bukkit.manager.database.DatabaseManager;
+import fr.lampalon.lifemod.bukkit.managers.*;
+import fr.lampalon.lifemod.bukkit.managers.database.DatabaseManager;
+import fr.lampalon.lifemod.bukkit.managers.gui.GuiManager;
 import fr.lampalon.lifemod.bukkit.utils.ConfigUpdater;
 import fr.lampalon.lifemod.bukkit.utils.UpdateChecker;
-import fr.lampalon.lifemod.bukkit.manager.PlayerManager;
+import fr.lampalon.lifemod.bukkit.managers.PlayerManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
@@ -19,9 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -35,11 +35,18 @@ public class LifeMod extends JavaPlugin {
     private DebugManager debugManager;
     private ChatManager chatManager;
     private VanishedManager playerManager;
+    private GuiManager guiManager;
+    private HikariDataSource dataSource;
+    private NoteInputManager noteInputManager;
+    private ModeratorSessionManager moderatorSessionManager;
+    private ModeratorAuthService moderatorAuthService;
+    private boolean chatEnabled = true;
     private FileConfiguration configConfig;
     private FileConfiguration langConfig;
     private Set<UUID> moderators = new HashSet<>();
     private Map<UUID, PlayerManager> players = new HashMap<>();
     private Map<UUID, Location> frozenPlayers = new HashMap<>();
+    private final Map<UUID, Deque<Long>> cpsMap = new HashMap<>();
     public String webHookUrl = getConfig().getString("discord.webhookurl");
 
     public static LifeMod getInstance() {
@@ -55,7 +62,6 @@ public class LifeMod extends JavaPlugin {
         loadConfigurations();
         this.spectateManager = new SpectateManager();
         this.debugManager = new DebugManager(this);
-        this.databaseManager = new DatabaseManager(this);
         initializeManagers();
         registerEvents();
         registerCommands();
@@ -69,6 +75,9 @@ public class LifeMod extends JavaPlugin {
             dbStatus = "§cError";
         }
         long elapsed = System.currentTimeMillis() - start;
+        if (!isVersionAtLeast116()) {
+            Bukkit.getConsoleSender().sendMessage("§cYou are at least of 1.16.x the report system was been disactivated");
+        }
         Bukkit.getConsoleSender().sendMessage("§8§m----------------------------------------");
         Bukkit.getConsoleSender().sendMessage("§6LifeMod §7v" + getDescription().getVersion() + " §8| §fby Lampalon");
         Bukkit.getConsoleSender().sendMessage("§7Java: §e" + System.getProperty("java.version") + " §8| §7Server: §e" + Bukkit.getVersion());
@@ -109,6 +118,12 @@ public class LifeMod extends JavaPlugin {
         chatManager = new ChatManager(this);
         databaseManager = new DatabaseManager(this);
         databaseManager.setupDatabase();
+        if (!isVersionAtLeast116()) {
+            guiManager = new GuiManager(this);
+            noteInputManager = new NoteInputManager(this);
+        }
+        moderatorAuthService = new ModeratorAuthService(this);
+        moderatorSessionManager = new ModeratorSessionManager(getConfigConfig().getInt("moderator-login.max-attempts", 3));
     }
 
     private void setupMetrics() {
@@ -127,6 +142,15 @@ public class LifeMod extends JavaPlugin {
         pm.registerEvents(new PlayerQuit(), this);
         pm.registerEvents(new FreezeGui(this), this);
         pm.registerEvents(new PlayerTeleportEvent(), this);
+        pm.registerEvents(new CPSListener(cpsMap), this);
+        if (!isVersionAtLeast116()){
+            pm.registerEvents(new GuiListener(this), this);
+            pm.registerEvents(new GuiDetailListener(this), this);
+            pm.registerEvents(new ChatAsyncListener(this), this);
+            pm.registerEvents(new TicketJoinListener(this, updateChecker), this);
+        }
+        pm.registerEvents(new ChatListener(), this);
+        pm.registerEvents(new ModeratorAuthListener(), this);
         if (getLangConfig().getBoolean("general.update.enabled")) {
             pm.registerEvents(new PlayerJoin(this, updateChecker), this);
         }
@@ -163,6 +187,16 @@ public class LifeMod extends JavaPlugin {
         registerCommand("settime", new TimeCmd(this));
         registerCommand("difficulty", new DifficultyCmd(this));
         registerCommand("hearts", new HeartsCmd(this));
+        registerCommand("modregister", new ModRegisterCmd());
+        registerCommand("modlogin", new ModLoginCmd());
+        registerCommand("modreset", new ModResetCmd());
+        registerCommand("modchangepass", new ModChangePassCmd());
+        registerCommand("follow", new FollowCmd(this));
+        if (!isVersionAtLeast116()) {
+            registerCommand("report", new ReportCmd(this));
+            registerCommand("reports", new ReportsCmd(this));
+        }
+        registerCommand("togglechat", new ToggleChatCmd());
     }
 
     private CommandMap getCommandMap() {
@@ -206,6 +240,17 @@ public class LifeMod extends JavaPlugin {
         }
     }
 
+    public boolean isVersionAtLeast116() {
+        String version = Bukkit.getBukkitVersion();
+        String[] parts = version.split("\\.");
+        try {
+            int major = Integer.parseInt(parts[1]);
+            return major >= 16;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Override
     public void onDisable() {
         Bukkit.getOnlinePlayers().stream()
@@ -228,6 +273,25 @@ public class LifeMod extends JavaPlugin {
 
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    public boolean isChatEnabled() {
+        return chatEnabled;
+    }
+    public void setChatEnabled(boolean enabled) {
+        this.chatEnabled = enabled;
+    }
+
+    public GuiManager getGuiManager() { return guiManager; }
+
+    public NoteInputManager getNoteInputManager() { return noteInputManager; }
+
+    public ModeratorSessionManager getModeratorSessionManager() {
+        return moderatorSessionManager;
+    }
+
+    public ModeratorAuthService getModeratorAuthService() {
+        return moderatorAuthService;
     }
 
     public Set<UUID> getModerators() {

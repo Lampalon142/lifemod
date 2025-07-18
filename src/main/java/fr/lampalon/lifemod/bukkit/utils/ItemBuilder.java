@@ -87,9 +87,19 @@ public class ItemBuilder {
 
     @SuppressWarnings("deprecation")
     public ItemBuilder setWoolColor(DyeColor color) {
-        if (!is.getType().equals(Material.WHITE_WOOL))
+        Material legacyWool = Material.matchMaterial("WOOL");
+        Material modernWool = Material.matchMaterial(color.name() + "_WOOL");
+
+        if (legacyWool != null && is.getType() == legacyWool) {
+            is.setDurability(color.getDyeData());
             return this;
-        this.is.setDurability(color.getDyeData());
+        }
+
+        if (modernWool != null) {
+            is.setType(modernWool);
+            return this;
+        }
+
         return this;
     }
 

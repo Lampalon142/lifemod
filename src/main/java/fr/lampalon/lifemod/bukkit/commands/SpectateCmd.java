@@ -1,7 +1,7 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.SpectateManager;
+import fr.lampalon.lifemod.bukkit.managers.SpectateManager;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -28,10 +28,12 @@ public class SpectateCmd implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage(MessageUtil.formatMessage(getLang("general.onlyplayer")));
             return true;
         }
+
+        Player player = (Player) sender;
 
         if (!player.hasPermission("lifemod.spectate")) {
             player.sendMessage(MessageUtil.formatMessage(getLang("general.nopermission")));
@@ -46,12 +48,22 @@ public class SpectateCmd implements CommandExecutor, TabCompleter {
         String arg = args[0].toLowerCase();
 
         switch (arg) {
-            case "leave" -> spectateManager.leaveSpectate(player);
-            case "fp" -> spectateManager.startFreecam(player);
-            case "random" -> spectateManager.spectateRandom(player);
-            case "back" -> spectateManager.spectateBack(player);
-            case "list" -> spectateManager.sendPlayerList(player);
-            default -> {
+            case "leave":
+                spectateManager.leaveSpectate(player);
+                break;
+            case "fp":
+                spectateManager.startFreecam(player);
+                break;
+            case "random":
+                spectateManager.spectateRandom(player);
+                break;
+            case "back":
+                spectateManager.spectateBack(player);
+                break;
+            case "list":
+                spectateManager.sendPlayerList(player);
+                break;
+            default:
                 Player target = Bukkit.getPlayer(arg);
                 if (target == null || !target.isOnline()) {
                     player.sendMessage(MessageUtil.formatMessage(
@@ -59,7 +71,7 @@ public class SpectateCmd implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 spectateManager.startSpectate(player, target);
-            }
+                break;
         }
         return true;
     }

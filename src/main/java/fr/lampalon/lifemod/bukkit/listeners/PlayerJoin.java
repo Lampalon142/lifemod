@@ -1,7 +1,10 @@
 package fr.lampalon.lifemod.bukkit.listeners;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.models.Report;
+import fr.lampalon.lifemod.bukkit.models.ReportStatus;
+import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import fr.lampalon.lifemod.bukkit.utils.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+import java.util.List;
 
 public class PlayerJoin implements Listener {
     private final LifeMod plugin;

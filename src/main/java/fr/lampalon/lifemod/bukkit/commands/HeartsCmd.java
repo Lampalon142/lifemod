@@ -1,11 +1,10 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -71,13 +70,13 @@ public class HeartsCmd implements CommandExecutor, TabCompleter {
 
         double healthPoints = hearts * 2.0;
         double newMaxHealth;
-        switch (action) {
-            case "set" -> newMaxHealth = healthPoints;
-            case "add" -> newMaxHealth = Math.min(target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() + healthPoints, MAX_HEARTS * 2.0);
-            default -> {
-                sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.usage")));
-                return true;
-            }
+        if ("set".equals(action)) {
+            newMaxHealth = healthPoints;
+        } else if ("add".equals(action)) {
+            newMaxHealth = Math.min(target.getMaxHealth() + healthPoints, MAX_HEARTS * 2.0);
+        } else {
+            sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.usage")));
+            return true;
         }
 
         newMaxHealth = Math.round(newMaxHealth * 2.0) / 2.0;
@@ -91,7 +90,7 @@ public class HeartsCmd implements CommandExecutor, TabCompleter {
             sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("hearts.half-heart-warning")));
         }
 
-        target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
+        target.setMaxHealth(newMaxHealth);
         target.setHealth(Math.min(target.getHealth(), newMaxHealth));
 
         if (plugin.getConfigConfig().getBoolean("discord.enabled")) {
@@ -110,6 +109,8 @@ public class HeartsCmd implements CommandExecutor, TabCompleter {
                 webhook.execute();
             } catch (IOException e) {
                 debug.log("discord", "Webhook error: " + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
 

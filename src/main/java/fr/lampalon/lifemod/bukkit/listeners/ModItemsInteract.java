@@ -1,10 +1,10 @@
 package fr.lampalon.lifemod.bukkit.listeners;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.FreezeManager;
-import fr.lampalon.lifemod.bukkit.manager.PlayerManager;
-import fr.lampalon.lifemod.bukkit.manager.VanishedManager;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.FreezeManager;
+import fr.lampalon.lifemod.bukkit.managers.PlayerManager;
+import fr.lampalon.lifemod.bukkit.managers.VanishedManager;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,6 +28,10 @@ public class ModItemsInteract implements Listener {
   private final int freezeCooldownTime = 1000;
   private final HashMap<UUID, Long> vanishCooldowns = new HashMap<>();
   private final int vanishCooldownTime = 5000;
+  private final HashMap<UUID, CPSData> cpsTests = new HashMap<>();
+  private final int cpsTestDuration = LifeMod.getInstance().getConfigConfig().getInt("moderation-items.cps-tester.duration");
+  private final int cpsTestCooldown = LifeMod.getInstance().getConfigConfig().getInt("moderation-items.cps-tester.cooldown");
+  private final HashMap<UUID, Long> cpsCooldowns = new HashMap<>();
 
   @EventHandler
   public void onInteract(PlayerInteractEntityEvent e) {
@@ -52,9 +56,56 @@ public class ModItemsInteract implements Listener {
       case BLAZE_ROD:
         handleKill(player, target);
         break;
+      case CLOCK:
+        handleCPSTest(player, target);
+        break;
       default:
         break;
     }
+  }
+
+  private void handleCPSTest(Player mod, Player target) {
+    if (cpsCooldowns.containsKey(mod.getUniqueId())) {
+      long last = cpsCooldowns.get(mod.getUniqueId());
+      long now = System.currentTimeMillis();
+      if (now - last < cpsTestCooldown * 1000) {
+        int left = (int) ((cpsTestCooldown * 1000 - (now - last)) / 1000);
+        mod.sendMessage(MessageUtil.formatMessage(
+                LifeMod.getInstance().getLangConfig().getString("cps.cooldown")
+                        .replace("%cooldown%", String.valueOf(left))
+        ));
+        return;
+      }
+    }
+
+    CPSData data = new CPSData();
+    data.startTime = System.currentTimeMillis();
+    data.target = target;
+    cpsTests.put(mod.getUniqueId(), data);
+
+    mod.sendMessage(MessageUtil.formatMessage(
+            LifeMod.getInstance().getLangConfig().getString("cps.start")
+                    .replace("%target%", target.getName())
+    ));
+    target.sendMessage(MessageUtil.formatMessage(
+            LifeMod.getInstance().getLangConfig().getString("cps.notify")
+    ));
+
+    Bukkit.getScheduler().runTaskLater(LifeMod.getInstance(), () -> {
+      CPSData result = cpsTests.remove(mod.getUniqueId());
+      if (result != null) {
+        double seconds = (System.currentTimeMillis() - result.startTime) / 1000.0;
+        int cps = (int) Math.round(result.clicks / seconds);
+        mod.sendMessage(MessageUtil.formatMessage(
+                LifeMod.getInstance().getLangConfig().getString("cps.result")
+                        .replace("%target%", target.getName())
+                        .replace("%cps%", String.valueOf(cps))
+                        .replace("%seconds%", String.valueOf(cpsTestDuration))
+        ));
+      }
+    }, cpsTestDuration * 20L);
+
+    cpsCooldowns.put(mod.getUniqueId(), System.currentTimeMillis());
   }
 
   @EventHandler
@@ -207,6 +258,25 @@ public class ModItemsInteract implements Listener {
         onlinePlayer.showPlayer(player);
       }
       debug.log("vanish", player.getName() + " is now visible (BLAZE_POWDER).");
+    }
+  }
+
+  private static class CPSData {
+    int clicks = 0;
+    long startTime;
+    Player target;
+  }
+  @EventHandler
+  public void onCPSInteract(PlayerInteractEntityEvent e) {
+    Player player = e.getPlayer();
+    if (!PlayerManager.isInModerationMod(player)) return;
+    if (!(e.getRightClicked() instanceof Player)) return;
+    Player target = (Player) e.getRightClicked();
+
+    CPSData data = cpsTests.get(player.getUniqueId());
+    if (data != null && data.target.getUniqueId().equals(target.getUniqueId())) {
+      data.clicks++;
+      e.setCancelled(true);
     }
   }
 }

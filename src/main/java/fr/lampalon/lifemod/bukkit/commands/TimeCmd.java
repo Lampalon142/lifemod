@@ -1,8 +1,8 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -39,13 +39,24 @@ public class TimeCmd implements CommandExecutor, TabCompleter {
         }
 
         String time = args[0].toLowerCase();
-        long ticks = switch (time) {
-            case "day" -> 1000;
-            case "noon" -> 6000;
-            case "night" -> 13000;
-            case "midnight" -> 18000;
-            default -> -1;
-        };
+        long ticks;
+        switch (time) {
+            case "day":
+                ticks = 1000;
+                break;
+            case "noon":
+                ticks = 6000;
+                break;
+            case "night":
+                ticks = 13000;
+                break;
+            case "midnight":
+                ticks = 18000;
+                break;
+            default:
+                ticks = -1;
+                break;
+        }
 
         if (ticks == -1) {
             sender.sendMessage(MessageUtil.formatMessage(plugin.getLangConfig().getString("time.invalid")));
@@ -69,6 +80,8 @@ public class TimeCmd implements CommandExecutor, TabCompleter {
                 webhook.execute();
             } catch (IOException e) {
                 debug.log("discord", "Webhook error: " + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
 

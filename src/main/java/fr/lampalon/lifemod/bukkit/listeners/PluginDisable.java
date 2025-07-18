@@ -1,8 +1,8 @@
 package fr.lampalon.lifemod.bukkit.listeners;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.PlayerManager;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

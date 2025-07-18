@@ -1,8 +1,8 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -67,6 +67,8 @@ public class WeatherCmd implements CommandExecutor, TabCompleter {
             } catch (IOException e) {
                 debug.userError(sender, "Failed to send Discord weather alert", e);
                 debug.log("discord", "Webhook error: " + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         } else {
             debug.log("weather", player.getName() + " changed weather to " + weatherType);

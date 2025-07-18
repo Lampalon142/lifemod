@@ -1,8 +1,8 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -81,6 +81,8 @@ public class EcopenCmd implements CommandExecutor, TabCompleter {
             } catch (IOException e) {
                 debug.userError(sender, "Failed to send Discord ecopen alert", e);
                 debug.log("discord", "Webhook error: " + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
 

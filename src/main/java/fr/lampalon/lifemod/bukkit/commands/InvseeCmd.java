@@ -1,8 +1,8 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,6 +16,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -74,6 +75,8 @@ public class InvseeCmd implements CommandExecutor, TabCompleter {
             } catch (IOException e) {
                 debug.userError(sender, "Failed to send Discord invsee alert", e);
                 debug.log("discord", "Webhook error: " + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         } else {
             debug.log("invsee", sender.getName() + " opened inventory of " + targetPlayer.getName());

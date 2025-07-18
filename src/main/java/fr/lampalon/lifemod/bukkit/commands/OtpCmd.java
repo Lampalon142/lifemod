@@ -1,9 +1,9 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
-import fr.lampalon.lifemod.bukkit.manager.database.DatabaseManager;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.database.DatabaseManager;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -59,7 +59,7 @@ public class OtpCmd implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        Location location = databaseManager.getSQLiteManager().getPlayerCoords(target.getUniqueId());
+        Location location = databaseManager.getDatabaseProvider().getPlayerCoords(target.getUniqueId());
         if (location == null) {
             player.sendMessage(MessageUtil.formatMessage(langConfig.getString("otp.no-position", "&cNo saved position for %target%.").replace("%target%", args[0])));
             debug.log("otp", "No saved position for " + args[0]);
@@ -80,6 +80,8 @@ public class OtpCmd implements CommandExecutor, TabCompleter {
             } catch (IOException e) {
                 debug.userError(sender, "Failed to send Discord otp alert", e);
                 debug.log("discord", "Webhook error: " + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         } else {
             debug.log("otp", player.getName() + " teleported to offline position of " + args[0]);

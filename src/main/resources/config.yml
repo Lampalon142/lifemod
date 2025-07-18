@@ -40,6 +40,12 @@ prefix: "&7[&6Moderation&7] &f» "
 
 database:
   type: "sqlite"
+  host: localhost
+  port: 3306
+  name: lifemod
+  user: root
+  password: ""
+  poolsize: 10
   sqlite:
     file: "database.db"
 
@@ -85,6 +91,12 @@ commands-enabled:
   settime: true
   difficulty: true
   hearts: true
+  report: true
+  reports: true
+  modlogin: true
+  modregister: true
+  modchangepass: true
+  modreset: true
 
 moderation-items:
   invSee:
@@ -143,6 +155,18 @@ moderation-items:
     customModelData:
       enabled: false
       id: 0
+  cps-tester:
+    enabled: true
+    material: COMPASS
+    duration: 3
+    cooldown: 10
+    slot: 7
+    name: "&bCPS Tester"
+    description: "&7Clique sur un joueur pour tester ses CPS !"
+    customModelData:
+      enabled: false
+      id: 0
+    enchantments: { }
 
 ## LifeMod config
 
@@ -354,5 +378,25 @@ discord:
       title: "Powered By LifeGroup"
       logo: "https://mc-heads.net/avatar/%player%/"
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  auth:
+    title: "New Alert!"
+    description: "> %player% has execute auth command!"
+    footer:
+      title: "Powered By LifeGroup"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
+  report:
+    title: "New Alert!"
+    description: "> %player% has execute report command!"
+    footer:
+      title: "Powered By LifeGroup"
+      logo: "https://mc-heads.net/avatar/%player%/"
+    color: "#FF0000" ## insert your color here for example : #FF000 for RED...
 
-version: 169
+moderator-login:
+  enabled: true
+  max-attempts: 5
+  session-timeout-minutes: 30
+  require-ip-match: false
+
+version: 170

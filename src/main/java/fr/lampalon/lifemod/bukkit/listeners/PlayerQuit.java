@@ -1,9 +1,9 @@
 package fr.lampalon.lifemod.bukkit.listeners;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.PlayerManager;
-import fr.lampalon.lifemod.bukkit.manager.VanishedManager;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.PlayerManager;
+import fr.lampalon.lifemod.bukkit.managers.VanishedManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -31,8 +31,8 @@ public class PlayerQuit implements Listener {
         UUID uuid = player.getUniqueId();
         Location location = player.getLocation();
 
-        LifeMod.getInstance().getDatabaseManager().getSQLiteManager().savePlayerCoords(uuid, location);
-        LifeMod.getInstance().getDatabaseManager().getSQLiteManager().savePlayerInventory(uuid, player.getInventory());
+        LifeMod.getInstance().getDatabaseManager().getDatabaseProvider().savePlayerCoords(uuid, location);
+        LifeMod.getInstance().getDatabaseManager().getDatabaseProvider().savePlayerInventory(uuid, player.getInventory());
         VanishedManager.handlePlayerQuit(player);
 
         debug.log("playerquit", player.getName() + " data saved on quit.");

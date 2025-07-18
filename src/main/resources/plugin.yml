@@ -1,8 +1,8 @@
 name: LifeMod
 authors: [Lampalon]
-version: '1.6.8-RELEASE'
+version: '1.7.0-RELEASE'
 main: fr.lampalon.lifemod.bukkit.LifeMod
-api-version: "1.16"
+api-version: '1.13'
 softdepend:
   - LuckPerms
 commands:
@@ -64,6 +64,29 @@ commands:
     description: Quickly set the world time to day, night, noon, or midnight.
   difficulty:
     description: Change the server difficulty to peaceful, easy, normal, or hard.
+  report:
+    description: Report a player
+  reports:
+    description: see all reports
+  modlogin:
+    description: Authenticate as a moderator.
+    usage: /modlogin <password>
+    permission: lifemod.moderator
+  modregister:
+    description: Register your moderator password.
+    usage: /modregister <password>
+    permission: lifemod.moderator
+  modchangepass:
+    description: Change your moderator password.
+    usage: /modchangepass <old> <new>
+    permission: lifemod.moderator
+  modreset:
+    description: Reset a moderator's password (admin only).
+    usage: /modreset <player>
+    permission: lifemod.admin
+  follow:
+    description: follow a player with somes informations.
+    usage: /<command>
 permissions:
   lifemod.*:
     default: op
@@ -95,3 +118,11 @@ permissions:
       - lifemod.time
       - lifemod.difficulty
       - lifemod.hearts
+      - lifemod.togglechat.bypass
+      - lifemod.togglechat
+      - lifemod.staff
+      - lifemod.reports
+      - lifemod.stafflist
+      - lifemod.report.join
+      - lifemod.moderator
+      - lifemod.admin

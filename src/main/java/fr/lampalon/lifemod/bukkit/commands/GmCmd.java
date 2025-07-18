@@ -1,8 +1,8 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
@@ -99,6 +99,8 @@ public class GmCmd implements CommandExecutor, TabCompleter {
       } catch (IOException e) {
         debug.userError(sender, "Failed to send Discord gamemode alert", e);
         debug.log("discord", "Webhook error: " + e.getMessage());
+      } catch (Exception e) {
+        throw new RuntimeException(e);
       }
     } else {
       debug.log("gm", sender.getName() + " changed gamemode of " + targetPlayer.getName());

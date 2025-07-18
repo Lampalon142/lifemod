@@ -1,8 +1,8 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
@@ -77,6 +77,8 @@ public class DifficultyCmd implements CommandExecutor, TabCompleter {
                     webhook.execute();
                 } catch (IOException e) {
                     debug.log("discord", "Webhook error: " + e.getMessage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
         } catch (IllegalArgumentException e) {

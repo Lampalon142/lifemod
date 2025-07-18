@@ -1,9 +1,9 @@
 package fr.lampalon.lifemod.bukkit.commands;
 
 import fr.lampalon.lifemod.bukkit.LifeMod;
-import fr.lampalon.lifemod.bukkit.manager.DebugManager;
-import fr.lampalon.lifemod.bukkit.manager.DiscordWebhook;
-import fr.lampalon.lifemod.bukkit.manager.database.DatabaseManager;
+import fr.lampalon.lifemod.bukkit.managers.DebugManager;
+import fr.lampalon.lifemod.bukkit.managers.DiscordWebhook;
+import fr.lampalon.lifemod.bukkit.managers.database.DatabaseManager;
 import fr.lampalon.lifemod.bukkit.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -62,7 +62,7 @@ public class OInvseeCmd implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        ItemStack[] savedInventory = databaseManager.getSQLiteManager().getPlayerInventory(target.getUniqueId());
+        ItemStack[] savedInventory = databaseManager.getDatabaseProvider().getPlayerInventory(target.getUniqueId());
         if (savedInventory == null) {
             player.sendMessage(MessageUtil.formatMessage(langConfig.getString("oinvsee.no-inventory", "&cNo saved inventory for %target%.").replace("%target%", args[0])));
             debug.log("oinvsee", "No saved inventory for " + args[0]);
@@ -83,6 +83,8 @@ public class OInvseeCmd implements CommandExecutor, TabCompleter {
             } catch (IOException e) {
                 debug.userError(sender, "Failed to send Discord oinvsee alert", e);
                 debug.log("discord", "Webhook error: " + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         } else {
             debug.log("oinvsee", player.getName() + " opened offline inventory of " + args[0]);
