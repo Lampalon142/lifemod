@@ -394,7 +394,7 @@ discord:
     color: "#FF0000" ## insert your color here for example : #FF000 for RED...
 
 moderator-login:
-  enabled: true
+  enabled: false
   max-attempts: 5
   session-timeout-minutes: 30
   require-ip-match: false

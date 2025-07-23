@@ -71,6 +71,7 @@ vanish:
   deactivate: "%prefix%&aYou are now visible!"
   cooldown: "%prefix%§cPlease wait %cooldown% seconds before changing your invisible mode again."
   usage: "%prefix%&cIncorrect use of the command. Usage: /vanish <player name>."
+  prefix: "&7[&4&lVanish&7] &f"
 
 ## Ender Chest
 ec:
@@ -91,6 +92,9 @@ modlist:
 staffchat:
   usage: "%prefix%&cUsage: /staffchat <message>"
   message: "&b[StaffChat] &c%player%"
+  toggle:
+    on: "&aStaffchat toggle activated."
+    off: "&cStaffchat toggle deactivated."
   success: "%prefix%&a[StaffChat] Message sent successfully!"
   prefix: "@"  ## Default is : "@"
 
